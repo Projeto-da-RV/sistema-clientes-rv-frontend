@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
@@ -10,6 +11,8 @@ import Swal from 'sweetalert2';
  */
 @Component({
   selector: 'app-header',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

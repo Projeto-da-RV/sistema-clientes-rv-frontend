@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivateChildFn, CanActivateFn } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
@@ -91,3 +91,29 @@ export class AuthGuard implements CanActivate {
     });
   }
 }
+
+// Função funcional para usar com rotas
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  
+  return authService.isAuthenticated().pipe(
+    take(1),
+    map(isAuthenticated => {
+      if (isAuthenticated) {
+        return true;
+      } else {
+        const returnUrl = state.url;
+        router.navigate(['/login'], { 
+          queryParams: { returnUrl: returnUrl } 
+        });
+        return false;
+      }
+    })
+  );
+};
+
+// Função funcional para rotas filhas
+export const authChildGuard: CanActivateChildFn = (route, state) => {
+  return authGuard(route, state);
+};
