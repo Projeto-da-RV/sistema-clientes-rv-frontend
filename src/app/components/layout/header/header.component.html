@@ -1,1 +1,184 @@
-<p>header works!</p>
+<!-- Header/Navbar fixo do sistema RV Digital -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-rv-gradient fixed-top shadow">
+  <div class="container-fluid">
+    
+    <!-- Logo e Nome do Sistema -->
+    <a class="navbar-brand d-flex align-items-center" (click)="navegarPara('/dashboard')">
+      <div class="brand-text">
+        <span class="fw-bold">RV Digital</span>
+        <small class="d-block">Sistema de Gestão</small>
+      </div>
+    </a>
+    
+    <!-- Botão do menu mobile -->
+    <button 
+      class="navbar-toggler border-0" 
+      type="button" 
+      (click)="alternarMenu()"
+      [attr.aria-expanded]="!menuColapsado">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Menu de navegação -->
+    <div class="collapse navbar-collapse" [class.show]="!menuColapsado">
+      
+      <!-- Menu principal (lado esquerdo) -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        
+        <!-- Dashboard -->
+        <li class="nav-item">
+          <a class="nav-link" 
+             [class.active]="rotaAtiva('/dashboard')"
+             (click)="navegarPara('/dashboard')">
+            <i class="fas fa-chart-line me-2"></i>
+            Dashboard
+          </a>
+        </li>
+        
+        <!-- Cadastros Básicos - Módulos do João Simi -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" 
+             href="#" 
+             id="navbarCadastros" 
+             role="button" 
+             data-bs-toggle="dropdown">
+            <i class="fas fa-database me-2"></i>
+            Cadastros
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" 
+                 [class.active]="rotaAtiva('/categorias')"
+                 (click)="navegarPara('/categorias')">
+                <i class="fas fa-tags me-2"></i>
+                Categorias
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" 
+                 [class.active]="rotaAtiva('/clientes')"
+                 (click)="navegarPara('/clientes')">
+                <i class="fas fa-users me-2"></i>
+                Clientes
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" 
+                 [class.active]="rotaAtiva('/servicos')"
+                 (click)="navegarPara('/servicos')">
+                <i class="fas fa-cogs me-2"></i>
+                Serviços
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+        <!-- Operacional - Módulos do PP -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" 
+             href="#" 
+             id="navbarOperacional" 
+             role="button" 
+             data-bs-toggle="dropdown">
+            <i class="fas fa-file-contract me-2"></i>
+            Operacional
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" 
+                 [class.active]="rotaAtiva('/contratos')"
+                 (click)="navegarPara('/contratos')">
+                <i class="fas fa-handshake me-2"></i>
+                Contratos
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" 
+                 [class.active]="rotaAtiva('/enderecos')"
+                 (click)="navegarPara('/enderecos')">
+                <i class="fas fa-map-marker-alt me-2"></i>
+                Endereços
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" 
+                 [class.active]="rotaAtiva('/itens')"
+                 (click)="navegarPara('/itens')">
+                <i class="fas fa-list me-2"></i>
+                Itens
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+      </ul>
+      
+      <!-- Menu do usuário (lado direito) -->
+      <ul class="navbar-nav">
+        
+        <!-- Perfil do usuário -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center" 
+             href="#" 
+             id="navbarUsuario" 
+             role="button" 
+             data-bs-toggle="dropdown">
+            
+            <!-- Avatar do usuário -->
+            <div class="user-avatar me-2">
+              @if (usuario?.nome) {
+                {{ usuario.nome.charAt(0).toUpperCase() }}
+              } @else {
+                <i class="fas fa-user"></i>
+              }
+            </div>
+            
+            <!-- Nome do usuário -->
+            <div class="user-info d-none d-md-block">
+              @if (usuario) {
+                <span class="user-name">{{ usuario.nome }}</span>
+                <small class="user-email d-block">{{ usuario.email }}</small>
+              } @else {
+                <span class="user-name">Usuário</span>
+              }
+            </div>
+            
+          </a>
+          
+          <!-- Menu dropdown do usuário -->
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <div class="dropdown-header d-flex align-items-center">
+                <div class="user-avatar-large me-3">
+                  @if (usuario?.nome) {
+                    {{ usuario.nome.charAt(0).toUpperCase() }}
+                  } @else {
+                    <i class="fas fa-user"></i>
+                  }
+                </div>
+                <div>
+                  @if (usuario) {
+                    <strong>{{ usuario.nome }}</strong>
+                    <small class="d-block text-muted">{{ usuario.email }}</small>
+                  }
+                </div>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item text-danger" (click)="fazerLogout()">
+                <i class="fas fa-sign-out-alt me-2"></i>
+                Sair do Sistema
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+<!-- Spacer para compensar navbar fixed -->
+<div class="navbar-spacer"></div>

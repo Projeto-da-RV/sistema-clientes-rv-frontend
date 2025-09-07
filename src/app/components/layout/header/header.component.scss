@@ -1,0 +1,75 @@
+/* Header/Navbar do sistema RV Digital */
+.bg-rv-gradient {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
+}
+
+.brand-text {
+  line-height: 1.2;
+  cursor: pointer;
+  
+  .fw-bold {
+    font-size: 1.1rem;
+  }
+  
+  small {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+}
+
+.navbar-spacer {
+  height: 76px; // Altura da navbar
+}
+
+.user-avatar, .user-avatar-large {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.user-avatar-large {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+}
+
+.user-info {
+  text-align: left;
+  
+  .user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .user-email {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px;
+}
+
+.dropdown-item {
+  &:hover {
+    background-color: rgba(0, 102, 204, 0.1);
+  }
+  
+  &.active {
+    background-color: rgba(0, 102, 204, 0.15);
+    color: var(--primary-color);
+    font-weight: 500;
+  }
+}
