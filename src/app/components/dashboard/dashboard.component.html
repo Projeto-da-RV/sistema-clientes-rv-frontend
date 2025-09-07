@@ -1,1 +1,132 @@
-<p>dashboard works!</p>
+<!-- Dashboard principal do sistema RV Digital -->
+<div class="dashboard-container">
+  
+  <!-- Cabeçalho de boas-vindas -->
+  <div class="welcome-section mb-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="welcome-card">
+          <h2 class="welcome-title">
+            {{ obterSaudacao() }}@if (usuario) {, {{ usuario.nome.split(' ')[0] }}!}
+          </h2>
+          <p class="welcome-subtitle">
+            Bem-vindo ao sistema de gestão RV Digital. Aqui você pode acompanhar todas as informações importantes do seu negócio.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Cards de estatísticas -->
+  <div class="statistics-section mb-4">
+    <div class="row g-3">
+      
+      <!-- Card Clientes -->
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-card-primary">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ estatisticas.totalClientes }}</h3>
+            <p class="stat-label">Clientes Ativos</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card Contratos -->
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-card-success">
+          <div class="stat-icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ estatisticas.totalContratos }}</h3>
+            <p class="stat-label">Contratos Vigentes</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card Serviços -->
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-card-warning">
+          <div class="stat-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ estatisticas.totalServicos }}</h3>
+            <p class="stat-label">Serviços Ativos</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Card Receita -->
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card stat-card-info">
+          <div class="stat-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ estatisticas.receitaMensal | currency:'BRL':'symbol':'1.0-0' }}</h3>
+            <p class="stat-label">Receita Mensal</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- Seção de ações rápidas -->
+  <div class="quick-actions-section">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-bolt me-2"></i>
+              Ações Rápidas
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              
+              <!-- Ação: Novo Cliente -->
+              <div class="col-md-6 col-lg-3">
+                <a href="/clientes/novo" class="quick-action-btn">
+                  <i class="fas fa-user-plus"></i>
+                  <span>Novo Cliente</span>
+                </a>
+              </div>
+              
+              <!-- Ação: Novo Contrato -->
+              <div class="col-md-6 col-lg-3">
+                <a href="/contratos/novo" class="quick-action-btn">
+                  <i class="fas fa-file-contract"></i>
+                  <span>Novo Contrato</span>
+                </a>
+              </div>
+              
+              <!-- Ação: Ver Relatórios -->
+              <div class="col-md-6 col-lg-3">
+                <a href="/relatorios" class="quick-action-btn">
+                  <i class="fas fa-chart-bar"></i>
+                  <span>Relatórios</span>
+                </a>
+              </div>
+              
+              <!-- Ação: Configurações -->
+              <div class="col-md-6 col-lg-3">
+                <a href="/configuracoes" class="quick-action-btn">
+                  <i class="fas fa-cog"></i>
+                  <span>Configurações</span>
+                </a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
