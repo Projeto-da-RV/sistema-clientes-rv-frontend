@@ -1,24 +1,26 @@
-/* Estilos globais do sistema RV Digital */
+/* Estilos globais do sistema RV Digital - Cores Oficiais */
 
 /* Importar fontes */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 
-/* Importar Bootstrap (substitui MDB para simplicidade) */
+/* Importar Bootstrap */
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
 
-/* Variáveis de cores RV Digital */
+/* Variáveis de cores oficiais RV Digital */
 :root {
-  --primary-color: #0066cc;
-  --secondary-color: #00a859;
-  --accent-color: #ff6b35;
-  --dark-color: #2c3e50;
-  --light-color: #f8f9fa;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --info-color: #17a2b8;
-  --muted-color: #6c757d;
+  --primary-color: #020096;          // Azul primário oficial
+  --secondary-color: #00124f;        // Azul secundário oficial
+  --accent-color: #00ceff;           // Azul claro para botões
+  --warning-color: #ffac00;          // Amarelo/laranja para botões
+  --success-color: #10b981;          // Verde
+  --danger-color: #ef4444;           // Vermelho
+  --dark-color: #1f2937;             // Cinza escuro
+  --light-color: #f8fafc;            // Branco/cinza muito claro
+  --text-color: #ffffff;             // Branco predominante
+  --text-dark: #374151;              // Cinza para texto escuro quando necessário
+  --border-color: #e5e7eb;           // Cinza para bordas
+  --muted-color: #6b7280;            // Cinza médio
 }
 
 /* Reset e configurações globais */
@@ -26,80 +28,187 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  background-color: var(--light-color);
-  color: #333;
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* Estilos de componentes reutilizáveis */
+body {
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--light-color);
+  font-weight: 400;
+}
+
+/* Tipografia */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.4;
+}
+
+/* Gradientes RV Digital com cores oficiais */
+.bg-rv-gradient {
+  background: linear-gradient(135deg, #020096 0%, #00124f 100%) !important;
+}
+
+.bg-rv-gradient-buttons {
+  background: linear-gradient(135deg, #ffac00 0%, #00ceff 100%) !important;
+}
+
+/* Botões customizados RV Digital com cores oficiais */
 .btn-rv-primary {
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(135deg, #ffac00, #00ceff);
   border: none;
-  color: white;
-  font-weight: 500;
-  border-radius: 6px;
+  color: var(--text-color);
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
   transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
-    color: white;
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #e69a00, #00b8e6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 172, 0, 0.4);
+    color: var(--text-color);
   }
   
   &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
-    color: white;
+    box-shadow: 0 0 0 3px rgba(255, 172, 0, 0.25);
+    color: var(--text-color);
+  }
+  
+  &:disabled {
+    background: var(--muted-color);
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+    color: var(--text-color);
   }
 }
 
 .btn-rv-secondary {
-  background: var(--secondary-color);
-  border-color: var(--secondary-color);
-  color: white;
+  background: linear-gradient(135deg, #020096, #00124f);
+  border: none;
+  color: var(--text-color);
+  font-weight: 600;
+  border-radius: 8px;
   
   &:hover {
-    background: #008a4a;
-    border-color: #008a4a;
-    color: white;
+    background: linear-gradient(135deg, #030077, #000f3d);
+    color: var(--text-color);
+    transform: translateY(-1px);
   }
 }
 
-.card-rv {
-  border: none;
-  border-left: 4px solid var(--primary-color);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.btn-rv-outline {
+  background: transparent;
+  border: 2px solid #020096;
+  color: #020096;
+  font-weight: 600;
   border-radius: 8px;
+  
+  &:hover {
+    background: #020096;
+    color: var(--text-color);
+    transform: translateY(-1px);
+  }
 }
 
-.bg-rv-gradient {
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
+/* Cards customizados */
+.card-rv {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background: white;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+.card-rv-primary {
+  border-left: 4px solid #020096;
+}
+
+.card-rv-secondary {
+  border-left: 4px solid #00124f;
+}
+
+.card-rv-accent {
+  border-left: 4px solid #00ceff;
+}
+
+.card-rv-warning {
+  border-left: 4px solid #ffac00;
+}
+
+/* Form controls customizados */
+.form-control-rv {
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+  color: var(--text-dark);
+  
+  &:focus {
+    border-color: #00ceff;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(0, 206, 255, 0.1);
+    outline: none;
+  }
+  
+  &.is-invalid {
+    border-color: var(--danger-color);
+    background-color: #fef2f2;
+  }
 }
 
 /* Utilitários */
 .text-rv-primary {
-  color: var(--primary-color) !important;
+  color: #020096 !important;
 }
 
 .text-rv-secondary {
-  color: var(--secondary-color) !important;
+  color: #00124f !important;
+}
+
+.text-rv-accent {
+  color: #00ceff !important;
+}
+
+.text-rv-warning {
+  color: #ffac00 !important;
+}
+
+.text-rv-white {
+  color: var(--text-color) !important;
+}
+
+.bg-rv-light {
+  background-color: var(--light-color) !important;
 }
 
 .border-rv-primary {
-  border-color: var(--primary-color) !important;
+  border-color: #020096 !important;
 }
 
 /* Loading spinner customizado */
 .spinner-rv {
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid var(--primary-color);
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #020096;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   animation: spin 1s linear infinite;
 }
 
@@ -115,27 +224,60 @@ body {
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--muted-color);
+  background: #020096;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color);
+  background: #00124f;
 }
 
-/* Responsividade global */
-@media (max-width: 768px) {
-  body {
-    font-size: 13px;
-  }
-  
-  .container-fluid {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
+/* Alerts customizados */
+.alert-rv-primary {
+  background-color: rgba(2, 0, 150, 0.1);
+  border: 1px solid rgba(2, 0, 150, 0.2);
+  color: #020096;
+  border-radius: 8px;
+}
+
+.alert-rv-accent {
+  background-color: rgba(0, 206, 255, 0.1);
+  border: 1px solid rgba(0, 206, 255, 0.2);
+  color: #0088cc;
+  border-radius: 8px;
+}
+
+.alert-rv-warning {
+  background-color: rgba(255, 172, 0, 0.1);
+  border: 1px solid rgba(255, 172, 0, 0.2);
+  color: #cc8800;
+  border-radius: 8px;
+}
+
+/* Badges customizados */
+.badge-rv-primary {
+  background-color: #020096;
+  color: var(--text-color);
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.badge-rv-accent {
+  background-color: #00ceff;
+  color: var(--text-color);
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.badge-rv-warning {
+  background-color: #ffac00;
+  color: var(--text-color);
+  font-weight: 600;
+  border-radius: 6px;
 }
 
 /* Animações globais */
@@ -161,4 +303,55 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsividade global */
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+  }
+  
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.1rem; }
+  h5 { font-size: 1rem; }
+  h6 { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .btn-rv-primary,
+  .btn-rv-secondary,
+  .btn-rv-outline {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+/* Texto em áreas escuras sempre branco */
+.bg-rv-gradient,
+.bg-rv-gradient *,
+.navbar-dark,
+.navbar-dark * {
+  color: var(--text-color) !important;
 }
