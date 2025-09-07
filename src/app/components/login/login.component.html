@@ -1,1 +1,122 @@
-<p>login works!</p>
+<!-- Template da tela de login com design RV Digital -->
+<div class="login-container">
+  <div class="login-background"></div>
+  
+  <div class="container-fluid h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+      <div class="col-md-4 col-lg-3">
+        
+        <!-- Card de Login -->
+        <div class="card login-card shadow-lg">
+          <div class="card-header text-center bg-rv-gradient">
+            <h4 class="text-white mb-2">RV Digital</h4>
+            <small class="text-white-50">Sistema de Gestão</small>
+          </div>
+          
+          <div class="card-body p-4">
+            
+            <!-- Formulário de Login -->
+            <form [formGroup]="loginForm" (ngSubmit)="fazerLogin()">
+              
+              <!-- Campo Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">
+                  <i class="fas fa-envelope me-2"></i>Email
+                </label>
+                <input 
+                  type="email" 
+                  id="email"
+                  formControlName="email"
+                  class="form-control"
+                  [class.is-invalid]="campoInvalido('email')"
+                  placeholder="seu@email.com">
+                  
+                <div class="invalid-feedback">
+                  {{ obterMensagemErro('email') }}
+                </div>
+              </div>
+              
+              <!-- Campo Senha -->
+              <div class="mb-3">
+                <label for="senha" class="form-label">
+                  <i class="fas fa-lock me-2"></i>Senha
+                </label>
+                <div class="input-group">
+                  <input 
+                    [type]="mostrarSenha ? 'text' : 'password'" 
+                    id="senha"
+                    formControlName="senha"
+                    class="form-control"
+                    [class.is-invalid]="campoInvalido('senha')"
+                    placeholder="Digite sua senha">
+                    
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary"
+                    (click)="alternarVisibilidadeSenha()">
+                    <i [class]="mostrarSenha ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                  </button>
+                </div>
+                
+                <div class="invalid-feedback">
+                  {{ obterMensagemErro('senha') }}
+                </div>
+              </div>
+              
+              <!-- Checkbox Lembrar-me -->
+              <div class="mb-3 form-check">
+                <input 
+                  type="checkbox" 
+                  id="lembrarMe"
+                  formControlName="lembrarMe"
+                  class="form-check-input">
+                <label for="lembrarMe" class="form-check-label">
+                  Lembrar-me neste dispositivo
+                </label>
+              </div>
+              
+              <!-- Botão de Login -->
+              <div class="d-grid mb-3">
+                <button 
+                  type="submit" 
+                  class="btn btn-rv-primary btn-lg"
+                  [disabled]="loginForm.invalid || carregando">
+                  
+                  @if (carregando) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Entrando...
+                  } @else {
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    Entrar no Sistema
+                  }
+                </button>
+              </div>
+              
+            </form>
+            
+          </div>
+          
+          <!-- Footer com informações -->
+          <div class="card-footer text-center bg-light">
+            <small class="text-muted">
+              Sistema RV Digital v1.0.0
+            </small>
+          </div>
+          
+        </div>
+        
+        <!-- Credenciais de teste -->
+        <div class="mt-3">
+          <div class="alert alert-info alert-sm">
+            <strong>Credenciais de teste:</strong><br>
+            <small>
+              Email: admin@rvdigital.com.br<br>
+              Senha: 123456
+            </small>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
