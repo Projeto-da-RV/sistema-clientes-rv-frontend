@@ -1,0 +1,86 @@
+<div class="item-list">
+  <div class="page-header">
+    <h1>
+      <lucide-icon name="package"></lucide-icon>
+      Itens de Contrato
+    </h1>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters">
+      <div class="filter-group">
+        <label>Filtrar por contrato:</label>
+        <select 
+          class="form-control" 
+          [(ngModel)]="contratoSelecionado"
+          (change)="filtrarPorContrato()">
+          <option [value]="null">Todos</option>
+          @for (contrato of contratos; track contrato.id) {
+            <option [value]="contrato.id">Contrato #{{ contrato.id }}</option>
+          }
+        </select>
+      </div>
+      
+      <div class="filter-actions">
+        <button class="btn btn-clear" (click)="limparFiltros()">
+          <lucide-icon name="filter"></lucide-icon>
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (loading) {
+      <div class="loading">
+        <lucide-icon name="loader" class="loading-icon"></lucide-icon>
+        <p>Carregando itens...</p>
+      </div>
+    } @else {
+      @if (itensFiltrados.length > 0) {
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Contrato</th>
+                <th>Serviço</th>
+                <th>Quantidade</th>
+                <th>Valor Unit.</th>
+                <th>Desconto</th>
+                <th>Valor Final</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of itensFiltrados; track item.id) {
+                <tr>
+                  <td>{{ item.id }}</td>
+                  <td>#{{ typeof item.contrato === 'object' && item.contrato.id ? item.contrato.id : '-' }}</td>
+                  <td>{{ getServicoNome(item) }}</td>
+                  <td>{{ item.quantidade }}</td>
+                  <td>{{ formatarValor(item.valor) }}</td>
+                  <td>{{ formatarValor(item.desconto) }}</td>
+                  <td><strong>{{ formatarValor(calcularValorFinal(item)) }}</strong></td>
+                  <td>
+                    <div class="actions">
+                      <button (click)="deletarItem(item)" class="btn-action btn-delete">
+                        <lucide-icon name="trash-2"></lucide-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <lucide-icon name="inbox" class="empty-icon"></lucide-icon>
+          <p>Nenhum item encontrado</p>
+          <p class="empty-subtitle">Itens de contrato aparecerão aqui</p>
+        </div>
+      }
+    }
+  </div>
+</div>

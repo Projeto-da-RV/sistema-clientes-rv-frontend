@@ -1,0 +1,38 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>RV Digital</h2>
+      <p>Sistema de Gestão de Clientes</p>
+    </div>
+    
+    <form (ngSubmit)="onLogin()" class="login-form">
+      <div class="form-group">
+        <label for="username">Usuário</label>
+        <input 
+          type="text" 
+          id="username"
+          class="form-control" 
+          [(ngModel)]="username" 
+          name="username"
+          placeholder="Digite seu usuário"
+          required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input 
+          type="password" 
+          id="password"
+          class="form-control" 
+          [(ngModel)]="password" 
+          name="password"
+          placeholder="Digite sua senha"
+          required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-block">
+        Entrar
+      </button>
+    </form>
+  </div>
+</div>

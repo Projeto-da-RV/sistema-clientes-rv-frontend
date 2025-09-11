@@ -1,0 +1,157 @@
+Contexto geral
+•  Objetivo: Sistema de cadastro e gestão de clientes, contratos e serviços para a RV Digital.
+•  Monorepo com:
+•  Frontend: Angular 20 (projeto em RV-Digital-Front), consumindo REST em http://localhost:8080.
+•  Backend: Spring Boot 3.1 (Java 17) minimalista no root, com MySQL configurado via application.properties, porém ainda sem endpoints implementados.
+•  Status atual:
+•  Frontend possui services prontos para chamadas REST (Clientes, Endereços, Categorias, Serviços, Itens, Contratos), interceptores de erro e loading, e models TypeScript.
+•  Backend contém apenas a aplicação Spring Boot básica (ClientesApplication), sem controllers/repos/services.
+•  apiBaseUrl do front aponta para http://localhost:8080.
+•  Importante: existe uma senha de banco em texto plano no arquivo src/main/resources/application.properties; migrar para variável de ambiente.
+
+Tech stack
+•  Frontend: Angular 20.2, Angular Material, ngx-mask, RxJS, SCSS. Comandos: npm start → ng serve em RV-Digital-Front.
+•  Backend: Spring Boot 3.1.5, Web, Data JPA, Validation, DevTools, Test; MySQL 8 driver; H2 para testes. Java 17. Maven (pom.xml).
+•  Banco: MySQL local (clientes_rv_db).
+•  Portas: Front 4200, API 8080.
+
+Contratos REST esperados pelo frontend
+Base: ${apiBaseUrl} = http://localhost:8080
+
+Recursos e endpoints (inferidos dos services Angular):
+
+1) Clientes (/clientes)
+•  GET /clientes → Cliente[]
+•  GET /clientes/{id} → Cliente
+•  POST /clientes → Cliente (body: Cliente)
+•  PUT /clientes/{id} → Cliente (body: Cliente)
+•  DELETE /clientes/{id} → void
+•  GET /clientes/buscar?nome={string} → Cliente[]
+•  GET /clientes/cpf?cpf={string} → Cliente
+•  GET /clientes/categoria/{categoriaId} → Cliente[]
+
+2) Contratos (/contratos)
+•  GET /contratos → Contrato[]
+•  GET /contratos/{id} → Contrato
+•  POST /contratos → Contrato (body: Contrato)
+•  PUT /contratos/{id} → Contrato (body: Contrato)
+•  DELETE /contratos/{id} → void
+•  GET /contratos/cliente/{clienteId} → Contrato[]
+•  GET /contratos/status/{status} → Contrato[]
+
+3) Categorias (/categorias)
+•  GET /categorias → Categoria[]
+•  GET /categorias/{id} → Categoria
+•  POST /categorias → Categoria
+•  PUT /categorias/{id} → Categoria
+•  DELETE /categorias/{id} → void
+•  GET /categorias/ativas → Categoria[]
+•  GET /categorias/buscar?nome={string} → Categoria[]
+
+4) Endereços (/enderecos)
+•  GET /enderecos → Endereco[]
+•  GET /enderecos/{id} → Endereco
+•  POST /enderecos → Endereco
+•  PUT /enderecos/{id} → Endereco
+•  DELETE /enderecos/{id} → void
+•  GET /enderecos/cliente/{clienteId} → Endereco[]
+•  GET /enderecos/buscar?cidade={string} → Endereco[]
+
+5) Itens (/itens)
+•  GET /itens → Item[]
+•  GET /itens/{id} → Item
+•  POST /itens → Item
+•  PUT /itens/{id} → Item
+•  DELETE /itens/{id} → void
+•  GET /itens/contrato/{contratoId} → Item[]
+•  GET /itens/servico/{servicoId} → Item[]
+
+6) Serviços (/servicos)
+•  GET /servicos → Servico[]
+•  GET /servicos/{id} → Servico
+•  POST /servicos → Servico
+•  PUT /servicos/{id} → Servico
+•  DELETE /servicos/{id} → void
+•  GET /servicos/ativos → Servico[]
+•  GET /servicos/buscar?nome={string} → Servico[]
+•  GET /servicos/categoria/{categoria} → Servico[]
+
+Modelos (front) a respeitar no backend
+•  Cliente: { id?, nome, cpf, email?, telefone?, dataNascimento(YYYY-MM-DD), ativo, statusCadastro?, categoria?, enderecos?, contratos? }
+•  Contrato: { id?, dataInicio(YYYY-MM-DD), dataFim?, status?, valorTotal?, observacoes?, cliente({id} | Cliente), itens? }
+•  Categoria: { id?, nome, descricao, beneficios?, ativo }
+•  Endereco: { id?, rua, numero, cidade, estado, cep, principal, cliente?({id}) }
+•  Item: { id?, quantidade, valor, desconto?, valorFinal?, contrato({id}|Contrato), servico({id}|Servico) }
+•  Servico: { id?, nome, descricao, valor, categoria(string), ativo }
+
+Tarefas para a IA
+1) Backend Spring Boot
+•  Implementar entidades JPA, repositórios e serviços para Cliente, Contrato, Categoria, Endereco, Item, Servico de acordo com os modelos.
+•  Criar controladores REST com os endpoints listados, respeitando:
+•  Query params: buscar por nome/cidade/cpf; segmentos de rota para filtros (clienteId, status, categoria).
+•  Validações (Bean Validation) e mensagens coerentes com o interceptor de erro do front:
+◦  400 para validações, retornando mensagens concatenadas simples ou estrutura {message/fieldErrors}.
+◦  404 quando não encontrado.
+◦  409 para conflitos de negócio.
+•  Cálculo e consistência:
+•  Item.valorFinal = lógica básica (valor - desconto, se houver).
+•  Contrato.valorTotal = soma de itens.valorFinal.
+•  CORS: permitir http://localhost:4200 em dev.
+•  Configuração:
+•  Migrar credenciais do MySQL do application.properties para variáveis de ambiente. Ex.: SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD.
+•  Servir em :8080.
+•  Testes:
+•  Unitários (services).
+•  Integração com H2 para controllers.
+
+2) Frontend Angular
+•  Confirmar que os services já consomem corretamente o backend e que interceptores tratam erros de forma amigável.
+•  Garantir que environment.prod.ts usa a URL real de produção da API quando for implantar (hoje está localhost, ajustar no deploy).
+•  Caso necessário, criar componentes de listagem/edição mínimos para cada entidade (se já não existirem) ou ajustar consumo.
+
+3) Documentação de API
+•  Gerar um OpenAPI 3.0 cobrindo todos os endpoints e schemas acima, alinhado aos tipos do front.
+•  Incluir respostas de erro padrão (400/404/409/5xx) com schema de erro consistente.
+
+4) Configuração de ambientes
+•  .env.example (backend) com SPRING_DATASOURCE_* e variáveis de CORS.
+•  Orientações para rodar local:
+•  Backend: mvn spring-boot:run (após configurar DB).
+•  Frontend: cd RV-Digital-Front && npm ci && npm start → abre em 4200.
+•  Banco: usar MySQL local existente OU docker compose com serviço mysql e volume.
+•  Scripts opcionais: seed de dados para demo.
+
+5) Containerização (opcional mas recomendado)
+•  Dockerfile backend (JDK 17 + fat jar).
+•  Dockerfile frontend (build Angular + Nginx).
+•  docker-compose.yml com services: api, web, db (MySQL), variáveis, healthchecks.
+
+Requisitos/aceite
+•  Todos os endpoints respondem conforme contratos usados pelo front.
+•  Frontend carrega listas e detalhes sem erros CORS ou de validação.
+•  OpenAPI atualizado e válido, cobrindo todos os recursos/rotas.
+•  Erros padronizados conforme esperado pelo ErrorInterceptor (mensagens claras).
+•  Config sensível via variáveis de ambiente (sem senhas em arquivos).
+•  Passam testes unitários/integrados básicos e manual smoke test end-to-end.
+
+Comandos de execução (dev)
+•  Backend:
+•  Pré-requisitos: Java 17, Maven, MySQL em execução, variáveis de ambiente setadas.
+•  mvn spring-boot:run
+•  Frontend:
+•  cd RV-Digital-Front
+•  npm ci
+•  npm start
+•  Acesse http://localhost:4200, com API em http://localhost:8080.
+
+Observações importantes
+•  Segurança: não versionar senhas. Migrar spring.datasource.password para variável de ambiente.
+•  Localização: as mensagens de erro podem ser retornadas em português, mas mantenha consistência.
+•  Perfis: em dev, show-sql pode permanecer, mas desabilitar em prod.
+•  Se forem adicionadas regras de negócio (ex.: validações de CPF, vínculos contratuais), documente nos DTOs e OpenAPI.
+
+Perguntas em aberto (se quiser refinar antes)
+•  Há autenticação/autorização prevista? Se sim, qual fluxo (JWT, OAuth2)?
+•  Campos obrigatórios e regras de validação específicas (ex.: máscaras e formatos) além do que está no front?
+•  Regras de negócio para status de contrato e cálculo de valorFinal/valorTotal?
+•  Precisão monetária (usar BigDecimal) e locale?

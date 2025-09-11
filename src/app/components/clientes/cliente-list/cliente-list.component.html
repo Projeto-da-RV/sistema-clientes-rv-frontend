@@ -1,0 +1,105 @@
+<div class="cliente-list">
+  <div class="page-header">
+    <h1>Clientes</h1>
+    <a routerLink="/clientes/novo" class="btn btn-primary">
+      <lucide-icon name="plus" size="18"></lucide-icon>
+      Novo Cliente
+    </a>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters">
+      <div class="filter-group">
+        <label>Buscar por nome:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="filtroNome"
+          (keyup.enter)="buscarPorNome()"
+          placeholder="Digite o nome">
+      </div>
+      
+      <div class="filter-group">
+        <label>Buscar por CPF:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="filtroCpf"
+          (keyup.enter)="buscarPorCpf()"
+          placeholder="Digite o CPF">
+      </div>
+      
+      <div class="filter-actions">
+        <button class="btn btn-search" (click)="filtrar()">
+          <lucide-icon name="filter" size="16"></lucide-icon>
+          Filtrar
+        </button>
+        <button class="btn btn-clear" (click)="limparFiltros()">
+          <lucide-icon name="search" size="16"></lucide-icon>
+          Limpar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (loading) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Carregando clientes...</p>
+      </div>
+    } @else {
+      @if (clientesFiltrados.length > 0) {
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Data Nascimento</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cliente of clientesFiltrados; track cliente.id) {
+                <tr>
+                  <td>{{ cliente.id }}</td>
+                  <td>{{ cliente.nome }}</td>
+                  <td>{{ cliente.cpf }}</td>
+                  <td>{{ cliente.email || '-' }}</td>
+                  <td>{{ cliente.telefone || '-' }}</td>
+                  <td>{{ cliente.dataNascimento }}</td>
+                  <td>
+                    <span class="badge" [class.badge-success]="cliente.ativo" [class.badge-danger]="!cliente.ativo">
+                      {{ cliente.ativo ? 'Ativo' : 'Inativo' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="actions">
+                      <a [routerLink]="['/clientes', cliente.id, 'editar']" class="btn-action btn-edit" title="Editar Cliente">
+                        <lucide-icon name="edit" size="16"></lucide-icon>
+                      </a>
+                      <button (click)="deletarCliente(cliente)" class="btn-action btn-delete" title="Excluir Cliente">
+                        <lucide-icon name="trash2" size="16"></lucide-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <lucide-icon name="user" size="48" class="empty-icon"></lucide-icon>
+          <p>Nenhum cliente encontrado</p>
+          <p class="empty-subtitle">Comece adicionando um novo cliente</p>
+        </div>
+      }
+    }
+  </div>
+</div>

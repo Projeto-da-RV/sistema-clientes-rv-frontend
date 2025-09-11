@@ -1,0 +1,222 @@
+.navbar {
+  background: var(--header-gradient);
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 70px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  a {
+    text-decoration: none;
+    
+    h3 {
+      color: white;
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+  }
+  
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    
+    span {
+      width: 25px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+  }
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 1rem;
+  
+  .nav-item {
+    position: relative;
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      transition: all var(--transition-normal);
+      cursor: pointer;
+      display: block;
+      font-weight: 500;
+      position: relative;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
+      }
+      
+      &.active {
+        background: var(--primary-orange);
+        box-shadow: 0 4px 12px rgba(255, 172, 0, 0.3);
+      }
+    }
+    
+    &.dropdown {
+      &:hover .dropdown-menu {
+        display: block;
+      }
+      
+      .dropdown-toggle::after {
+        content: '▼';
+        margin-left: 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
+    
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: var(--bg-card);
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      min-width: 180px;
+      padding: 0.75rem 0;
+      margin-top: 0.5rem;
+      list-style: none;
+      border: 1px solid var(--border-light);
+      
+      .dropdown-item {
+        color: var(--text-primary);
+        text-decoration: none;
+        padding: 0.75rem 1.25rem;
+        display: block;
+        transition: all var(--transition-normal);
+        font-weight: 500;
+        
+        &:hover {
+          background: var(--bg-hover);
+          color: var(--primary-orange);
+        }
+      }
+    }
+  }
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  .user-name {
+    color: white;
+    font-weight: 500;
+  }
+  
+  .btn-logout {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-brand .menu-toggle {
+    display: flex;
+  }
+  
+  .navbar-menu {
+    position: fixed;
+    top: 60px;
+    left: -100%;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background: white;
+    flex-direction: column;
+    padding: 2rem;
+    transition: left 0.3s;
+    
+    &.active {
+      left: 0;
+    }
+    
+    .navbar-nav {
+      flex-direction: column;
+      width: 100%;
+      
+      .nav-link {
+        color: #333;
+      }
+      
+      .dropdown-menu {
+        position: static;
+        display: none;
+        box-shadow: none;
+        background: #f8f9fa;
+        
+        &.show {
+          display: block;
+        }
+      }
+    }
+    
+    .navbar-user {
+      width: 100%;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ddd;
+      
+      .user-name {
+        color: #333;
+      }
+      
+      .btn-logout {
+        background: #dc3545;
+        color: white;
+        border: none;
+      }
+    }
+  }
+}

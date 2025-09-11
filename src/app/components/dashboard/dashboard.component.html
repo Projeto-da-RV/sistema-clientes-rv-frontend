@@ -1,0 +1,92 @@
+<div class="dashboard">
+  <h1>Dashboard</h1>
+  <p class="subtitle">Bem-vindo ao Sistema de Gestão RV Digital</p>
+  
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon clients">
+        <lucide-icon [img]="Users"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.clientes }}</h3>
+        <p>Clientes</p>
+        <a routerLink="/clientes" class="stat-link">
+          Ver todos 
+          <lucide-icon [img]="ArrowRight"></lucide-icon>
+        </a>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon contracts">
+        <lucide-icon [img]="FileText"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.contratos }}</h3>
+        <p>Contratos</p>
+        <a routerLink="/contratos" class="stat-link">
+          Ver todos 
+          <lucide-icon [img]="ArrowRight"></lucide-icon>
+        </a>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon services">
+        <lucide-icon [img]="Settings"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.servicos }}</h3>
+        <p>Serviços</p>
+        <a routerLink="/servicos" class="stat-link">
+          Ver todos 
+          <lucide-icon [img]="ArrowRight"></lucide-icon>
+        </a>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon categories">
+        <lucide-icon [img]="Tag"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.categorias }}</h3>
+        <p>Categorias</p>
+        <a routerLink="/categorias" class="stat-link">
+          Ver todas 
+          <lucide-icon [img]="ArrowRight"></lucide-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="quick-actions">
+    <h2>Ações Rápidas</h2>
+    <div class="actions-grid">
+      <a routerLink="/clientes/novo" class="action-card">
+        <div class="action-icon">
+          <lucide-icon [img]="Plus"></lucide-icon>
+        </div>
+        <span>Novo Cliente</span>
+      </a>
+      <a routerLink="/contratos/novo" class="action-card">
+        <div class="action-icon">
+          <lucide-icon [img]="FileText"></lucide-icon>
+        </div>
+        <span>Novo Contrato</span>
+      </a>
+      <a routerLink="/servicos/novo" class="action-card">
+        <div class="action-icon">
+          <lucide-icon [img]="Settings"></lucide-icon>
+        </div>
+        <span>Novo Serviço</span>
+      </a>
+      <a routerLink="/categorias/novo" class="action-card">
+        <div class="action-icon">
+          <lucide-icon [img]="Tag"></lucide-icon>
+        </div>
+        <span>Nova Categoria</span>
+      </a>
+    </div>
+  </div>
+</div>

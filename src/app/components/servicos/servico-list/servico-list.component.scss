@@ -1,0 +1,58 @@
+/* ===================================================================
+   Servico List - Estilos Específicos (Otimizado)
+   ================================================================ */
+
+.servico-list {
+  /* NOTA: Layouts base (page-header, filters-card, table-card, etc.) 
+     agora estão disponíveis globalmente através dos partials SCSS */
+  
+  // Customizações específicas para filtros de serviços (4 colunas)
+  .filters-card .filters {
+    // Grid específico para serviços (nome, categoria, status, ações)
+    grid-template-columns: 1fr 1fr auto auto;
+    
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    @media (max-width: 576px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  // Customizações específicas para tabela de serviços
+  .table-card .table tbody tr td {
+    // Nome do serviço em destaque
+    &:first-child {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    // Formatação específica para preços de serviços
+    .price-display {
+      font-weight: 600;
+      color: var(--success);
+      font-family: 'Monaco', 'Consolas', monospace;
+    }
+    
+    // Categoria de serviço com cor especial
+    .category-badge {
+      background: linear-gradient(135deg, var(--info) 0%, var(--secondary-cyan-hover) 100%);
+      color: white;
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    
+    // Descrição do serviço truncada
+    .service-description {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+  }
+}

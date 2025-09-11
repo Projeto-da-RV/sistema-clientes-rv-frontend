@@ -1,0 +1,101 @@
+<div class="categoria-list">
+  <div class="page-header">
+    <h1>Categorias</h1>
+    <a routerLink="/categorias/novo" class="btn btn-primary">
+      <lucide-icon name="plus" size="18"></lucide-icon>
+      Nova Categoria
+    </a>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters">
+      <div class="filter-group">
+        <label>Buscar por nome:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="filtroNome"
+          (keyup.enter)="filtrar()"
+          placeholder="Digite o nome">
+      </div>
+      
+      <div class="filter-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            [(ngModel)]="mostrarAtivas"
+            (change)="toggleMostrarAtivas()">
+          Mostrar apenas ativas
+        </label>
+      </div>
+      
+      <div class="filter-actions">
+        <button class="btn btn-search" (click)="filtrar()">
+          <lucide-icon name="filter" size="16"></lucide-icon>
+          Filtrar
+        </button>
+        <button class="btn btn-clear" (click)="limparFiltros()">
+          <lucide-icon name="search" size="16"></lucide-icon>
+          Limpar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (loading) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Carregando categorias...</p>
+      </div>
+    } @else {
+      @if (categoriasFiltradas.length > 0) {
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Benefícios</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (categoria of categoriasFiltradas; track categoria.id) {
+                <tr>
+                  <td>{{ categoria.id }}</td>
+                  <td>{{ categoria.nome }}</td>
+                  <td>{{ categoria.descricao }}</td>
+                  <td>{{ categoria.beneficios || '-' }}</td>
+                  <td>
+                    <span class="badge" [class.badge-success]="categoria.ativo" [class.badge-danger]="!categoria.ativo">
+                      {{ categoria.ativo ? 'Ativa' : 'Inativa' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="actions">
+                      <a [routerLink]="['/categorias', categoria.id, 'editar']" class="btn-action btn-edit" title="Editar Categoria">
+                        <lucide-icon name="edit" size="16"></lucide-icon>
+                      </a>
+                      <button (click)="deletarCategoria(categoria)" class="btn-action btn-delete" title="Excluir Categoria">
+                        <lucide-icon name="trash2" size="16"></lucide-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <lucide-icon name="tag" size="48" class="empty-icon"></lucide-icon>
+          <p>Nenhuma categoria encontrada</p>
+          <p class="empty-subtitle">Comece adicionando uma nova categoria</p>
+        </div>
+      }
+    }
+  </div>
+</div>

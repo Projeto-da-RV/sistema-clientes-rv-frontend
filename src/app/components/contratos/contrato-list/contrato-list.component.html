@@ -1,0 +1,100 @@
+<div class="contrato-list">
+  <div class="page-header">
+    <h1>
+      <lucide-icon name="file-text"></lucide-icon>
+      Contratos
+    </h1>
+    <a routerLink="/contratos/novo" class="btn btn-primary">
+      <lucide-icon name="plus"></lucide-icon>
+      Novo Contrato
+    </a>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters">
+      <div class="filter-group">
+        <label>Filtrar por status:</label>
+        <select 
+          class="form-control" 
+          [(ngModel)]="filtroStatus"
+          (change)="filtrarPorStatus()">
+          <option value="">Todos</option>
+          <option value="ATIVO">Ativo</option>
+          <option value="INATIVO">Inativo</option>
+          <option value="PENDENTE">Pendente</option>
+          <option value="CANCELADO">Cancelado</option>
+        </select>
+      </div>
+      
+      <div class="filter-actions">
+        <button class="btn btn-clear" (click)="limparFiltros()">
+          <lucide-icon name="filter"></lucide-icon>
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (loading) {
+      <div class="loading">
+        <lucide-icon name="loader" class="loading-icon"></lucide-icon>
+        <p>Carregando contratos...</p>
+      </div>
+    } @else {
+      @if (contratosFiltrados.length > 0) {
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Data Início</th>
+                <th>Data Fim</th>
+                <th>Status</th>
+                <th>Valor Total</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (contrato of contratosFiltrados; track contrato.id) {
+                <tr>
+                  <td>{{ contrato.id }}</td>
+                  <td>{{ getClienteNome(contrato) }}</td>
+                  <td>{{ contrato.dataInicio }}</td>
+                  <td>{{ contrato.dataFim || '-' }}</td>
+                  <td>
+                    <span class="badge" 
+                          [class.badge-success]="contrato.status === 'ATIVO'"
+                          [class.badge-warning]="contrato.status === 'PENDENTE'"
+                          [class.badge-danger]="contrato.status === 'CANCELADO'"
+                          [class.badge-secondary]="contrato.status === 'INATIVO'">
+                      {{ contrato.status || 'PENDENTE' }}
+                    </span>
+                  </td>
+                  <td>{{ formatarValor(contrato.valorTotal) }}</td>
+                  <td>
+                    <div class="actions">
+                      <a [routerLink]="['/contratos', contrato.id, 'editar']" class="btn-action btn-edit">
+                        <lucide-icon name="edit"></lucide-icon>
+                      </a>
+                      <button (click)="deletarContrato(contrato)" class="btn-action btn-delete">
+                        <lucide-icon name="trash-2"></lucide-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <lucide-icon name="inbox" class="empty-icon"></lucide-icon>
+          <p>Nenhum contrato encontrado</p>
+          <p class="empty-subtitle">Crie o primeiro contrato para começar</p>
+        </div>
+      }
+    }
+  </div>
+</div>

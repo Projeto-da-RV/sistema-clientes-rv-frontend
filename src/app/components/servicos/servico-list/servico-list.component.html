@@ -1,0 +1,116 @@
+<div class="servico-list">
+  <div class="page-header">
+    <h1>
+      <lucide-icon name="settings"></lucide-icon>
+      Serviços
+    </h1>
+    <a routerLink="/servicos/novo" class="btn btn-primary">
+      <lucide-icon name="plus"></lucide-icon>
+      Novo Serviço
+    </a>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters">
+      <div class="filter-group">
+        <label>Buscar por nome:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="filtroNome"
+          (keyup.enter)="buscarPorNome()"
+          placeholder="Digite o nome">
+      </div>
+      
+      <div class="filter-group">
+        <label>Buscar por categoria:</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="filtroCategoria"
+          (keyup.enter)="buscarPorCategoria()"
+          placeholder="Digite a categoria">
+      </div>
+      
+      <div class="filter-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            [(ngModel)]="mostrarAtivos"
+            (change)="toggleMostrarAtivos()">
+          Mostrar apenas ativos
+        </label>
+      </div>
+      
+      <div class="filter-actions">
+        <button class="btn btn-search" (click)="filtrar()">
+          <lucide-icon name="search"></lucide-icon>
+          Filtrar
+        </button>
+        <button class="btn btn-clear" (click)="limparFiltros()">
+          <lucide-icon name="filter"></lucide-icon>
+          Limpar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    @if (loading) {
+      <div class="loading">
+        <lucide-icon name="loader" class="loading-icon"></lucide-icon>
+        <p>Carregando serviços...</p>
+      </div>
+    } @else {
+      @if (servicosFiltrados.length > 0) {
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Categoria</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (servico of servicosFiltrados; track servico.id) {
+                <tr>
+                  <td>{{ servico.id }}</td>
+                  <td>{{ servico.nome }}</td>
+                  <td>{{ servico.descricao }}</td>
+                  <td>{{ formatarValor(servico.valor) }}</td>
+                  <td>{{ servico.categoria }}</td>
+                  <td>
+                    <span class="badge" [class.badge-success]="servico.ativo" [class.badge-danger]="!servico.ativo">
+                      {{ servico.ativo ? 'Ativo' : 'Inativo' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="actions">
+                      <a [routerLink]="['/servicos', servico.id, 'editar']" class="btn-action btn-edit">
+                        <lucide-icon name="edit"></lucide-icon>
+                      </a>
+                      <button (click)="deletarServico(servico)" class="btn-action btn-delete">
+                        <lucide-icon name="trash-2"></lucide-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <lucide-icon name="inbox" class="empty-icon"></lucide-icon>
+          <p>Nenhum serviço encontrado</p>
+          <p class="empty-subtitle">Crie o primeiro serviço para começar</p>
+        </div>
+      }
+    }
+  </div>
+</div>
