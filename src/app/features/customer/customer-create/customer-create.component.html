@@ -1,0 +1,23 @@
+<div class="container mt-5">
+  <h1>Adicionar Cliente</h1>
+
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Nome</label>
+      <input type="text" id="name" class="form-control" formControlName="name">
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" id="email" class="form-control" formControlName="email">
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Telefone</label>
+      <input type="text" id="phone" class="form-control" formControlName="phone">
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="customerForm.invalid">Salvar</button>
+    <a routerLink="/customers" class="btn btn-secondary ms-2">Cancelar</a>
+  </form>
+</div>

@@ -1,0 +1,38 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Clientes</h1>
+    <a routerLink="/customers/create" class="btn btn-primary">Adicionar Cliente</a>
+  </div>
+
+  <table class="table align-middle mb-0 bg-white">
+    <thead class="bg-light">
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of customers">
+        <td>
+          <p class="fw-normal mb-1">{{ customer.name }}</p>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{ customer.email }}</p>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{ customer.phone }}</p>
+        </td>
+        <td>
+          <a [routerLink]="['/customers', customer.id, 'edit']" class="btn btn-link btn-sm btn-rounded">
+            Editar
+          </a>
+          <button type="button" class="btn btn-danger btn-sm btn-rounded" (click)="deleteCustomer(customer.id)">
+            Excluir
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
