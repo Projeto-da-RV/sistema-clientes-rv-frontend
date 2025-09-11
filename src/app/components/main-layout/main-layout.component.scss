@@ -1,0 +1,26 @@
+.main-layout {
+  min-height: 100vh;
+  background: var(--bg-main);
+  display: flex;
+}
+
+.content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 2rem;
+  transition: all var(--transition-normal);
+  min-height: 100vh;
+
+  &.sidebar-collapsed {
+    margin-left: 70px;
+  }
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    padding: 1rem;
+
+    &.sidebar-collapsed {
+      margin-left: 0;
+    }
+  }
+}

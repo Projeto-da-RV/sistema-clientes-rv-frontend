@@ -1,0 +1,40 @@
+/* ===================================================================
+   Cliente Form - Estilos Específicos (Otimizado)
+   ================================================================ */
+
+.cliente-form {
+  /* NOTA: Estilos base de form-card, form-controls, buttons, etc. 
+     agora estão disponíveis globalmente através dos partials SCSS */
+  
+  // Customizações específicas para formulário de clientes
+  .form-card {
+    max-width: 800px;
+    margin: 0 auto;
+    
+    // Customização específica para campos de cliente
+    form {
+      .form-group {
+        // Campo de telefone com formatação especial
+        &.phone-field .form-control {
+          font-family: 'Monaco', 'Consolas', monospace;
+          letter-spacing: 0.5px;
+        }
+        
+        // Campo de email com validação visual
+        &.email-field .form-control:valid {
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2328a745' stroke-width='2'%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E");
+          background-position: right 0.75rem center;
+          background-repeat: no-repeat;
+          padding-right: 2.5rem;
+        }
+        
+        // Campos de endereço com espaçamento especial
+        &.address-section {
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid var(--border-light);
+        }
+      }
+    }
+  }
+}

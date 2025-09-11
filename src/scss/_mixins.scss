@@ -1,0 +1,554 @@
+/* ===================================================================
+   RV Digital - Mixins Reutilizáveis
+   ================================================================ */
+
+/* ===================================================================
+   BOTÕES - Mixins Base
+   ================================================================ */
+
+// Mixin base para todos os botões
+@mixin btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: none;
+  border-radius: $radius-md;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
+  user-select: none;
+
+  // Centralização universal dos ícones
+  lucide-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+// Tamanhos de botões
+@mixin btn-size($padding, $font-size: $font-size-sm, $icon-size: $icon-md) {
+  padding: $padding;
+  font-size: $font-size;
+
+  lucide-icon {
+    width: $icon-size;
+    height: $icon-size;
+  }
+}
+
+// Botão primário (laranja)
+@mixin btn-primary {
+  @include btn-base;
+  background-color: var(--primary-orange);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: var(--primary-orange-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 172, 0, 0.3);
+  }
+}
+
+// Botão secundário (ciano)
+@mixin btn-secondary {
+  @include btn-base;
+  background-color: var(--secondary-cyan);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: var(--secondary-cyan-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 206, 255, 0.3);
+  }
+}
+
+// Botão outline primário
+@mixin btn-outline-primary {
+  @include btn-base;
+  background-color: transparent;
+  color: var(--primary-orange);
+  border: 2px solid var(--primary-orange);
+
+  &:hover:not(:disabled) {
+    background-color: var(--primary-orange);
+    color: white;
+    transform: translateY(-1px);
+  }
+}
+
+// Botão outline secundário
+@mixin btn-outline-secondary {
+  @include btn-base;
+  background-color: transparent;
+  color: var(--secondary-cyan);
+  border: 2px solid var(--secondary-cyan);
+
+  &:hover:not(:disabled) {
+    background-color: var(--secondary-cyan);
+    color: white;
+    transform: translateY(-1px);
+  }
+}
+
+// Botão de perigo
+@mixin btn-danger {
+  @include btn-base;
+  background-color: var(--danger);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background-color: var(--danger-hover);
+    transform: translateY(-1px);
+  }
+}
+
+// Botão claro
+@mixin btn-light {
+  @include btn-base;
+  background-color: var(--bg-light);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+
+  &:hover:not(:disabled) {
+    background-color: var(--bg-light-hover);
+    transform: translateY(-1px);
+  }
+}
+
+// Botões de ação (pequenos, para tabelas)
+@mixin btn-action($bg-color: transparent, $text-color: var(--text-secondary), $hover-bg: var(--bg-hover)) {
+  @include btn-base;
+  @include btn-size(0.5rem, $font-size-sm, $icon-sm);
+  background: $bg-color;
+  color: $text-color;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  gap: 0.375rem;
+  min-height: 32px;
+  width: 36px;
+  height: 36px;
+
+  &:hover:not(:disabled) {
+    background-color: $hover-bg;
+    border-color: var(--border-light);
+  }
+}
+
+// Variações específicas de botões de ação
+@mixin btn-action-edit {
+  @include btn-action(var(--warning), white, var(--warning-hover));
+  box-shadow: var(--shadow-sm);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+@mixin btn-action-delete {
+  @include btn-action(var(--danger), white, var(--danger-hover));
+  box-shadow: var(--shadow-sm);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* ===================================================================
+   FORMS - Mixins de Formulários
+   ================================================================ */
+
+// Controle de formulário base
+@mixin form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-light);
+  border-radius: $radius-md;
+  font-size: $font-size-base;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 0.2rem rgba(255, 172, 0, 0.25);
+  }
+
+  &.is-invalid {
+    border-color: var(--danger);
+
+    &:focus {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+  }
+
+  &.is-valid {
+    border-color: var(--success);
+
+    &:focus {
+      border-color: var(--success);
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+  }
+}
+
+// Labels de formulário
+@mixin form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: $font-weight-medium;
+
+  lucide-icon {
+    width: $icon-sm;
+    height: $icon-sm;
+    color: var(--primary-orange);
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+}
+
+// Select customizado
+@mixin form-select {
+  @include form-control;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+// Feedback de validação
+@mixin form-feedback($color) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $color;
+  font-size: $font-size-sm;
+  margin-top: 0.25rem;
+  font-weight: $font-weight-medium;
+}
+
+/* ===================================================================
+   CARDS - Mixins de Cartões
+   ================================================================ */
+
+// Card base
+@mixin card-base {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: $radius-lg;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// Header de card com gradiente
+@mixin card-header {
+  background: var(--header-gradient);
+  color: white;
+  padding: $spacing-xl;
+  border-radius: $radius-lg $radius-lg 0 0;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    color: white;
+  }
+}
+
+// Corpo do card
+@mixin card-body {
+  padding: $spacing-xl;
+}
+
+// Card de filtros
+@mixin filters-card {
+  @include card-base;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-2xl;
+}
+
+// Card de tabela
+@mixin table-card {
+  @include card-base;
+  padding: $spacing-xl;
+}
+
+/* ===================================================================
+   LOADING STATES - Estados de Carregamento
+   ================================================================ */
+
+// Spinner base
+@mixin spinner($size: 40px, $border-width: 3px, $color: var(--primary-orange)) {
+  width: $size;
+  height: $size;
+  border: $border-width solid var(--border-light);
+  border-top: $border-width solid $color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  &.spinner-small {
+    width: #{$size * 0.5};
+    height: #{$size * 0.5};
+    border-width: #{$border-width - 1px};
+  }
+
+  &.spinner-large {
+    width: #{$size * 1.5};
+    height: #{$size * 1.5};
+    border-width: #{$border-width + 1px};
+  }
+}
+
+// Estado de carregamento centralizado
+@mixin loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-3xl;
+  text-align: center;
+
+  p {
+    color: var(--text-secondary);
+    margin-top: $spacing-lg;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Loading inline para botões
+@mixin spinner-inline($size: 16px) {
+  width: $size;
+  height: $size;
+  border: 2px solid #ffffff50;
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* ===================================================================
+   TABLES - Mixins de Tabelas
+   ================================================================ */
+
+// Container responsivo de tabela
+@mixin table-responsive {
+  overflow-x: auto;
+}
+
+// Tabela base
+@mixin table-base {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    tr {
+      th {
+        text-align: left;
+        padding: $spacing-lg;
+        border-bottom: 2px solid var(--border-medium);
+        color: var(--text-secondary);
+        font-weight: $font-weight-semibold;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid var(--border-light);
+      transition: all var(--transition-normal);
+
+      &:hover {
+        background: var(--bg-hover);
+      }
+
+      td {
+        padding: $spacing-lg;
+      }
+    }
+  }
+}
+
+/* ===================================================================
+   STATES - Estados Visuais
+   ================================================================ */
+
+// Estado vazio
+@mixin empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+
+  .empty-icon {
+    color: var(--text-muted);
+    margin-bottom: $spacing-lg;
+    opacity: 0.5;
+
+    lucide-icon {
+      width: $icon-3xl;
+      height: $icon-3xl;
+    }
+  }
+
+  p {
+    margin: 0.5rem 0;
+
+    &:first-of-type {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: var(--text-primary);
+    }
+  }
+
+  .empty-subtitle {
+    font-size: $font-size-sm;
+    color: var(--text-muted);
+  }
+}
+
+// Badges/distintivos
+@mixin badge($bg-color, $text-color: white) {
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  background: $bg-color;
+  color: $text-color;
+}
+
+// Estado de sucesso
+@mixin success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: $spacing-2xl;
+  background: var(--success-light);
+  border-radius: $radius-lg;
+  border: 1px solid var(--success);
+
+  p {
+    color: var(--success);
+    margin-top: $spacing-lg;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Estado de erro
+@mixin error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: $spacing-2xl;
+  background: var(--danger-light);
+  border-radius: $radius-lg;
+  border: 1px solid var(--danger);
+
+  p {
+    color: var(--danger);
+    margin-top: $spacing-lg;
+    font-weight: $font-weight-medium;
+  }
+}
+
+/* ===================================================================
+   LAYOUTS - Mixins de Layout
+   ================================================================ */
+
+// Header de página
+@mixin page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-2xl;
+
+  h1 {
+    color: var(--text-primary);
+    margin: 0;
+  }
+}
+
+// Grid de filtros
+@mixin filters-grid($columns: 3) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr) auto;
+  gap: $spacing-lg;
+  align-items: end;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Ações de filtro
+@mixin filter-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ===================================================================
+   RESPONSIVIDADE - Mixins Media Queries
+   ================================================================ */
+
+@mixin mobile {
+  @media (max-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+/* ===================================================================
+   ANIMAÇÕES
+   ================================================================ */
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,41 @@
+/* ===================================================================
+   Cliente List - Estilos Específicos (Otimizado)
+   ================================================================ */
+
+.cliente-list {
+  /* NOTA: Layouts base (page-header, filters-card, table-card, etc.) 
+     agora estão disponíveis globalmente através dos partials SCSS */
+  
+  // Customizações específicas para filtros de clientes
+  .filters-card .filters {
+    // Grid específico para filtros de clientes (nome, status, ações)
+    grid-template-columns: 1fr 1fr auto;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  // Customizações específicas para tabela de clientes
+  .table-card .table tbody tr td {
+    // Nome do cliente em destaque
+    &:first-child {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    // Formatação específica para dados de contato
+    .contact-info {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+    
+    // Formatação para dados de endereço em cards de clientes
+    .address-summary {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+      font-style: italic;
+    }
+  }
+}
