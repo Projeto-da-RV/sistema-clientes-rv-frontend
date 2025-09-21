@@ -35,6 +35,13 @@ export class NotificationService {
   }
 
   /**
+   * Alias para success - mantém compatibilidade
+   */
+  showSuccess(message: string, title?: string): Promise<SweetAlertResult> {
+    return this.success(message, title);
+  }
+
+  /**
    * Exibe notificação de erro
    */
   error(message: string, title?: string): Promise<SweetAlertResult> {
@@ -45,6 +52,13 @@ export class NotificationService {
       confirmButtonText: 'OK',
       confirmButtonColor: '#dc3545'
     });
+  }
+
+  /**
+   * Alias para error - mantém compatibilidade
+   */
+  showError(message: string, title?: string): Promise<SweetAlertResult> {
+    return this.error(message, title);
   }
 
   /**
@@ -93,26 +107,43 @@ export class NotificationService {
   }
 
   /**
+   * Alias para confirm - mantém compatibilidade com diferentes assinaturas
+   */
+  showConfirm(title: string, text: string, icon?: SweetAlertIcon): Promise<SweetAlertResult> {
+    return Swal.fire({
+      icon: icon || 'question',
+      title: title,
+      text: text,
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      reverseButtons: true
+    });
+  }
+
+  /**
    * Diálogo específico para confirmação de exclusão
    */
   confirmDelete(itemName?: string): Promise<boolean> {
     const text = itemName 
       ? `Tem certeza que deseja excluir "${itemName}"? Esta ação não pode ser desfeita.`
       : 'Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.';
-      
+
     return this.confirm({
       title: 'Confirmar Exclusão',
-      text,
-      confirmButtonText: 'Excluir',
-      cancelButtonText: 'Cancelar',
-      icon: 'warning'
+      text: text,
+      icon: 'warning',
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar'
     });
   }
 
   /**
-   * Notificação toast (pequena, no canto da tela)
+   * Exibe toast de notificação pequena
    */
-  toast(message: string, icon: SweetAlertIcon = 'success'): void {
+  toast(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info'): void {
     const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
@@ -126,18 +157,20 @@ export class NotificationService {
     });
 
     Toast.fire({
-      icon,
+      icon: type,
       title: message
     });
   }
 
   /**
-   * Loading com possibilidade de cancelamento
+   * Exibe loading
    */
-  showLoading(title?: string): void {
+  showLoading(message: string = 'Carregando...'): void {
     Swal.fire({
-      title: title || 'Carregando...',
+      title: message,
       allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
       didOpen: () => {
         Swal.showLoading();
       }
@@ -145,7 +178,7 @@ export class NotificationService {
   }
 
   /**
-   * Fecha qualquer diálogo aberto
+   * Fecha qualquer modal aberto
    */
   close(): void {
     Swal.close();

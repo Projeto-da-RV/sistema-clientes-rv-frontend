@@ -1,83 +1,194 @@
-<div class="categoria-form">
-  <div class="form-card">
-    <div class="form-header">
-      <lucide-icon name="tag" class="header-icon"></lucide-icon>
-      <h2>{{ isEditMode ? 'Editar' : 'Nova' }} Categoria</h2>
+<div class="page-container">
+  <!-- Header da página -->
+  <div class="page-header">
+    <div class="page-title">
+      <div>
+        <h1>{{ isEdicao ? 'Editar Categoria' : 'Nova Categoria' }}</h1>
+        <span class="subtitle">
+          {{ isEdicao ? 'Atualizar informações da categoria' : 'Adicionar nova categoria' }}
+        </span>
+      </div>
     </div>
-    
+    <button class="btn-back" (click)="voltar()">
+      Voltar
+    </button>
+  </div>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/categorias" class="breadcrumb-item">
+      Categorias
+    </a>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-item active">
+      {{ isEdicao ? 'Editar' : 'Nova Categoria' }}
+    </span>
+  </nav>
+
+  <!-- Container do formulário -->
+  <div class="form-container">
     <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="nome">Nome *</label>
-        <input 
-          type="text" 
-          id="nome"
-          class="form-control"
-          formControlName="nome"
-          [class.is-invalid]="isFieldInvalid('nome')"
-          placeholder="Digite o nome da categoria">
-        @if (isFieldInvalid('nome')) {
-          <div class="invalid-feedback">
-            <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-            {{ getFieldError('nome') }}
+      
+      <!-- Card de informações principais -->
+      <div class="form-card">
+        <div class="form-header">
+          <h3>Informações da Categoria</h3>
+        </div>
+
+        <div class="form-content">
+          <!-- Nome da categoria -->
+          <div class="form-group full-width">
+            <label for="nome" class="form-label required">
+              Nome da Categoria
+            </label>
+            <input
+              id="nome"
+              type="text"
+              class="form-control"
+              [class.error]="isFieldInvalid('nome')"
+              formControlName="nome"
+              placeholder="Digite o nome da categoria"
+              maxlength="100">
+            
+            @if (isFieldInvalid('nome')) {
+              <div class="error-message">
+                @if (categoriaForm.get('nome')?.errors?.['required']) {
+                  O nome da categoria é obrigatório
+                }
+                @if (categoriaForm.get('nome')?.errors?.['minlength']) {
+                  O nome deve ter pelo menos 3 caracteres
+                }
+              </div>
+            }
           </div>
-        }
-      </div>
-      
-      <div class="form-group">
-        <label for="descricao">Descrição *</label>
-        <textarea 
-          id="descricao"
-          class="form-control"
-          formControlName="descricao"
-          [class.is-invalid]="isFieldInvalid('descricao')"
-          rows="3"
-          placeholder="Descreva a categoria"></textarea>
-        @if (isFieldInvalid('descricao')) {
-          <div class="invalid-feedback">
-            <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-            {{ getFieldError('descricao') }}
+
+          <!-- Descrição -->
+          <div class="form-group full-width">
+            <label for="descricao" class="form-label required">
+              Descrição
+            </label>
+            <textarea
+              id="descricao"
+              class="form-control textarea"
+              [class.error]="isFieldInvalid('descricao')"
+              formControlName="descricao"
+              placeholder="Descreva a categoria"
+              rows="4"
+              maxlength="500"></textarea>
+            
+            <div class="field-info">
+              <span class="char-count">
+                {{ categoriaForm.get('descricao')?.value?.length || 0 }}/500 caracteres
+              </span>
+            </div>
+
+            @if (isFieldInvalid('descricao')) {
+              <div class="error-message">
+                A descrição é obrigatória
+              </div>
+            }
           </div>
-        }
+
+          <!-- Benefícios -->
+          <div class="form-group full-width">
+            <label for="beneficios" class="form-label">
+              Benefícios
+              <span class="optional">(opcional)</span>
+            </label>
+            <textarea
+              id="beneficios"
+              class="form-control textarea"
+              formControlName="beneficios"
+              placeholder="Liste os benefícios desta categoria"
+              rows="3"
+              maxlength="300"></textarea>
+            
+            <div class="field-info">
+              <span class="char-count">
+                {{ categoriaForm.get('beneficios')?.value?.length || 0 }}/300 caracteres
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      <div class="form-group">
-        <label for="beneficios">Benefícios</label>
-        <textarea 
-          id="beneficios"
-          class="form-control"
-          formControlName="beneficios"
-          rows="3"
-          placeholder="Liste os benefícios desta categoria (opcional)"></textarea>
+
+      <!-- Card de configurações -->
+      <div class="form-card">
+        <div class="form-header">
+          <h3>Configurações</h3>
+        </div>
+
+        <div class="form-content">
+          <div class="form-row">
+            <div class="form-group">
+              <div class="checkbox-group">
+                <div class="custom-checkbox-large">
+                  <input
+                    id="ativo"
+                    type="checkbox"
+                    formControlName="ativo">
+                  <span class="checkmark-large"></span>
+                </div>
+                <div class="checkbox-content">
+                  <label for="ativo" class="checkbox-label">
+                    Categoria Ativa
+                  </label>
+                  <span class="checkbox-description">
+                    Categorias ativas ficam disponíveis para seleção
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      <div class="form-group checkbox-group">
-        <label>
-          <input 
-            type="checkbox" 
-            formControlName="ativo">
-          Categoria Ativa
-        </label>
-      </div>
-      
+
+      <!-- Card de metadados (apenas para edição) -->
+      @if (isEdicao && categoria) {
+        <div class="metadata-card">
+          <div class="metadata-header">
+            <h4>Informações do Sistema</h4>
+          </div>
+          
+          <div class="metadata-grid">
+            <div class="metadata-item">
+              <span class="metadata-label">ID:</span>
+              <span class="metadata-value">{{ categoria.id }}</span>
+            </div>
+            
+            @if (categoria.createdAt) {
+              <div class="metadata-item">
+                <span class="metadata-label">Criado em:</span>
+                <span class="metadata-value">{{ categoria.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+            
+            @if (categoria.updatedAt) {
+              <div class="metadata-item">
+                <span class="metadata-label">Atualizado em:</span>
+                <span class="metadata-value">{{ categoria.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Botões de ação -->
       <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn btn-secondary"
-          (click)="cancelar()"
-          [disabled]="loading">
-          <lucide-icon name="arrow-left"></lucide-icon>
+        <button type="button" class="btn-cancel" (click)="voltar()">
           Cancelar
         </button>
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="loading">
+        
+        <button type="submit" 
+                class="btn-save" 
+                [disabled]="categoriaForm.invalid || loading"
+                [class.loading]="loading"
+                [class.disabled]="categoriaForm.invalid || loading">
           @if (loading) {
-            <lucide-icon name="loader" class="loading-icon-small"></lucide-icon>
-            Salvando...
+            <div class="spinner-small"></div>
+            <span>Salvando...</span>
           } @else {
-            <lucide-icon name="save"></lucide-icon>
-            {{ isEditMode ? 'Atualizar' : 'Cadastrar' }}
+            <span>{{ isEdicao ? 'Atualizar' : 'Cadastrar' }} Categoria</span>
           }
         </button>
       </div>

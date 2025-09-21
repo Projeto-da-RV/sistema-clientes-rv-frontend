@@ -1,116 +1,259 @@
 <div class="servico-list">
+  <!-- Header da página -->
   <div class="page-header">
-    <h1>
-      <lucide-icon name="settings"></lucide-icon>
-      Serviços
-    </h1>
-    <a routerLink="/servicos/novo" class="btn btn-primary">
-      <lucide-icon name="plus"></lucide-icon>
-      Novo Serviço
+    <div class="header-left">
+      <div class="title-group">
+        <h1>Serviços</h1>
+        <span class="subtitle">Gestão de Serviços</span>
+      </div>
+    </div>
+    <a routerLink="/servicos/novo" class="btn-novo">
+      <span>Novo Serviço</span>
     </a>
   </div>
 
-  <div class="filters-card">
-    <div class="filters">
-      <div class="filter-group">
-        <label>Buscar por nome:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          [(ngModel)]="filtroNome"
-          (keyup.enter)="buscarPorNome()"
-          placeholder="Digite o nome">
+  <!-- Card de Filtros -->
+  <div class="filtros-container">
+    <div class="filtros-header">
+      <h3>Filtros de Busca</h3>
+    </div>
+    
+    <div class="filtros-content">
+      <div class="filtros-inputs">
+        <!-- Campo de busca por nome -->
+        <div class="input-group">
+          <label>Buscar por nome</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              class="input-field" 
+              [(ngModel)]="filtroNome"
+              (keyup.enter)="buscarPorNome()"
+              (input)="aplicarFiltros()"
+              placeholder="Digite o nome do serviço">
+          </div>
+        </div>
+        
+        <!-- Campo de busca por categoria -->
+        <div class="input-group">
+          <label>Buscar por categoria</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              class="input-field" 
+              [(ngModel)]="filtroCategoria"
+              (keyup.enter)="buscarPorCategoria()"
+              (input)="aplicarFiltros()"
+              placeholder="Digite a categoria">
+          </div>
+        </div>
+        
+        <!-- Campo de filtro especial -->
+        <div class="input-group">
+          <label>Filtros Especiais</label>
+          <div class="checkbox-wrapper">
+            <input 
+              type="checkbox" 
+              id="mostrarAtivos"
+              [(ngModel)]="mostrarAtivos"
+              (change)="toggleMostrarAtivos()">
+            <label for="mostrarAtivos" class="checkbox-label">
+              Apenas serviços ativos
+            </label>
+          </div>
+        </div>
       </div>
       
-      <div class="filter-group">
-        <label>Buscar por categoria:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          [(ngModel)]="filtroCategoria"
-          (keyup.enter)="buscarPorCategoria()"
-          placeholder="Digite a categoria">
-      </div>
-      
-      <div class="filter-group">
-        <label class="checkbox-label">
-          <input 
-            type="checkbox" 
-            [(ngModel)]="mostrarAtivos"
-            (change)="toggleMostrarAtivos()">
-          Mostrar apenas ativos
-        </label>
-      </div>
-      
-      <div class="filter-actions">
-        <button class="btn btn-search" (click)="filtrar()">
-          <lucide-icon name="search"></lucide-icon>
-          Filtrar
+      <!-- Botões de ação -->
+      <div class="filtros-actions">
+        <button class="btn-filtrar" (click)="filtrar()">
+          <span>Filtrar</span>
         </button>
-        <button class="btn btn-clear" (click)="limparFiltros()">
-          <lucide-icon name="filter"></lucide-icon>
-          Limpar
+        
+        <button class="btn-limpar" (click)="limparFiltros()">
+          <span>Limpar</span>
         </button>
       </div>
     </div>
   </div>
 
-  <div class="table-card">
+  <!-- Contador de resultados -->
+  <div class="resultados-info">
+    <div class="contador">
+      <span>{{ contadorResultados }}</span>
+    </div>
+  </div>
+
+  <!-- Tabela de resultados -->
+  <div class="tabela-container">
     @if (loading) {
-      <div class="loading">
-        <lucide-icon name="loader" class="loading-icon"></lucide-icon>
+      <div class="loading-wrapper">
+        <div class="loading-spinner"></div>
         <p>Carregando serviços...</p>
       </div>
+    } @else if (servicosFiltrados.length === 0) {
+      <div class="empty-wrapper">
+        <h3>Nenhum serviço encontrado</h3>
+        <p>{{ servicos.length === 0 ? 'Você ainda não possui serviços cadastrados.' : 'Não há serviços que correspondam aos filtros selecionados.' }}</p>
+        
+        @if (servicos.length === 0) {
+          <!-- Se não há serviços no total, mostra botão para cadastrar -->
+          <a routerLink="/servicos/novo" class="btn-novo">
+            <span>Cadastrar Primeiro Serviço</span>
+          </a>
+        } @else {
+          <!-- Se há serviços mas filtro não encontrou, mostra botão para limpar filtros -->
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <span>Limpar Filtros</span>
+          </button>
+        }
+      </div>
     } @else {
-      @if (servicosFiltrados.length > 0) {
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th>Valor</th>
-                <th>Categoria</th>
-                <th>Status</th>
-                <th>Ações</th>
+      <!-- Tabela Desktop -->
+      <div class="tabela-desktop">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th class="col-id">
+                <div class="th-content">
+                  <span>ID</span>
+                </div>
+              </th>
+              <th class="col-nome">
+                <div class="th-content">
+                  <span>Nome</span>
+                </div>
+              </th>
+              <th class="col-descricao">
+                <div class="th-content">
+                  <span>Descrição</span>
+                </div>
+              </th>
+              <th class="col-categoria">
+                <div class="th-content">
+                  <span>Categoria</span>
+                </div>
+              </th>
+              <th class="col-valor">
+                <div class="th-content">
+                  <span>Valor</span>
+                </div>
+              </th>
+              <th class="col-status">
+                <div class="th-content">
+                  <span>Status</span>
+                </div>
+              </th>
+              <th class="col-actions">
+                <div class="th-content">
+                  <span>Ações</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (servico of servicosFiltrados; track servico.id) {
+              <tr class="tabela-row">
+                <td class="col-id">
+                  <span class="id-badge">{{ servico.id }}</span>
+                </td>
+                <td class="col-nome">
+                  <div class="servico-nome">
+                    <strong>{{ servico.nome }}</strong>
+                  </div>
+                </td>
+                <td class="col-descricao">
+                  <span class="descricao-texto" [title]="servico.descricao">
+                    {{ servico.descricao }}
+                  </span>
+                </td>
+                <td class="col-categoria">
+                  <span class="categoria-texto">
+                    {{ servico.categoria || '-' }}
+                  </span>
+                </td>
+                <td class="col-valor">
+                  <span class="valor-texto">
+                    {{ servico.valor | currency:'BRL':'symbol':'1.2-2' }}
+                  </span>
+                </td>
+                <td class="col-status">
+                  <span class="status-badge" 
+                        [class.ativo]="servico.ativo"
+                        [class.inativo]="!servico.ativo">
+                    <span>{{ servico.ativo ? 'Ativo' : 'Inativo' }}</span>
+                  </span>
+                </td>
+                <td class="col-actions">
+                  <div class="action-buttons">
+                    <a [routerLink]="['/servicos', servico.id, 'editar']" 
+                       class="btn-action btn-editar"
+                       title="Editar dados do serviço"
+                       attr.aria-label="Editar serviço {{ servico.nome }}">
+                      <span class="action-text">Editar</span>
+                    </a>
+                    <button class="btn-action btn-excluir" 
+                            (click)="confirmarExclusao(servico)"
+                            title="Excluir serviço permanentemente"
+                            attr.aria-label="Excluir serviço {{ servico.nome }}">
+                      <span class="action-text">Excluir</span>
+                    </button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              @for (servico of servicosFiltrados; track servico.id) {
-                <tr>
-                  <td>{{ servico.id }}</td>
-                  <td>{{ servico.nome }}</td>
-                  <td>{{ servico.descricao }}</td>
-                  <td>{{ formatarValor(servico.valor) }}</td>
-                  <td>{{ servico.categoria }}</td>
-                  <td>
-                    <span class="badge" [class.badge-success]="servico.ativo" [class.badge-danger]="!servico.ativo">
-                      {{ servico.ativo ? 'Ativo' : 'Inativo' }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <a [routerLink]="['/servicos', servico.id, 'editar']" class="btn-action btn-edit">
-                        <lucide-icon name="edit"></lucide-icon>
-                      </a>
-                      <button (click)="deletarServico(servico)" class="btn-action btn-delete">
-                        <lucide-icon name="trash-2"></lucide-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Cards Mobile -->
+      <div class="cards-mobile">
+        @for (servico of servicosFiltrados; track servico.id) {
+          <div class="servico-card">
+            <div class="card-header">
+              <div class="servico-info">
+                <span class="id-badge">{{ servico.id }}</span>
+                <h4 class="servico-nome">{{ servico.nome }}</h4>
+              </div>
+              <div class="status-badge" 
+                   [class.ativo]="servico.ativo"
+                   [class.inativo]="!servico.ativo">
+                <span>{{ servico.ativo ? 'Ativo' : 'Inativo' }}</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div class="info-item">
+                <span class="label">Descrição:</span>
+                <span class="value">{{ servico.descricao }}</span>
+              </div>
+              
+              @if (servico.categoria) {
+                <div class="info-item">
+                  <span class="label">Categoria:</span>
+                  <span class="value">{{ servico.categoria }}</span>
+                </div>
               }
-            </tbody>
-          </table>
-        </div>
-      } @else {
-        <div class="empty-state">
-          <lucide-icon name="inbox" class="empty-icon"></lucide-icon>
-          <p>Nenhum serviço encontrado</p>
-          <p class="empty-subtitle">Crie o primeiro serviço para começar</p>
-        </div>
-      }
+              
+              <div class="info-item">
+                <span class="label">Valor:</span>
+                <span class="value valor-destaque">{{ servico.valor | currency:'BRL':'symbol':'1.2-2' }}</span>
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <a [routerLink]="['/servicos', servico.id, 'editar']" 
+                 class="btn-action btn-editar">
+                <span>Editar</span>
+              </a>
+              <button class="btn-action btn-excluir" 
+                      (click)="confirmarExclusao(servico)">
+                <span>Excluir</span>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     }
   </div>
 </div>

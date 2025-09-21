@@ -1,134 +1,222 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, FileText, Save, ArrowLeft } from 'lucide-angular';
-import { BaseCrudFormComponent } from '../../../shared/components/base-crud-form.component';
-import { NotificationService } from '../../../shared/services/notification.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Contrato } from '../../../models/contrato.model';
 import { ContratoService } from '../../../services/contrato.service';
 import { ClienteService } from '../../../services/cliente.service';
-import { FormConfig, FormFieldType, CrudFormService } from '../../../shared/interfaces/form-config.interface';
+import { Cliente } from '../../../models/cliente.model';
+import { NotificationService } from '../../../shared/services/notification.service';
 
-/**
- * Componente de formulário de contratos
- * Refatorado para usar BaseCrudFormComponent eliminando duplicação de código
- * Redução de ~80% no código comparado à versão anterior
- */
 @Component({
   selector: 'app-contrato-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   templateUrl: './contrato-form.component.html',
-  styleUrl: './contrato-form.component.scss'
+  styleUrl: './contrato-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.Default // Força estratégia padrão
 })
-export class ContratoFormComponent extends BaseCrudFormComponent<Contrato> implements OnInit {
+export class ContratoFormComponent implements OnInit {
   
-  // Required implementation of abstract config property
-  protected config: FormConfig<Contrato> = {
-    entityName: 'Contrato',
-    entityNamePlural: 'Contratos',
-    baseRoute: '/contratos',
-    fields: [
-      {
-        key: 'cliente',
-        label: 'Cliente',
-        type: FormFieldType.SELECT,
-        required: true,
-        validators: [Validators.required]
-      },
-      {
-        key: 'dataInicio',
-        label: 'Data de Início',
-        type: FormFieldType.DATE,
-        required: true,
-        validators: [Validators.required]
-      },
-      {
-        key: 'dataFim',
-        label: 'Data de Fim',
-        type: FormFieldType.DATE
-      },
-      {
-        key: 'status',
-        label: 'Status',
-        type: FormFieldType.SELECT,
-        defaultValue: 'PENDENTE',
-        options: [
-          { value: 'PENDENTE', label: 'Pendente' },
-          { value: 'ATIVO', label: 'Ativo' },
-          { value: 'CONCLUIDO', label: 'Concluído' },
-          { value: 'CANCELADO', label: 'Cancelado' }
-        ]
-      },
-      {
-        key: 'observacoes',
-        label: 'Observações',
-        type: FormFieldType.TEXTAREA,
-        placeholder: 'Digite suas observações',
-        fieldSpecificConfig: {
-          rows: 3
-        }
-      }
-    ],
-    relatedData: [
-      {
-        propertyName: 'clientes',
-        loadFunction: () => this.clienteService.listarTodos(),
-        loadOnInit: true
-      }
-    ],
-    beforeSave: (formValue, isEditMode) => {
-      return {
-        ...formValue,
-        cliente: { id: formValue.cliente.id || formValue.cliente }
-      };
-    },
-    createTitle: 'Novo Contrato',
-    editTitle: 'Editar Contrato'
-  };
-
-  // Legacy properties for template compatibility
-  clientes: any[] = [];
-  get contratoForm() { return this.entityForm; }
-  get contratoId() { return this.entityId; }
+  contratoForm!: FormGroup;
+  loading = false;
+  isEdicao = false;
+  contrato: Contrato | null = null;
+  contratoId: number | null = null;
+  clientes: Cliente[] = [];
 
   constructor(
+    private fb: FormBuilder,
     private contratoService: ContratoService,
     private clienteService: ClienteService,
-    fb: FormBuilder,
-    router: Router,
-    route: ActivatedRoute,
-    cdr: ChangeDetectorRef,
-    notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone // Adiciona NgZone para forçar detecção
   ) {
-    super(fb, router, route, cdr, notificationService);
+    this.initializeForm();
   }
 
-  protected get entityService(): CrudFormService<Contrato> {
-    return this.contratoService;
+  ngOnInit(): void {
+    this.contratoId = Number(this.route.snapshot.paramMap.get('id'));
+    this.isEdicao = !!this.contratoId && !isNaN(this.contratoId);
+
+    this.carregarClientes();
+    
+    if (this.isEdicao) {
+      this.carregarContrato();
+    }
   }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    // Load clientes for template compatibility
-    this.loadClientes();
+  private initializeForm(): void {
+    this.contratoForm = this.fb.group({
+      cliente: [null, [Validators.required]],
+      dataInicio: ['', [Validators.required]],
+      dataFim: [''],
+      status: ['PENDENTE'],
+      valorTotal: [''],
+      observacoes: ['', [Validators.maxLength(1000)]]
+    });
   }
 
-  private loadClientes(): void {
+  private carregarClientes(): void {
     this.clienteService.listarTodos().subscribe({
-      next: (data) => {
-        this.clientes = data;
-        this.cdr.markForCheck();
+      next: (clientes) => {
+        this.clientes = clientes.filter(cliente => cliente.ativo);
       },
       error: (error) => {
-        console.error('Erro ao carregar clientes', error);
+        console.error('Erro ao carregar clientes:', error);
+        this.notificationService.showError('Erro ao carregar clientes');
       }
     });
   }
 
-  // Legacy methods for template compatibility
-  marcarCamposInvalidos(): void {
-    this.markAllFieldsAsTouched();
+  private carregarContrato(): void {
+    if (!this.contratoId) return;
+
+    this.loading = true;
+    
+    this.contratoService.buscarPorId(this.contratoId).subscribe({
+      next: (contrato) => {
+        // Força execução dentro da zona do Angular
+        this.ngZone.run(() => {
+          this.contrato = contrato;
+          this.preencherFormulario(contrato);
+          this.loading = false;
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar contrato:', error);
+        this.ngZone.run(() => {
+          this.notificationService.showError('Erro ao carregar contrato');
+          this.loading = false;
+          this.voltar();
+        });
+      }
+    });
+  }
+
+  private preencherFormulario(contrato: Contrato): void {
+    // Encontrar o cliente correspondente na lista carregada
+    const clienteEncontrado = this.clientes.find(c => {
+      if (typeof contrato.cliente === 'object' && contrato.cliente && 'id' in contrato.cliente) {
+        return c.id === contrato.cliente.id;
+      }
+      return false;
+    });
+
+    this.contratoForm.patchValue({
+      cliente: clienteEncontrado || null,
+      dataInicio: contrato.dataInicio,
+      dataFim: contrato.dataFim || '',
+      status: contrato.status || 'PENDENTE',
+      valorTotal: contrato.valorTotal || '',
+      observacoes: contrato.observacoes || ''
+    });
+  }
+
+  onSubmit(): void {
+    if (this.contratoForm.invalid) {
+      this.markAllFieldsAsTouched();
+      this.notificationService.showError('Por favor, corrija os erros no formulário');
+      return;
+    }
+
+    this.loading = true;
+    const contratoData = this.prepareContratoData();
+
+    const operation = this.isEdicao 
+      ? this.contratoService.atualizar(this.contratoId!, contratoData)
+      : this.contratoService.criar(contratoData);
+
+    operation.subscribe({
+      next: (resultado) => {
+        const mensagem = this.isEdicao 
+          ? 'Contrato atualizado com sucesso!' 
+          : 'Contrato cadastrado com sucesso!';
+        
+        this.notificationService.showSuccess(mensagem);
+        this.loading = false;
+        this.voltar();
+      },
+      error: (error) => {
+        console.error('Erro ao salvar contrato:', error);
+        const mensagem = this.isEdicao 
+          ? 'Erro ao atualizar contrato' 
+          : 'Erro ao cadastrar contrato';
+        
+        this.notificationService.showError(mensagem);
+        this.loading = false;
+      }
+    });
+  }
+
+  private prepareContratoData(): Contrato {
+    const formValue = this.contratoForm.value;
+    
+    const contrato: Contrato = {
+      cliente: formValue.cliente,
+      dataInicio: formValue.dataInicio,
+      dataFim: formValue.dataFim || undefined,
+      status: formValue.status,
+      valorTotal: formValue.valorTotal ? parseFloat(formValue.valorTotal) : undefined,
+      observacoes: formValue.observacoes ? formValue.observacoes.trim() : undefined
+    };
+
+    if (this.isEdicao && this.contratoId) {
+      contrato.id = this.contratoId;
+    }
+
+    return contrato;
+  }
+
+  private markAllFieldsAsTouched(): void {
+    Object.keys(this.contratoForm.controls).forEach(key => {
+      const control = this.contratoForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.contratoForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  // Método para debug - verificar estado do formulário
+  debugFormulario(): void {
+    console.log('=== DEBUG FORMULÁRIO ===');
+    console.log('Formulário válido:', this.contratoForm.valid);
+    console.log('Formulário inválido:', this.contratoForm.invalid);
+    console.log('Loading:', this.loading);
+    console.log('Errors:', this.contratoForm.errors);
+    
+    // Verificar cada campo
+    Object.keys(this.contratoForm.controls).forEach(key => {
+      const control = this.contratoForm.get(key);
+      if (control && control.invalid) {
+        console.log(`Campo ${key} inválido:`, control.errors);
+      }
+    });
+    console.log('========================');
+  }
+
+  // Métodos auxiliares
+  getStatusTexto(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'PENDENTE': 'Pendente',
+      'ATIVO': 'Ativo',
+      'CONCLUIDO': 'Concluído',
+      'CANCELADO': 'Cancelado'
+    };
+    return statusMap[status] || status;
+  }
+
+  voltar(): void {
+    this.router.navigate(['/contratos']);
   }
 }

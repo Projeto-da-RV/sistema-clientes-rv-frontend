@@ -1,110 +1,180 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, Tag, Save, ArrowLeft } from 'lucide-angular';
-import { BaseCrudFormComponent } from '../../../shared/components/base-crud-form.component';
-import { NotificationService } from '../../../shared/services/notification.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Categoria } from '../../../models/categoria.model';
 import { CategoriaService } from '../../../services/categoria.service';
-import { FormConfig, FormFieldType, CrudFormService } from '../../../shared/interfaces/form-config.interface';
+import { NotificationService } from '../../../shared/services/notification.service';
 
-/**
- * Componente de formulário de categorias
- * Refatorado para usar BaseCrudFormComponent eliminando duplicação de código
- * Redução de ~80% no código comparado à versão anterior
- */
 @Component({
   selector: 'app-categoria-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   templateUrl: './categoria-form.component.html',
-  styleUrl: './categoria-form.component.scss'
+  styleUrl: './categoria-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.Default // Força estratégia padrão
 })
-export class CategoriaFormComponent extends BaseCrudFormComponent<Categoria> implements OnInit {
+export class CategoriaFormComponent implements OnInit {
   
-  // Required implementation of abstract config property
-  protected config: FormConfig<Categoria> = {
-    entityName: 'Categoria',
-    entityNamePlural: 'Categorias',
-    baseRoute: '/categorias',
-    fields: [
-      {
-        key: 'nome',
-        label: 'Nome da Categoria',
-        type: FormFieldType.TEXT,
-        required: true,
-        placeholder: 'Digite o nome da categoria',
-        validators: [Validators.required, Validators.minLength(3)]
-      },
-      {
-        key: 'descricao',
-        label: 'Descrição',
-        type: FormFieldType.TEXTAREA,
-        required: true,
-        placeholder: 'Descreva a categoria',
-        validators: [Validators.required],
-        fieldSpecificConfig: {
-          rows: 3
-        }
-      },
-      {
-        key: 'beneficios',
-        label: 'Benefícios',
-        type: FormFieldType.TEXTAREA,
-        placeholder: 'Liste os benefícios desta categoria',
-        fieldSpecificConfig: {
-          rows: 2
-        }
-      },
-      {
-        key: 'ativo',
-        label: 'Categoria Ativa',
-        type: FormFieldType.CHECKBOX,
-        defaultValue: true
-      }
-    ],
-    createTitle: 'Nova Categoria',
-    editTitle: 'Editar Categoria',
-    customValidation: {
-      errorMessages: {
-        'nome': 'Nome deve ter pelo menos 3 caracteres'
-      }
-    }
-  };
-
-  // Legacy properties for template compatibility
-  get categoriaForm() { return this.entityForm; }
-  get categoriaId() { return this.entityId; }
+  categoriaForm!: FormGroup;
+  loading = false;
+  isEdicao = false;
+  categoria: Categoria | null = null;
+  categoriaId: number | null = null;
 
   constructor(
+    private fb: FormBuilder,
     private categoriaService: CategoriaService,
-    fb: FormBuilder,
-    router: Router,
-    route: ActivatedRoute,
-    cdr: ChangeDetectorRef,
-    notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone // Adiciona NgZone para forçar detecção
   ) {
-    super(fb, router, route, cdr, notificationService);
+    this.initializeForm();
   }
 
-  protected get entityService(): CrudFormService<Categoria> {
-    return this.categoriaService;
+  ngOnInit(): void {
+    this.categoriaId = Number(this.route.snapshot.paramMap.get('id'));
+    this.isEdicao = !!this.categoriaId && !isNaN(this.categoriaId);
+
+    if (this.isEdicao) {
+      this.carregarCategoria();
+    }
   }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    // All form lifecycle is managed by BaseCrudFormComponent
-    // This eliminates the need to manage:
-    // - Form building and validation
-    // - Route parameter handling
-    // - Entity loading and saving
-    // - Error handling
-    // - Subscription management
+  private initializeForm(): void {
+    this.categoriaForm = this.fb.group({
+      nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      descricao: ['', [Validators.required, Validators.maxLength(500)]],
+      beneficios: ['', [Validators.maxLength(300)]],
+      ativo: [true]
+    });
   }
 
-  // Legacy methods for template compatibility if needed
-  marcarCamposInvalidos(): void {
-    this.markAllFieldsAsTouched();
+  private carregarCategoria(): void {
+    if (!this.categoriaId) return;
+
+    this.loading = true;
+    
+    this.categoriaService.buscarPorId(this.categoriaId).subscribe({
+      next: (categoria) => {
+        // Força execução dentro da zona do Angular
+        this.ngZone.run(() => {
+          this.categoria = categoria;
+          this.preencherFormulario(categoria);
+          this.loading = false;
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar categoria:', error);
+        this.ngZone.run(() => {
+          this.notificationService.showError('Erro ao carregar categoria');
+          this.loading = false;
+          this.voltar();
+        });
+      }
+    });
+  }
+
+  private preencherFormulario(categoria: Categoria): void {
+    this.categoriaForm.patchValue({
+      nome: categoria.nome,
+      descricao: categoria.descricao,
+      beneficios: categoria.beneficios || '',
+      ativo: categoria.ativo
+    });
+  }
+
+  onSubmit(): void {
+    if (this.categoriaForm.invalid) {
+      this.markAllFieldsAsTouched();
+      this.notificationService.showError('Por favor, corrija os erros no formulário');
+      return;
+    }
+
+    this.loading = true;
+    const categoriaData = this.prepareCategoriaData();
+
+    const operation = this.isEdicao 
+      ? this.categoriaService.atualizar(this.categoriaId!, categoriaData)
+      : this.categoriaService.criar(categoriaData);
+
+    operation.subscribe({
+      next: (resultado) => {
+        const mensagem = this.isEdicao 
+          ? 'Categoria atualizada com sucesso!' 
+          : 'Categoria cadastrada com sucesso!';
+        
+        this.notificationService.showSuccess(mensagem);
+        this.loading = false;
+        this.voltar();
+      },
+      error: (error) => {
+        console.error('Erro ao salvar categoria:', error);
+        const mensagem = this.isEdicao 
+          ? 'Erro ao atualizar categoria' 
+          : 'Erro ao cadastrar categoria';
+        
+        this.notificationService.showError(mensagem);
+        this.loading = false;
+      }
+    });
+  }
+
+  private prepareCategoriaData(): Categoria {
+    const formValue = this.categoriaForm.value;
+    
+    const categoria: Categoria = {
+      nome: formValue.nome.trim(),
+      descricao: formValue.descricao.trim(),
+      beneficios: formValue.beneficios ? formValue.beneficios.trim() : undefined,
+      ativo: formValue.ativo
+    };
+
+    if (this.isEdicao && this.categoriaId) {
+      categoria.id = this.categoriaId;
+    }
+
+    return categoria;
+  }
+
+  private markAllFieldsAsTouched(): void {
+    Object.keys(this.categoriaForm.controls).forEach(key => {
+      const control = this.categoriaForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.categoriaForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  // Método para debug - verificar estado do formulário
+  debugFormulario(): void {
+    console.log('=== DEBUG FORMULÁRIO ===');
+    console.log('Formulário válido:', this.categoriaForm.valid);
+    console.log('Formulário inválido:', this.categoriaForm.invalid);
+    console.log('Loading:', this.loading);
+    console.log('Errors:', this.categoriaForm.errors);
+    
+    // Verificar cada campo
+    Object.keys(this.categoriaForm.controls).forEach(key => {
+      const control = this.categoriaForm.get(key);
+      if (control && control.invalid) {
+        console.log(`Campo ${key} inválido:`, control.errors);
+      }
+    });
+    console.log('========================');
+  }
+
+  voltar(): void {
+    this.router.navigate(['/categorias']);
   }
 }

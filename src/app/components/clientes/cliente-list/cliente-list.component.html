@@ -1,105 +1,239 @@
 <div class="cliente-list">
+  <!-- Header da página -->
   <div class="page-header">
-    <h1>Clientes</h1>
-    <a routerLink="/clientes/novo" class="btn btn-primary">
-      <lucide-icon name="plus" size="18"></lucide-icon>
-      Novo Cliente
+    <div class="header-left">
+      <div class="title-group">
+        <h1>Clientes</h1>
+        <span class="subtitle">Gestão de Clientes</span>
+      </div>
+    </div>
+    <a routerLink="/clientes/novo" class="btn-novo">
+      <span>Novo Cliente</span>
     </a>
   </div>
 
-  <div class="filters-card">
-    <div class="filters">
-      <div class="filter-group">
-        <label>Buscar por nome:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          [(ngModel)]="filtroNome"
-          (keyup.enter)="buscarPorNome()"
-          placeholder="Digite o nome">
+  <!-- Card de Filtros -->
+  <div class="filtros-container">
+    <div class="filtros-header">
+      <h3>Filtros de Busca</h3>
+    </div>
+    
+    <div class="filtros-content">
+      <div class="filtros-inputs">
+        <!-- Campo de busca por nome -->
+        <div class="input-group">
+          <label>Buscar por nome</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              class="input-field" 
+              [(ngModel)]="filtroNome"
+              (keyup.enter)="buscarPorNome()"
+              (input)="aplicarFiltros()"
+              placeholder="Digite o nome do cliente">
+          </div>
+        </div>
+        
+        <!-- Campo de busca por CPF -->
+        <div class="input-group">
+          <label>Buscar por CPF</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              class="input-field" 
+              [(ngModel)]="filtroCpf"
+              (keyup.enter)="buscarPorCpf()"
+              (input)="aplicarFiltros()"
+              placeholder="Digite o CPF">
+          </div>
+        </div>
       </div>
       
-      <div class="filter-group">
-        <label>Buscar por CPF:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          [(ngModel)]="filtroCpf"
-          (keyup.enter)="buscarPorCpf()"
-          placeholder="Digite o CPF">
-      </div>
-      
-      <div class="filter-actions">
-        <button class="btn btn-search" (click)="filtrar()">
-          <lucide-icon name="filter" size="16"></lucide-icon>
-          Filtrar
+      <!-- Botões de ação -->
+      <div class="filtros-actions">
+        <button class="btn-filtrar" (click)="filtrar()">
+          <span>Filtrar</span>
         </button>
-        <button class="btn btn-clear" (click)="limparFiltros()">
-          <lucide-icon name="search" size="16"></lucide-icon>
-          Limpar
+        
+        <button class="btn-limpar" (click)="limparFiltros()">
+          <span>Limpar</span>
         </button>
       </div>
     </div>
   </div>
 
-  <div class="table-card">
+  <!-- Contador de resultados -->
+  <div class="resultados-info">
+    <div class="contador">
+      <span>{{ contadorResultados }}</span>
+    </div>
+  </div>
+
+  <!-- Tabela de resultados -->
+  <div class="tabela-container">
     @if (loading) {
-      <div class="loading">
-        <div class="spinner"></div>
+      <div class="loading-wrapper">
+        <div class="loading-spinner"></div>
         <p>Carregando clientes...</p>
       </div>
+    } @else if (clientesFiltrados.length === 0) {
+      <div class="empty-wrapper">
+        <h3>Nenhum cliente encontrado</h3>
+        <p>{{ clientes.length === 0 ? 'Você ainda não possui clientes cadastrados.' : 'Não há clientes que correspondam aos filtros selecionados.' }}</p>
+        
+        @if (clientes.length === 0) {
+          <!-- Se não há clientes no total, mostra botão para cadastrar -->
+          <a routerLink="/clientes/novo" class="btn-novo">
+            <span>Cadastrar Primeiro Cliente</span>
+          </a>
+        } @else {
+          <!-- Se há clientes mas filtro não encontrou, mostra botão para limpar filtros -->
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <span>Limpar Filtros</span>
+          </button>
+        }
+      </div>
     } @else {
-      @if (clientesFiltrados.length > 0) {
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Data Nascimento</th>
-                <th>Status</th>
-                <th>Ações</th>
+      <!-- Tabela Desktop -->
+      <div class="tabela-desktop">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th class="col-id">
+                <div class="th-content">
+                  <span>ID</span>
+                </div>
+              </th>
+              <th class="col-nome">
+                <div class="th-content">
+                  <span>Nome</span>
+                </div>
+              </th>
+              <th class="col-cpf">
+                <div class="th-content">
+                  <span>CPF</span>
+                </div>
+              </th>
+              <th class="col-email">
+                <div class="th-content">
+                  <span>E-mail</span>
+                </div>
+              </th>
+              <th class="col-status">
+                <div class="th-content">
+                  <span>Status</span>
+                </div>
+              </th>
+              <th class="col-actions">
+                <div class="th-content">
+                  <span>Ações</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cliente of clientesFiltrados; track cliente.id) {
+              <tr class="tabela-row">
+                <td class="col-id">
+                  <span class="id-badge">{{ cliente.id }}</span>
+                </td>
+                <td class="col-nome">
+                  <div class="cliente-nome">
+                    <strong>{{ cliente.nome }}</strong>
+                  </div>
+                </td>
+                <td class="col-cpf">
+                  <span class="cpf-texto">{{ cliente.cpf }}</span>
+                </td>
+                <td class="col-email">
+                  <span class="email-texto">{{ cliente.email || '-' }}</span>
+                </td>
+                <td class="col-status">
+                  <span class="status-badge" 
+                        [class.ativo]="cliente.ativo"
+                        [class.inativo]="!cliente.ativo">
+                    <span>{{ cliente.ativo ? 'Ativo' : 'Inativo' }}</span>
+                  </span>
+                </td>
+                <td class="col-actions">
+                  <div class="action-buttons">
+                    <a [routerLink]="['/clientes', cliente.id, 'editar']" 
+                       class="btn-action btn-editar"
+                       title="Editar dados do cliente"
+                       attr.aria-label="Editar cliente {{ cliente.nome }}">
+                      <span class="action-text">Editar</span>
+                    </a>
+                    <button class="btn-action btn-excluir" 
+                            (click)="confirmarExclusao(cliente)"
+                            title="Excluir cliente permanentemente"
+                            attr.aria-label="Excluir cliente {{ cliente.nome }}">
+                      <span class="action-text">Excluir</span>
+                    </button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              @for (cliente of clientesFiltrados; track cliente.id) {
-                <tr>
-                  <td>{{ cliente.id }}</td>
-                  <td>{{ cliente.nome }}</td>
-                  <td>{{ cliente.cpf }}</td>
-                  <td>{{ cliente.email || '-' }}</td>
-                  <td>{{ cliente.telefone || '-' }}</td>
-                  <td>{{ cliente.dataNascimento }}</td>
-                  <td>
-                    <span class="badge" [class.badge-success]="cliente.ativo" [class.badge-danger]="!cliente.ativo">
-                      {{ cliente.ativo ? 'Ativo' : 'Inativo' }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <a [routerLink]="['/clientes', cliente.id, 'editar']" class="btn-action btn-edit" title="Editar Cliente">
-                        <lucide-icon name="edit" size="16"></lucide-icon>
-                      </a>
-                      <button (click)="deletarCliente(cliente)" class="btn-action btn-delete" title="Excluir Cliente">
-                        <lucide-icon name="trash2" size="16"></lucide-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Cards Mobile -->
+      <div class="cards-mobile">
+        @for (cliente of clientesFiltrados; track cliente.id) {
+          <div class="cliente-card">
+            <div class="card-header">
+              <div class="cliente-info">
+                <span class="id-badge">{{ cliente.id }}</span>
+                <h4 class="cliente-nome">{{ cliente.nome }}</h4>
+              </div>
+              <div class="status-badge" 
+                   [class.ativo]="cliente.ativo"
+                   [class.inativo]="!cliente.ativo">
+                <span>{{ cliente.ativo ? 'Ativo' : 'Inativo' }}</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div class="info-item">
+                <span class="label">CPF:</span>
+                <span class="value">{{ cliente.cpf }}</span>
+              </div>
+              
+              @if (cliente.email) {
+                <div class="info-item">
+                  <span class="label">E-mail:</span>
+                  <span class="value">{{ cliente.email }}</span>
+                </div>
               }
-            </tbody>
-          </table>
-        </div>
-      } @else {
-        <div class="empty-state">
-          <lucide-icon name="user" size="48" class="empty-icon"></lucide-icon>
-          <p>Nenhum cliente encontrado</p>
-          <p class="empty-subtitle">Comece adicionando um novo cliente</p>
-        </div>
-      }
+              
+              @if (cliente.telefone) {
+                <div class="info-item">
+                  <span class="label">Telefone:</span>
+                  <span class="value">{{ cliente.telefone }}</span>
+                </div>
+              }
+              
+              @if (cliente.dataNascimento) {
+                <div class="info-item">
+                  <span class="label">Nascimento:</span>
+                  <span class="value">{{ cliente.dataNascimento | date:'dd/MM/yyyy' }}</span>
+                </div>
+              }
+            </div>
+            
+            <div class="card-footer">
+              <a [routerLink]="['/clientes', cliente.id, 'editar']" 
+                 class="btn-action btn-editar">
+                <span>Editar</span>
+              </a>
+              <button class="btn-action btn-excluir" 
+                      (click)="confirmarExclusao(cliente)">
+                <span>Excluir</span>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     }
   </div>
 </div>

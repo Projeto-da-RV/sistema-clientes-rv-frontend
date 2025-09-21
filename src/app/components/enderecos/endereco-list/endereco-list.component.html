@@ -1,104 +1,255 @@
 <div class="endereco-list">
+  <!-- Header da página -->
   <div class="page-header">
-    <h1>
-      <lucide-icon name="map-pin"></lucide-icon>
-      Endereços
-    </h1>
+    <div class="header-left">
+      <div class="title-group">
+        <h1>Endereços</h1>
+        <span class="subtitle">Gestão de Endereços</span>
+      </div>
+    </div>
+    <!-- Nota: Endereços geralmente são criados via cliente, sem botão "novo" separado -->
   </div>
 
-  <div class="filters-card">
-    <div class="filters">
-      <div class="filter-group">
-        <label>Filtrar por cliente:</label>
-        <select 
-          class="form-control" 
-          [(ngModel)]="clienteSelecionado"
-          (change)="filtrarPorCliente()">
-          <option [value]="null">Todos</option>
-          @for (cliente of clientes; track cliente.id) {
-            <option [value]="cliente.id">{{ cliente.nome }}</option>
-          }
-        </select>
+  <!-- Card de Filtros -->
+  <div class="filtros-container">
+    <div class="filtros-header">
+      <h3>Filtros de Busca</h3>
+    </div>
+    
+    <div class="filtros-content">
+      <div class="filtros-inputs">
+        <!-- Campo de filtro por cliente -->
+        <div class="input-group">
+          <label>Filtrar por cliente</label>
+          <div class="input-wrapper">
+            <select 
+              class="input-field" 
+              [(ngModel)]="clienteSelecionado"
+              (change)="filtrarPorCliente()">
+              <option [value]="null">Todos os clientes</option>
+              @for (cliente of clientes; track cliente.id) {
+                <option [value]="cliente.id">{{ cliente.nome }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        
+        <!-- Campo de busca por cidade -->
+        <div class="input-group">
+          <label>Buscar por cidade</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              class="input-field" 
+              [(ngModel)]="filtroCidade"
+              (keyup.enter)="filtrarPorCidade()"
+              (input)="aplicarFiltros()"
+              placeholder="Digite a cidade">
+          </div>
+        </div>
+        
+        <!-- Campo de filtro especial -->
+        <div class="input-group">
+          <label>Filtros Especiais</label>
+          <div class="checkbox-wrapper">
+            <input 
+              type="checkbox" 
+              id="apenasPrivados"
+              [(ngModel)]="apenasPrivados"
+              (change)="toggleApenasPrivados()">
+            <label for="apenasPrivados" class="checkbox-label">
+              Apenas endereços principais
+            </label>
+          </div>
+        </div>
       </div>
       
-      <div class="filter-group">
-        <label>Buscar por cidade:</label>
-        <input 
-          type="text" 
-          class="form-control" 
-          [(ngModel)]="filtroCidade"
-          (keyup.enter)="filtrarPorCidade()"
-          placeholder="Digite a cidade">
-      </div>
-      
-      <div class="filter-actions">
-        <button class="btn btn-search" (click)="filtrarPorCidade()">
-          <lucide-icon name="search"></lucide-icon>
-          Buscar
+      <!-- Botões de ação -->
+      <div class="filtros-actions">
+        <button class="btn-filtrar" (click)="filtrar()">
+          <span>Filtrar</span>
         </button>
-        <button class="btn btn-clear" (click)="limparFiltros()">
-          <lucide-icon name="filter"></lucide-icon>
-          Limpar
+        
+        <button class="btn-limpar" (click)="limparFiltros()">
+          <span>Limpar</span>
         </button>
       </div>
     </div>
   </div>
 
-  <div class="table-card">
+  <!-- Contador de resultados -->
+  <div class="resultados-info">
+    <div class="contador">
+      <span>{{ contadorResultados }}</span>
+    </div>
+  </div>
+
+  <!-- Tabela de resultados -->
+  <div class="tabela-container">
     @if (loading) {
-      <div class="loading">
-        <lucide-icon name="loader" class="loading-icon"></lucide-icon>
+      <div class="loading-wrapper">
+        <div class="loading-spinner"></div>
         <p>Carregando endereços...</p>
       </div>
+    } @else if (enderecosFiltrados.length === 0) {
+      <div class="empty-wrapper">
+        <h3>Nenhum endereço encontrado</h3>
+        <p>{{ enderecos.length === 0 ? 'Não há endereços cadastrados.' : 'Não há endereços que correspondam aos filtros selecionados.' }}</p>
+        
+        @if (enderecos.length === 0) {
+          <!-- Se não há endereços no total -->
+          <p class="empty-subtitle">Endereços são criados através do cadastro de clientes</p>
+        } @else {
+          <!-- Se há endereços mas filtro não encontrou -->
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <span>Limpar Filtros</span>
+          </button>
+        }
+      </div>
     } @else {
-      @if (enderecosFiltrados.length > 0) {
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Rua</th>
-                <th>Número</th>
-                <th>Cidade</th>
-                <th>Estado</th>
-                <th>CEP</th>
-                <th>Principal</th>
-                <th>Ações</th>
+      <!-- Tabela Desktop -->
+      <div class="tabela-desktop">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th class="col-id">
+                <div class="th-content">
+                  <span>ID</span>
+                </div>
+              </th>
+              <th class="col-cliente">
+                <div class="th-content">
+                  <span>Cliente</span>
+                </div>
+              </th>
+              <th class="col-logradouro">
+                <div class="th-content">
+                  <span>Logradouro</span>
+                </div>
+              </th>
+              <th class="col-numero">
+                <div class="th-content">
+                  <span>Número</span>
+                </div>
+              </th>
+              <th class="col-cidade">
+                <div class="th-content">
+                  <span>Cidade</span>
+                </div>
+              </th>
+              <th class="col-estado">
+                <div class="th-content">
+                  <span>Estado</span>
+                </div>
+              </th>
+              <th class="col-cep">
+                <div class="th-content">
+                  <span>CEP</span>
+                </div>
+              </th>
+              <th class="col-principal">
+                <div class="th-content">
+                  <span>Principal</span>
+                </div>
+              </th>
+              <th class="col-actions">
+                <div class="th-content">
+                  <span>Ações</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (endereco of enderecosFiltrados; track endereco.id) {
+              <tr class="tabela-row">
+                <td class="col-id">
+                  <span class="id-badge">{{ endereco.id }}</span>
+                </td>
+                <td class="col-cliente">
+                  <div class="endereco-cliente">
+                    <strong>{{ getClienteNome(endereco) }}</strong>
+                  </div>
+                </td>
+                <td class="col-logradouro">
+                  <span class="logradouro-texto">{{ endereco.rua }}</span>
+                </td>
+                <td class="col-numero">
+                  <span class="numero-texto">{{ endereco.numero }}</span>
+                </td>
+                <td class="col-cidade">
+                  <span class="cidade-texto">{{ endereco.cidade }}</span>
+                </td>
+                <td class="col-estado">
+                  <span class="estado-texto">{{ endereco.estado }}</span>
+                </td>
+                <td class="col-cep">
+                  <span class="cep-texto">{{ formatarCep(endereco.cep) }}</span>
+                </td>
+                <td class="col-principal">
+                  <span class="status-badge" 
+                        [class.principal]="endereco.principal"
+                        [class.secundario]="!endereco.principal">
+                    <span>{{ endereco.principal ? 'Principal' : 'Secundário' }}</span>
+                  </span>
+                </td>
+                <td class="col-actions">
+                  <div class="action-buttons">
+                    <button class="btn-action btn-excluir" 
+                            (click)="confirmarExclusao(endereco)"
+                            title="Excluir endereço"
+                            attr.aria-label="Excluir endereço {{ endereco.id }}">
+                      <span class="action-text">Excluir</span>
+                    </button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              @for (endereco of enderecosFiltrados; track endereco.id) {
-                <tr>
-                  <td>{{ endereco.id }}</td>
-                  <td>{{ endereco.rua }}</td>
-                  <td>{{ endereco.numero }}</td>
-                  <td>{{ endereco.cidade }}</td>
-                  <td>{{ endereco.estado }}</td>
-                  <td>{{ endereco.cep }}</td>
-                  <td>
-                    <span class="badge" [class.badge-primary]="endereco.principal" [class.badge-secondary]="!endereco.principal">
-                      {{ endereco.principal ? 'Sim' : 'Não' }}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <button (click)="deletarEndereco(endereco)" class="btn-action btn-delete">
-                        <lucide-icon name="trash-2"></lucide-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      } @else {
-        <div class="empty-state">
-          <lucide-icon name="inbox" class="empty-icon"></lucide-icon>
-          <p>Nenhum endereço encontrado</p>
-          <p class="empty-subtitle">Endereços serão listados aqui</p>
-        </div>
-      }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Cards Mobile -->
+      <div class="cards-mobile">
+        @for (endereco of enderecosFiltrados; track endereco.id) {
+          <div class="endereco-card">
+            <div class="card-header">
+              <div class="endereco-info">
+                <span class="id-badge">{{ endereco.id }}</span>
+                <h4 class="endereco-cliente">{{ getClienteNome(endereco) }}</h4>
+              </div>
+              <div class="status-badge" 
+                   [class.principal]="endereco.principal"
+                   [class.secundario]="!endereco.principal">
+                <span>{{ endereco.principal ? 'Principal' : 'Secundário' }}</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div class="info-item">
+                <span class="label">Endereço:</span>
+                <span class="value">{{ endereco.rua }}, {{ endereco.numero }}</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="label">Cidade/Estado:</span>
+                <span class="value">{{ endereco.cidade }}/{{ endereco.estado }}</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="label">CEP:</span>
+                <span class="value">{{ formatarCep(endereco.cep) }}</span>
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <button class="btn-action btn-excluir" 
+                      (click)="confirmarExclusao(endereco)">
+                <span>Excluir</span>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     }
   </div>
 </div>

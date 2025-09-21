@@ -1,100 +1,197 @@
-<div class="contrato-form">
-  <div class="form-card">
-    <div class="form-header">
-      <lucide-icon name="file-text" class="header-icon"></lucide-icon>
-      <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Contrato</h2>
+<div class="page-container">
+  <!-- Header da página -->
+  <div class="page-header">
+    <div class="page-title">
+      <div>
+        <h1>{{ isEdicao ? 'Editar Contrato' : 'Novo Contrato' }}</h1>
+        <span class="subtitle">
+          {{ isEdicao ? 'Atualizar informações do contrato' : 'Adicionar novo contrato' }}
+        </span>
+      </div>
     </div>
-    
+    <button class="btn-back" (click)="voltar()">
+      Voltar
+    </button>
+  </div>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/contratos" class="breadcrumb-item">
+      Contratos
+    </a>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-item active">
+      {{ isEdicao ? 'Editar' : 'Novo Contrato' }}
+    </span>
+  </nav>
+
+  <!-- Container do formulário -->
+  <div class="form-container">
     <form [formGroup]="contratoForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="cliente">Cliente *</label>
-        <select 
-          id="cliente"
-          class="form-control"
-          formControlName="cliente"
-          [class.is-invalid]="isFieldInvalid('cliente')">
-          <option [ngValue]="null">Selecione um cliente</option>
-          @for (cliente of clientes; track cliente.id) {
-            <option [ngValue]="cliente">{{ cliente.nome }} - {{ cliente.cpf }}</option>
-          }
-        </select>
-        @if (isFieldInvalid('cliente')) {
-          <div class="invalid-feedback">
-            <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-            {{ getFieldError('cliente') }}
+      
+      <!-- Card de informações principais -->
+      <div class="form-card">
+        <div class="form-header">
+          <h3>Informações do Contrato</h3>
+        </div>
+
+        <div class="form-content">
+          <!-- Cliente -->
+          <div class="form-group full-width">
+            <label for="cliente" class="form-label required">
+              Cliente
+            </label>
+            <select
+              id="cliente"
+              class="form-control"
+              [class.error]="isFieldInvalid('cliente')"
+              formControlName="cliente">
+              <option [ngValue]="null">Selecione um cliente</option>
+              @for (cliente of clientes; track cliente.id) {
+                <option [ngValue]="cliente">{{ cliente.nome }} - {{ cliente.cpf }}</option>
+              }
+            </select>
+            
+            @if (isFieldInvalid('cliente')) {
+              <div class="error-message">
+                O cliente é obrigatório
+              </div>
+            }
           </div>
-        }
-      </div>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="dataInicio">Data de Início *</label>
-          <input 
-            type="date" 
-            id="dataInicio"
-            class="form-control"
-            formControlName="dataInicio"
-            [class.is-invalid]="isFieldInvalid('dataInicio')">
-          @if (isFieldInvalid('dataInicio')) {
-            <div class="invalid-feedback">
-              <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-              {{ getFieldError('dataInicio') }}
+
+          <!-- Data de Início e Data de Fim -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dataInicio" class="form-label required">
+                Data de Início
+              </label>
+              <input
+                id="dataInicio"
+                type="date"
+                class="form-control"
+                [class.error]="isFieldInvalid('dataInicio')"
+                formControlName="dataInicio">
+              
+              @if (isFieldInvalid('dataInicio')) {
+                <div class="error-message">
+                  A data de início é obrigatória
+                </div>
+              }
             </div>
-          }
+
+            <div class="form-group">
+              <label for="dataFim" class="form-label">
+                Data de Fim
+                <span class="optional">(opcional)</span>
+              </label>
+              <input
+                id="dataFim"
+                type="date"
+                class="form-control"
+                formControlName="dataFim">
+            </div>
+          </div>
+
+          <!-- Status e Valor Total -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="status" class="form-label">
+                Status
+              </label>
+              <select
+                id="status"
+                class="form-control"
+                formControlName="status">
+                <option value="PENDENTE">Pendente</option>
+                <option value="ATIVO">Ativo</option>
+                <option value="CONCLUIDO">Concluído</option>
+                <option value="CANCELADO">Cancelado</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="valorTotal" class="form-label">
+                Valor Total (R$)
+                <span class="optional">(opcional)</span>
+              </label>
+              <input
+                id="valorTotal"
+                type="number"
+                class="form-control"
+                formControlName="valorTotal"
+                placeholder="0,00"
+                step="0.01"
+                min="0">
+            </div>
+          </div>
+
+          <!-- Observações -->
+          <div class="form-group full-width">
+            <label for="observacoes" class="form-label">
+              Observações
+              <span class="optional">(opcional)</span>
+            </label>
+            <textarea
+              id="observacoes"
+              class="form-control textarea"
+              formControlName="observacoes"
+              placeholder="Digite observações sobre o contrato"
+              rows="4"
+              maxlength="1000"></textarea>
+            
+            <div class="field-info">
+              <span class="char-count">
+                {{ contratoForm.get('observacoes')?.value?.length || 0 }}/1000 caracteres
+              </span>
+            </div>
+          </div>
         </div>
-        
-        <div class="form-group">
-          <label for="dataFim">Data de Fim</label>
-          <input 
-            type="date" 
-            id="dataFim"
-            class="form-control"
-            formControlName="dataFim">
+      </div>
+
+      <!-- Card de metadados (apenas para edição) -->
+      @if (isEdicao && contrato) {
+        <div class="metadata-card">
+          <div class="metadata-header">
+            <h4>Informações do Sistema</h4>
+          </div>
+          
+          <div class="metadata-grid">
+            <div class="metadata-item">
+              <span class="metadata-label">ID:</span>
+              <span class="metadata-value">{{ contrato.id }}</span>
+            </div>
+            
+            <div class="metadata-item">
+              <span class="metadata-label">Status:</span>
+              <span class="metadata-value">{{ getStatusTexto(contrato.status || 'PENDENTE') }}</span>
+            </div>
+            
+            @if (contrato.dataInicio) {
+              <div class="metadata-item">
+                <span class="metadata-label">Data de Início:</span>
+                <span class="metadata-value">{{ contrato.dataInicio | date:'dd/MM/yyyy' }}</span>
+              </div>
+            }
+          </div>
         </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="status">Status</label>
-        <select 
-          id="status"
-          class="form-control"
-          formControlName="status">
-          <option value="PENDENTE">Pendente</option>
-          <option value="ATIVO">Ativo</option>
-          <option value="INATIVO">Inativo</option>
-          <option value="CANCELADO">Cancelado</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label for="observacoes">Observações</label>
-        <textarea 
-          id="observacoes"
-          class="form-control"
-          formControlName="observacoes"
-          rows="3"
-          placeholder="Observações sobre o contrato"></textarea>
-      </div>
-      
+      }
+
+      <!-- Botões de ação -->
       <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn btn-secondary"
-          (click)="cancelar()"
-          [disabled]="loading">
-          <lucide-icon name="arrow-left"></lucide-icon>
+        <button type="button" class="btn-cancel" (click)="voltar()">
           Cancelar
         </button>
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="loading">
+        
+        <button type="submit" 
+                class="btn-save" 
+                [disabled]="contratoForm.invalid || loading"
+                [class.loading]="loading"
+                [class.disabled]="contratoForm.invalid || loading">
           @if (loading) {
-            <lucide-icon name="loader" class="loading-icon-small"></lucide-icon>
-            Salvando...
+            <div class="spinner-small"></div>
+            <span>Salvando...</span>
           } @else {
-            <lucide-icon name="save"></lucide-icon>
-            {{ isEditMode ? 'Atualizar' : 'Cadastrar' }}
+            <span>{{ isEdicao ? 'Atualizar' : 'Cadastrar' }} Contrato</span>
           }
         </button>
       </div>

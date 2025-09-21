@@ -1,187 +1,304 @@
-<div class="cliente-form">
-  <div class="form-card">
-    <div class="form-header">
-      <lucide-icon name="user-plus" size="24" class="header-icon"></lucide-icon>
-      <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Cliente</h2>
+<div class="page-container">
+  <!-- Header da página -->
+  <div class="page-header">
+    <div class="page-title">
+      <div>
+        <h1>{{ isEdicao ? 'Editar Cliente' : 'Novo Cliente' }}</h1>
+        <span class="subtitle">
+          {{ isEdicao ? 'Atualizar informações do cliente' : 'Adicionar novo cliente' }}
+        </span>
+      </div>
     </div>
-    
-    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="nome">
-            <lucide-icon name="user" size="16"></lucide-icon>
-            Nome *
-          </label>
-          <input 
-            type="text" 
-            id="nome"
-            class="form-control"
-            formControlName="nome"
-            [class.is-invalid]="isFieldInvalid('nome')"
-            placeholder="Digite o nome completo">
-          @if (isFieldInvalid('nome')) {
-            <div class="invalid-feedback">
-              {{ getFieldError('nome') }}
-            </div>
-          }
-        </div>
-        
-        <div class="form-group">
-          <label for="cpf">CPF *</label>
-          <input 
-            type="text" 
-            id="cpf"
-            class="form-control"
-            formControlName="cpf"
-            [class.is-invalid]="isFieldInvalid('cpf')"
-            (input)="formatarCPF($event)"
-            placeholder="Digite apenas números"
-            maxlength="11">
-          @if (isFieldInvalid('cpf')) {
-            <div class="invalid-feedback">
-              {{ getFieldError('cpf') }}
-            </div>
-          }
-        </div>
-      </div>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="email">
-            <lucide-icon name="mail" size="16"></lucide-icon>
-            Email
-          </label>
-          <input 
-            type="email" 
-            id="email"
-            class="form-control"
-            formControlName="email"
-            [class.is-invalid]="isFieldInvalid('email')"
-            placeholder="email@exemplo.com">
-          @if (isFieldInvalid('email')) {
-            <div class="invalid-feedback">
-              {{ getFieldError('email') }}
-            </div>
-          }
-        </div>
-        
-        <div class="form-group">
-          <label for="telefone">
-            <lucide-icon name="phone" size="16"></lucide-icon>
-            Telefone
-          </label>
-          <input 
-            type="text" 
-            id="telefone"
-            class="form-control"
-            formControlName="telefone"
-            placeholder="(00) 00000-0000">
-        </div>
-      </div>
+    <button class="btn-back" (click)="voltar()">
+      Voltar
+    </button>
+  </div>
 
-      @if (!isEditMode) {
-        <div class="form-row">
-          <div class="form-group">
-            <label for="senha">
-              <lucide-icon name="lock" size="16"></lucide-icon>
-              Senha *
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/clientes" class="breadcrumb-item">
+      Clientes
+    </a>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-item active">
+      {{ isEdicao ? 'Editar' : 'Novo Cliente' }}
+    </span>
+  </nav>
+
+  <!-- Container do formulário -->
+  <div class="form-container">
+    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Card de informações pessoais -->
+      <div class="form-card">
+        <div class="form-header">
+          <h3>Informações Pessoais</h3>
+        </div>
+
+        <div class="form-content">
+          <!-- Nome completo -->
+          <div class="form-group full-width">
+            <label for="nome" class="form-label required">
+              Nome Completo
             </label>
-            <input 
-              type="password" 
-              id="senha"
+            <input
+              id="nome"
+              type="text"
               class="form-control"
-              formControlName="senha"
-              [class.is-invalid]="isFieldInvalid('senha')"
-              placeholder="Mínimo 6 caracteres">
-            @if (isFieldInvalid('senha')) {
-              <div class="invalid-feedback">
-                {{ getFieldError('senha') }}
+              [class.error]="isFieldInvalid('nome')"
+              formControlName="nome"
+              placeholder="Digite o nome completo"
+              maxlength="100">
+            
+            @if (isFieldInvalid('nome')) {
+              <div class="error-message">
+                @if (clienteForm.get('nome')?.errors?.['required']) {
+                  O nome é obrigatório
+                }
+                @if (clienteForm.get('nome')?.errors?.['minlength']) {
+                  O nome deve ter pelo menos 3 caracteres
+                }
               </div>
             }
           </div>
+
+          <!-- CPF e Email na mesma linha -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cpf" class="form-label required">
+                CPF
+              </label>
+              <input
+                id="cpf"
+                type="text"
+                class="form-control"
+                [class.error]="isFieldInvalid('cpf')"
+                formControlName="cpf"
+                placeholder="000.000.000-00"
+                maxlength="14">
+              
+              @if (isFieldInvalid('cpf')) {
+                <div class="error-message">
+                  @if (clienteForm.get('cpf')?.errors?.['required']) {
+                    CPF é obrigatório
+                  }
+                  @if (clienteForm.get('cpf')?.errors?.['pattern']) {
+                    CPF deve ter 11 dígitos
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">
+                E-mail
+                <span class="optional">(opcional)</span>
+              </label>
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                [class.error]="isFieldInvalid('email')"
+                formControlName="email"
+                placeholder="email@exemplo.com">
+              
+              @if (isFieldInvalid('email')) {
+                <div class="error-message">
+                  E-mail inválido
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Telefone e Data de Nascimento -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="telefone" class="form-label">
+                Telefone
+                <span class="optional">(opcional)</span>
+              </label>
+              <input
+                id="telefone"
+                type="tel"
+                class="form-control"
+                formControlName="telefone"
+                placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="form-group">
+              <label for="dataNascimento" class="form-label required">
+                Data de Nascimento
+              </label>
+              <input
+                id="dataNascimento"
+                type="date"
+                class="form-control"
+                [class.error]="isFieldInvalid('dataNascimento')"
+                formControlName="dataNascimento">
+              
+              @if (isFieldInvalid('dataNascimento')) {
+                <div class="error-message">
+                  Data de nascimento é obrigatória
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card de senha (apenas para criação ou se especificado) -->
+      @if (!isEdicao || mostrarCamposSenha) {
+        <div class="form-card">
+          <div class="form-header">
+            <h3>Senha de Acesso</h3>
+          </div>
+
+          <div class="form-content">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="senha" class="form-label required">
+                  Senha
+                </label>
+                <input
+                  id="senha"
+                  type="password"
+                  class="form-control"
+                  [class.error]="isFieldInvalid('senha')"
+                  formControlName="senha"
+                  placeholder="Mínimo 6 caracteres">
+                
+                @if (isFieldInvalid('senha')) {
+                  <div class="error-message">
+                    @if (clienteForm.get('senha')?.errors?.['required']) {
+                      Senha é obrigatória
+                    }
+                    @if (clienteForm.get('senha')?.errors?.['minlength']) {
+                      Senha deve ter pelo menos 6 caracteres
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="confirmarSenha" class="form-label required">
+                  Confirmar Senha
+                </label>
+                <input
+                  id="confirmarSenha"
+                  type="password"
+                  class="form-control"
+                  [class.error]="isFieldInvalid('confirmarSenha')"
+                  formControlName="confirmarSenha"
+                  placeholder="Confirme a senha">
+                
+                @if (isFieldInvalid('confirmarSenha')) {
+                  <div class="error-message">
+                    @if (clienteForm.get('confirmarSenha')?.errors?.['required']) {
+                      Confirmação de senha é obrigatória
+                    }
+                    @if (clienteForm.get('confirmarSenha')?.errors?.['passwordMismatch']) {
+                      Senhas não conferem
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Card de categoria e status -->
+      <div class="form-card">
+        <div class="form-header">
+          <h3>Configurações</h3>
+        </div>
+
+        <div class="form-content">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="categoria" class="form-label">
+                Categoria
+              </label>
+              <select
+                id="categoria"
+                class="form-control"
+                formControlName="categoria">
+                <option value="">Selecione uma categoria</option>
+                @for (categoria of categorias; track categoria.id) {
+                  <option [value]="categoria.id">{{ categoria.nome }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="checkbox-group">
+                <div class="custom-checkbox-large">
+                  <input
+                    id="ativo"
+                    type="checkbox"
+                    formControlName="ativo">
+                  <span class="checkmark-large"></span>
+                </div>
+                <div class="checkbox-content">
+                  <label for="ativo" class="checkbox-label">
+                    Cliente Ativo
+                  </label>
+                  <span class="checkbox-description">
+                    Clientes ativos podem fazer login no sistema
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card de metadados (apenas para edição) -->
+      @if (isEdicao && cliente) {
+        <div class="metadata-card">
+          <div class="metadata-header">
+            <h4>Informações do Sistema</h4>
+          </div>
           
-          <div class="form-group">
-            <label for="confirmarSenha">
-              <lucide-icon name="lock" size="16"></lucide-icon>
-              Confirmar Senha *
-            </label>
-            <input 
-              type="password" 
-              id="confirmarSenha"
-              class="form-control"
-              formControlName="confirmarSenha"
-              [class.is-invalid]="isFieldInvalid('confirmarSenha')"
-              placeholder="Confirme a senha">
-            @if (isFieldInvalid('confirmarSenha')) {
-              <div class="invalid-feedback">
-                {{ getFieldError('confirmarSenha') }}
+          <div class="metadata-grid">
+            <div class="metadata-item">
+              <span class="metadata-label">ID:</span>
+              <span class="metadata-value">{{ cliente.id }}</span>
+            </div>
+            
+            @if (cliente.createdAt) {
+              <div class="metadata-item">
+                <span class="metadata-label">Criado em:</span>
+                <span class="metadata-value">{{ cliente.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+            
+            @if (cliente.updatedAt) {
+              <div class="metadata-item">
+                <span class="metadata-label">Atualizado em:</span>
+                <span class="metadata-value">{{ cliente.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
               </div>
             }
           </div>
         </div>
       }
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="dataNascimento">
-            <lucide-icon name="calendar-days" size="16"></lucide-icon>
-            Data de Nascimento *
-          </label>
-          <input 
-            type="date" 
-            id="dataNascimento"
-            class="form-control"
-            formControlName="dataNascimento"
-            [class.is-invalid]="isFieldInvalid('dataNascimento')">
-          @if (isFieldInvalid('dataNascimento')) {
-            <div class="invalid-feedback">
-              {{ getFieldError('dataNascimento') }}
-            </div>
-          }
-        </div>
-        
-        <div class="form-group">
-          <label for="categoria">Categoria</label>
-          <select 
-            id="categoria"
-            class="form-control"
-            formControlName="categoria">
-            <option [ngValue]="null">Selecione uma categoria</option>
-            @for (categoria of categorias; track categoria.id) {
-              <option [ngValue]="categoria">{{ categoria.nome }}</option>
-            }
-          </select>
-        </div>
-      </div>
-      
-      <div class="form-group checkbox-group">
-        <label>
-          <input 
-            type="checkbox" 
-            formControlName="ativo">
-          Cliente Ativo
-        </label>
-      </div>
-      
+
+      <!-- Botões de ação -->
       <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn btn-secondary"
-          (click)="cancelar()"
-          [disabled]="loading">
-          <lucide-icon name="x" size="16"></lucide-icon>
+        <button type="button" class="btn-cancel" (click)="voltar()">
           Cancelar
         </button>
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="loading">
+        
+        <button type="submit" 
+                class="btn-save" 
+                [disabled]="clienteForm.invalid || loading"
+                [class.loading]="loading"
+                [class.disabled]="clienteForm.invalid || loading">
           @if (loading) {
-            <span class="spinner-small"></span>
-            Salvando...
+            <div class="spinner-small"></div>
+            <span>Salvando...</span>
           } @else {
-            <lucide-icon name="save" size="16"></lucide-icon>
-            {{ isEditMode ? 'Atualizar' : 'Cadastrar' }}
+            <span>{{ isEdicao ? 'Atualizar' : 'Cadastrar' }} Cliente</span>
           }
         </button>
       </div>

@@ -1,251 +1,223 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, UserPlus, Mail, Phone, CalendarDays, User, Save, X, Lock } from 'lucide-angular';
-import { BaseCrudFormComponent } from '../../../shared/components/base-crud-form.component';
-import { NotificationService } from '../../../shared/services/notification.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { Categoria } from '../../../models/categoria.model';
-import { FormConfig, FormFieldType, CrudFormService } from '../../../shared/interfaces/form-config.interface';
-
-// Validador customizado para confirmar senha
-function confirmPasswordValidator(control: AbstractControl) {
-  const senha = control.get('senha');
-  const confirmarSenha = control.get('confirmarSenha');
-  
-  if (senha && confirmarSenha && senha.value !== confirmarSenha.value) {
-    confirmarSenha.setErrors({ senhasDiferentes: true });
-  } else if (confirmarSenha && confirmarSenha.hasError('senhasDiferentes')) {
-    confirmarSenha.setErrors(null);
-  }
-  
-  return null;
-}
+import { NotificationService } from '../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   templateUrl: './cliente-form.component.html',
   styleUrl: './cliente-form.component.scss'
 })
-export class ClienteFormComponent extends BaseCrudFormComponent<Cliente> implements OnInit {
+export class ClienteFormComponent implements OnInit {
   
-  // Required implementation of abstract config property
-  protected config: FormConfig<Cliente> = {
-    entityName: 'Cliente',
-    entityNamePlural: 'Clientes',
-    baseRoute: '/clientes',
-    fields: [
-      {
-        key: 'nome',
-        label: 'Nome Completo',
-        type: FormFieldType.TEXT,
-        required: true,
-        placeholder: 'Digite o nome completo',
-        validators: [Validators.required, Validators.minLength(3)]
-      },
-      {
-  key: 'cpf',
-  label: 'CPF',
-  type: FormFieldType.CPF,
-  required: true,
-  validators: [
-    Validators.required, 
-    Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/) // ✅ Aceitar CPF com ou sem formatação
-  ]
-},
-      {
-        key: 'email',
-        label: 'E-mail',
-        type: FormFieldType.EMAIL,
-        placeholder: 'usuario@exemplo.com',
-        validators: [Validators.email]
-      },
-      {
-        key: 'telefone',
-        label: 'Telefone',
-        type: FormFieldType.PHONE,
-        placeholder: '(00) 00000-0000'
-      },
-      {
-        key: 'senha',
-        label: 'Senha',
-        type: FormFieldType.PASSWORD,
-        required: true,
-        validators: [Validators.required, Validators.minLength(6)]
-      },
-      {
-        key: 'confirmarSenha',
-        label: 'Confirmar Senha',
-        type: FormFieldType.PASSWORD,
-        required: true,
-        validators: [Validators.required]
-      },
-      {
-        key: 'dataNascimento',
-        label: 'Data de Nascimento',
-        type: FormFieldType.DATE,
-        required: true,
-        validators: [Validators.required]
-      },
-      {
-        key: 'categoria',
-        label: 'Categoria',
-        type: FormFieldType.SELECT,
-        placeholder: 'Selecione uma categoria'
-      },
-      {
-        key: 'ativo',
-        label: 'Cliente Ativo',
-        type: FormFieldType.CHECKBOX,
-        defaultValue: true
-      }
-    ],
-    relatedData: [
-      {
-        propertyName: 'categorias',
-        loadFunction: () => this.categoriaService.buscarAtivas(),
-        loadOnInit: true
-      }
-    ],
-    createTitle: 'Novo Cliente',
-    editTitle: 'Editar Cliente',
-    customValidation: {
-      errorMessages: {
-        'cpf': 'CPF deve ter 11 dígitos numéricos',
-        'senha': 'Senha deve ter no mínimo 6 caracteres',
-        'confirmarSenha': 'Senhas não conferem'
-      }
-    }
-  };
-
-  // Legacy properties for template compatibility
+  clienteForm!: FormGroup;
+  loading = false;
+  isEdicao = false;
+  cliente: Cliente | null = null;
+  clienteId: number | null = null;
+  mostrarCamposSenha = false;
   categorias: Categoria[] = [];
-  get clienteForm() { return this.entityForm; }
-  get clienteId() { return this.entityId; }
 
   constructor(
+    private fb: FormBuilder,
     private clienteService: ClienteService,
     private categoriaService: CategoriaService,
-    fb: FormBuilder,
-    router: Router,
-    route: ActivatedRoute,
-    cdr: ChangeDetectorRef,
-    notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    super(fb, router, route, cdr, notificationService);
+    this.initializeForm();
   }
 
-  protected get entityService(): CrudFormService<Cliente> {
-    return this.clienteService;
-  }
+  ngOnInit(): void {
+    this.clienteId = Number(this.route.snapshot.paramMap.get('id'));
+    this.isEdicao = !!this.clienteId && !isNaN(this.clienteId);
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.loadCategorias();
-    this.setupFormValidation();
-  }
-
-  protected override buildForm(): void {
-    super.buildForm();
+    this.carregarCategorias();
     
-    // Adicionar validador customizado para confirmar senha apenas em modo criação
-    if (!this.isEditMode) {
-      this.entityForm.addValidators(confirmPasswordValidator);
-    } else {
-      // Em modo edição, remover campos de senha
-      this.entityForm.removeControl('senha');
-      this.entityForm.removeControl('confirmarSenha');
+    if (this.isEdicao) {
+      this.carregarCliente();
     }
   }
 
-  private setupFormValidation(): void {
-    // Validação em tempo real para confirmação de senha
-    if (!this.isEditMode) {
-      this.entityForm.get('confirmarSenha')?.valueChanges.subscribe(() => {
-        this.entityForm.updateValueAndValidity();
-      });
+  private initializeForm(): void {
+    this.clienteForm = this.fb.group({
+      nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/)]],
+      email: ['', [Validators.email]],
+      telefone: [''],
+      dataNascimento: ['', [Validators.required]],
+      senha: [''],
+      confirmarSenha: [''],
+      categoria: [''],
+      ativo: [true]
+    });
+
+    // Adicionar validações condicionais para senha apenas se não for edição
+    if (!this.isEdicao) {
+      this.clienteForm.get('senha')?.setValidators([Validators.required, Validators.minLength(6)]);
+      this.clienteForm.get('confirmarSenha')?.setValidators([Validators.required]);
     }
   }
 
-  protected override saveEntity(): void {
+  private carregarCategorias(): void {
+    this.categoriaService.listarTodos().subscribe({
+      next: (categorias) => {
+        this.categorias = categorias.filter(cat => cat.ativo);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar categorias:', error);
+      }
+    });
+  }
+
+  private carregarCliente(): void {
+    if (!this.clienteId) return;
+
     this.loading = true;
-    this.cdr.markForCheck();
-
-    let formValue = this.entityForm.value;
-    
-    // Preparar dados para envio
-    if (!this.isEditMode) {
-      // Em modo criação, incluir senha mas remover confirmação
-      const { confirmarSenha, ...clienteData } = formValue;
-      formValue = clienteData;
-    }
-    
-    // Processar categoria se selecionada
-    if (formValue.categoria && typeof formValue.categoria === 'object') {
-      formValue.categoria = { id: formValue.categoria.id };
-    }
-
-    const request = this.isEditMode && this.entityId
-      ? this.entityService.atualizar(this.entityId, formValue)
-      : this.entityService.criar(formValue);
-
-    request.subscribe({
-      next: (entity) => {
+    this.clienteService.buscarPorId(this.clienteId).subscribe({
+      next: (cliente) => {
+        this.cliente = cliente;
+        this.preencherFormulario(cliente);
         this.loading = false;
-        const message = `${this.config.entityName} ${this.isEditMode ? 'atualizado' : 'cadastrado'} com sucesso`;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar cliente:', error);
+        this.notificationService.showError('Erro ao carregar cliente');
+        this.loading = false;
+        this.voltar();
+      }
+    });
+  }
+
+  private preencherFormulario(cliente: Cliente): void {
+    this.clienteForm.patchValue({
+      nome: cliente.nome,
+      cpf: cliente.cpf,
+      email: cliente.email || '',
+      telefone: cliente.telefone || '',
+      dataNascimento: cliente.dataNascimento,
+      categoria: cliente.categoria?.id || '',
+      ativo: cliente.ativo
+    });
+  }
+
+  onSubmit(): void {
+    if (this.clienteForm.invalid) {
+      this.markAllFieldsAsTouched();
+      this.notificationService.showError('Por favor, corrija os erros no formulário');
+      return;
+    }
+
+    // Verificar senhas se não for edição
+    if (!this.isEdicao && this.clienteForm.get('senha')?.value !== this.clienteForm.get('confirmarSenha')?.value) {
+      this.notificationService.showError('As senhas não conferem');
+      return;
+    }
+
+    this.loading = true;
+    const clienteData = this.prepareClienteData();
+
+    const operation = this.isEdicao 
+      ? this.clienteService.atualizar(this.clienteId!, clienteData)
+      : this.clienteService.criar(clienteData);
+
+    operation.subscribe({
+      next: (resultado) => {
+        const mensagem = this.isEdicao 
+          ? 'Cliente atualizado com sucesso!' 
+          : 'Cliente cadastrado com sucesso!';
         
-        this.notificationService.success(message).then(() => {
-          this.navigateToList();
-        });
-        this.cdr.markForCheck();
-      },
-      error: (error) => {
+        this.notificationService.showSuccess(mensagem);
         this.loading = false;
-        this.notificationService.error(
-          error.message || `Erro ao salvar ${this.config.entityName.toLowerCase()}`
-        );
-        this.cdr.markForCheck();
-      }
-    });
-  }
-
-  override getFieldError(fieldName: string): string {
-    const field = this.entityForm.get(fieldName);
-    if (!field || !field.errors) {
-      return '';
-    }
-
-    const errors = field.errors;
-    
-    // Erro específico para confirmação de senha
-    if (fieldName === 'confirmarSenha' && errors['senhasDiferentes']) {
-      return 'As senhas não conferem';
-    }
-
-    // Outros erros padrão
-    return super.getFieldError(fieldName);
-  }
-
-  // Keep this method for template compatibility  
-  private loadCategorias(): void {
-    this.categoriaService.buscarAtivas().subscribe({
-      next: (data) => {
-        this.categorias = data;
-        this.cdr.markForCheck();
+        this.voltar();
       },
       error: (error) => {
-        console.error('Erro ao carregar categorias', error);
+        console.error('Erro ao salvar cliente:', error);
+        const mensagem = this.isEdicao 
+          ? 'Erro ao atualizar cliente' 
+          : 'Erro ao cadastrar cliente';
+        
+        this.notificationService.showError(mensagem);
+        this.loading = false;
       }
     });
   }
 
-  // Legacy method for template compatibility
-  formatarCPF(event: any): void {
-    this.formatCPF(event);
+  private prepareClienteData(): Cliente {
+    const formValue = this.clienteForm.value;
+    
+    const cliente: Cliente = {
+      nome: formValue.nome.trim(),
+      cpf: formValue.cpf,
+      email: formValue.email ? formValue.email.trim() : undefined,
+      telefone: formValue.telefone || undefined,
+      dataNascimento: formValue.dataNascimento,
+      ativo: formValue.ativo
+    };
+
+    // Adicionar senha apenas se não for edição ou se senha foi preenchida
+    if (!this.isEdicao && formValue.senha) {
+      cliente.senha = formValue.senha;
+    }
+
+    // Adicionar categoria se selecionada
+    if (formValue.categoria) {
+      const categoriaEncontrada = this.categorias.find(cat => cat.id === formValue.categoria);
+      if (categoriaEncontrada) {
+        cliente.categoria = categoriaEncontrada;
+      }
+    }
+
+    if (this.isEdicao && this.clienteId) {
+      cliente.id = this.clienteId;
+    }
+
+    return cliente;
+  }
+
+  private markAllFieldsAsTouched(): void {
+    Object.keys(this.clienteForm.controls).forEach(key => {
+      const control = this.clienteForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.clienteForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  // Método para debug - verificar estado do formulário
+  debugFormulario(): void {
+    console.log('=== DEBUG FORMULÁRIO ===');
+    console.log('Formulário válido:', this.clienteForm.valid);
+    console.log('Formulário inválido:', this.clienteForm.invalid);
+    console.log('Loading:', this.loading);
+    console.log('Errors:', this.clienteForm.errors);
+    
+    // Verificar cada campo
+    Object.keys(this.clienteForm.controls).forEach(key => {
+      const control = this.clienteForm.get(key);
+      if (control && control.invalid) {
+        console.log(`Campo ${key} inválido:`, control.errors);
+      }
+    });
+    console.log('========================');
+  }
+
+  voltar(): void {
+    this.router.navigate(['/clientes']);
   }
 }

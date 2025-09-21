@@ -1,124 +1,182 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, Settings, Save, ArrowLeft } from 'lucide-angular';
-import { BaseCrudFormComponent } from '../../../shared/components/base-crud-form.component';
-import { NotificationService } from '../../../shared/services/notification.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Servico } from '../../../models/servico.model';
 import { ServicoService } from '../../../services/servico.service';
-import { FormConfig, FormFieldType, CrudFormService } from '../../../shared/interfaces/form-config.interface';
+import { NotificationService } from '../../../shared/services/notification.service';
 
-/**
- * Componente de formulário de serviços
- * Refatorado para usar BaseCrudFormComponent eliminando duplicação de código
- * Redução de ~80% no código comparado à versão anterior
- */
 @Component({
   selector: 'app-servico-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LucideAngularModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   templateUrl: './servico-form.component.html',
-  styleUrl: './servico-form.component.scss'
+  styleUrl: './servico-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.Default // Força estratégia padrão
 })
-export class ServicoFormComponent extends BaseCrudFormComponent<Servico> implements OnInit {
+export class ServicoFormComponent implements OnInit {
   
-  // Required implementation of abstract config property
-  protected config: FormConfig<Servico> = {
-    entityName: 'Serviço',
-    entityNamePlural: 'Serviços',
-    baseRoute: '/servicos',
-    fields: [
-      {
-        key: 'nome',
-        label: 'Nome do Serviço',
-        type: FormFieldType.TEXT,
-        required: true,
-        placeholder: 'Digite o nome do serviço',
-        validators: [Validators.required, Validators.minLength(3)]
-      },
-      {
-        key: 'descricao',
-        label: 'Descrição',
-        type: FormFieldType.TEXTAREA,
-        required: true,
-        placeholder: 'Descreva o serviço',
-        validators: [Validators.required],
-        fieldSpecificConfig: {
-          rows: 3
-        }
-      },
-      {
-        key: 'valor',
-        label: 'Valor',
-        type: FormFieldType.CURRENCY,
-        required: true,
-        placeholder: '0,00',
-        validators: [Validators.required, Validators.min(0.01)],
-        applyMask: true
-      },
-      {
-        key: 'categoria',
-        label: 'Categoria',
-        type: FormFieldType.TEXT,
-        required: true,
-        placeholder: 'Digite a categoria do serviço',
-        validators: [Validators.required]
-      },
-      {
-        key: 'ativo',
-        label: 'Serviço Ativo',
-        type: FormFieldType.CHECKBOX,
-        defaultValue: true
-      }
-    ],
-    createTitle: 'Novo Serviço',
-    editTitle: 'Editar Serviço',
-    customValidation: {
-      errorMessages: {
-        'nome': 'Nome deve ter pelo menos 3 caracteres',
-        'valor': 'Valor deve ser maior que zero'
-      }
-    }
-  };
-
-  // Legacy properties for template compatibility
-  get servicoForm() { return this.entityForm; }
-  get servicoId() { return this.entityId; }
+  servicoForm!: FormGroup;
+  loading = false;
+  isEdicao = false;
+  servico: Servico | null = null;
+  servicoId: number | null = null;
 
   constructor(
+    private fb: FormBuilder,
     private servicoService: ServicoService,
-    fb: FormBuilder,
-    router: Router,
-    route: ActivatedRoute,
-    cdr: ChangeDetectorRef,
-    notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone // Adiciona NgZone para forçar detecção
   ) {
-    super(fb, router, route, cdr, notificationService);
+    this.initializeForm();
   }
 
-  protected get entityService(): CrudFormService<Servico> {
-    return this.servicoService;
+  ngOnInit(): void {
+    this.servicoId = Number(this.route.snapshot.paramMap.get('id'));
+    this.isEdicao = !!this.servicoId && !isNaN(this.servicoId);
+
+    if (this.isEdicao) {
+      this.carregarServico();
+    }
   }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    // All form lifecycle is managed by BaseCrudFormComponent
-    // This eliminates the need to manage:
-    // - Form building and validation
-    // - Route parameter handling
-    // - Entity loading and saving
-    // - Error handling
-    // - Subscription management
-    // - Currency formatting (handled by base class)
+  private initializeForm(): void {
+    this.servicoForm = this.fb.group({
+      nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      categoria: ['', [Validators.required, Validators.maxLength(50)]],
+      valor: ['', [Validators.required, Validators.min(0.01)]],
+      descricao: ['', [Validators.required, Validators.maxLength(500)]],
+      ativo: [true]
+    });
   }
 
-  // Legacy methods for template compatibility
-  marcarCamposInvalidos(): void {
-    this.markAllFieldsAsTouched();
+  private carregarServico(): void {
+    if (!this.servicoId) return;
+
+    this.loading = true;
+    
+    this.servicoService.buscarPorId(this.servicoId).subscribe({
+      next: (servico) => {
+        // Força execução dentro da zona do Angular
+        this.ngZone.run(() => {
+          this.servico = servico;
+          this.preencherFormulario(servico);
+          this.loading = false;
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar serviço:', error);
+        this.ngZone.run(() => {
+          this.notificationService.showError('Erro ao carregar serviço');
+          this.loading = false;
+          this.voltar();
+        });
+      }
+    });
   }
 
-  formatarValor(event: any): void {
-    this.formatCurrency(event);
+  private preencherFormulario(servico: Servico): void {
+    this.servicoForm.patchValue({
+      nome: servico.nome,
+      categoria: servico.categoria || '',
+      valor: servico.valor,
+      descricao: servico.descricao,
+      ativo: servico.ativo
+    });
+  }
+
+  onSubmit(): void {
+    if (this.servicoForm.invalid) {
+      this.markAllFieldsAsTouched();
+      this.notificationService.showError('Por favor, corrija os erros no formulário');
+      return;
+    }
+
+    this.loading = true;
+    const servicoData = this.prepareServicoData();
+
+    const operation = this.isEdicao 
+      ? this.servicoService.atualizar(this.servicoId!, servicoData)
+      : this.servicoService.criar(servicoData);
+
+    operation.subscribe({
+      next: (resultado) => {
+        const mensagem = this.isEdicao 
+          ? 'Serviço atualizado com sucesso!' 
+          : 'Serviço cadastrado com sucesso!';
+        
+        this.notificationService.showSuccess(mensagem);
+        this.loading = false;
+        this.voltar();
+      },
+      error: (error) => {
+        console.error('Erro ao salvar serviço:', error);
+        const mensagem = this.isEdicao 
+          ? 'Erro ao atualizar serviço' 
+          : 'Erro ao cadastrar serviço';
+        
+        this.notificationService.showError(mensagem);
+        this.loading = false;
+      }
+    });
+  }
+
+  private prepareServicoData(): Servico {
+    const formValue = this.servicoForm.value;
+    
+    const servico: Servico = {
+      nome: formValue.nome.trim(),
+      categoria: formValue.categoria ? formValue.categoria.trim() : undefined,
+      valor: parseFloat(formValue.valor),
+      descricao: formValue.descricao.trim(),
+      ativo: formValue.ativo
+    };
+
+    if (this.isEdicao && this.servicoId) {
+      servico.id = this.servicoId;
+    }
+
+    return servico;
+  }
+
+  private markAllFieldsAsTouched(): void {
+    Object.keys(this.servicoForm.controls).forEach(key => {
+      const control = this.servicoForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.servicoForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  // Método para debug - verificar estado do formulário
+  debugFormulario(): void {
+    console.log('=== DEBUG FORMULÁRIO ===');
+    console.log('Formulário válido:', this.servicoForm.valid);
+    console.log('Formulário inválido:', this.servicoForm.invalid);
+    console.log('Loading:', this.loading);
+    console.log('Errors:', this.servicoForm.errors);
+    
+    // Verificar cada campo
+    Object.keys(this.servicoForm.controls).forEach(key => {
+      const control = this.servicoForm.get(key);
+      if (control && control.invalid) {
+        console.log(`Campo ${key} inválido:`, control.errors);
+      }
+    });
+    console.log('========================');
+  }
+
+  voltar(): void {
+    this.router.navigate(['/servicos']);
   }
 }

@@ -1,100 +1,273 @@
 <div class="contrato-list">
+  <!-- Header da página -->
   <div class="page-header">
-    <h1>
-      <lucide-icon name="file-text"></lucide-icon>
-      Contratos
-    </h1>
-    <a routerLink="/contratos/novo" class="btn btn-primary">
-      <lucide-icon name="plus"></lucide-icon>
-      Novo Contrato
+    <div class="header-left">
+      <div class="title-group">
+        <h1>Contratos</h1>
+        <span class="subtitle">Gestão de Contratos</span>
+      </div>
+    </div>
+    <a routerLink="/contratos/novo" class="btn-novo">
+      <span>Novo Contrato</span>
     </a>
   </div>
 
-  <div class="filters-card">
-    <div class="filters">
-      <div class="filter-group">
-        <label>Filtrar por status:</label>
-        <select 
-          class="form-control" 
-          [(ngModel)]="filtroStatus"
-          (change)="filtrarPorStatus()">
-          <option value="">Todos</option>
-          <option value="ATIVO">Ativo</option>
-          <option value="INATIVO">Inativo</option>
-          <option value="PENDENTE">Pendente</option>
-          <option value="CANCELADO">Cancelado</option>
-        </select>
+  <!-- Card de Filtros -->
+  <div class="filtros-container">
+    <div class="filtros-header">
+      <h3>Filtros de Busca</h3>
+    </div>
+    
+    <div class="filtros-content">
+      <div class="filtros-inputs">
+        <!-- Campo de filtro por status -->
+        <div class="input-group">
+          <label>Filtrar por status</label>
+          <div class="input-wrapper">
+            <select 
+              class="input-field" 
+              [(ngModel)]="filtroStatus"
+              (change)="aplicarFiltros()">
+              <option value="">Todos os status</option>
+              <option value="PENDENTE">Pendente</option>
+              <option value="ATIVO">Ativo</option>
+              <option value="CONCLUIDO">Concluído</option>
+              <option value="CANCELADO">Cancelado</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Campo de busca por cliente -->
+        <div class="input-group">
+          <label>Buscar por cliente</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              class="input-field" 
+              [(ngModel)]="filtroCliente"
+              (keyup.enter)="buscarPorCliente()"
+              (input)="aplicarFiltros()"
+              placeholder="Digite o nome do cliente">
+          </div>
+        </div>
+        
+        <!-- Campo de filtro especial -->
+        <div class="input-group">
+          <label>Filtros Especiais</label>
+          <div class="checkbox-wrapper">
+            <input 
+              type="checkbox" 
+              id="mostrarAtivos"
+              [(ngModel)]="mostrarAtivos"
+              (change)="toggleMostrarAtivos()">
+            <label for="mostrarAtivos" class="checkbox-label">
+              Apenas contratos ativos
+            </label>
+          </div>
+        </div>
       </div>
       
-      <div class="filter-actions">
-        <button class="btn btn-clear" (click)="limparFiltros()">
-          <lucide-icon name="filter"></lucide-icon>
-          Limpar Filtros
+      <!-- Botões de ação -->
+      <div class="filtros-actions">
+        <button class="btn-filtrar" (click)="filtrar()">
+          <span>Filtrar</span>
+        </button>
+        
+        <button class="btn-limpar" (click)="limparFiltros()">
+          <span>Limpar</span>
         </button>
       </div>
     </div>
   </div>
 
-  <div class="table-card">
+  <!-- Contador de resultados -->
+  <div class="resultados-info">
+    <div class="contador">
+      <span>{{ contadorResultados }}</span>
+    </div>
+  </div>
+
+  <!-- Tabela de resultados -->
+  <div class="tabela-container">
     @if (loading) {
-      <div class="loading">
-        <lucide-icon name="loader" class="loading-icon"></lucide-icon>
+      <div class="loading-wrapper">
+        <div class="loading-spinner"></div>
         <p>Carregando contratos...</p>
       </div>
+    } @else if (contratosFiltrados.length === 0) {
+      <div class="empty-wrapper">
+        <h3>Nenhum contrato encontrado</h3>
+        <p>{{ contratos.length === 0 ? 'Você ainda não possui contratos cadastrados.' : 'Não há contratos que correspondam aos filtros selecionados.' }}</p>
+        
+        @if (contratos.length === 0) {
+          <!-- Se não há contratos no total, mostra botão para cadastrar -->
+          <a routerLink="/contratos/novo" class="btn-novo">
+            <span>Cadastrar Primeiro Contrato</span>
+          </a>
+        } @else {
+          <!-- Se há contratos mas filtro não encontrou, mostra botão para limpar filtros -->
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <span>Limpar Filtros</span>
+          </button>
+        }
+      </div>
     } @else {
-      @if (contratosFiltrados.length > 0) {
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Cliente</th>
-                <th>Data Início</th>
-                <th>Data Fim</th>
-                <th>Status</th>
-                <th>Valor Total</th>
-                <th>Ações</th>
+      <!-- Tabela Desktop -->
+      <div class="tabela-desktop">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th class="col-id">
+                <div class="th-content">
+                  <span>ID</span>
+                </div>
+              </th>
+              <th class="col-cliente">
+                <div class="th-content">
+                  <span>Cliente</span>
+                </div>
+              </th>
+              <th class="col-data-inicio">
+                <div class="th-content">
+                  <span>Data Início</span>
+                </div>
+              </th>
+              <th class="col-data-fim">
+                <div class="th-content">
+                  <span>Data Fim</span>
+                </div>
+              </th>
+              <th class="col-status">
+                <div class="th-content">
+                  <span>Status</span>
+                </div>
+              </th>
+              <th class="col-valor">
+                <div class="th-content">
+                  <span>Valor Total</span>
+                </div>
+              </th>
+              <th class="col-actions">
+                <div class="th-content">
+                  <span>Ações</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (contrato of contratosFiltrados; track contrato.id) {
+              <tr class="tabela-row">
+                <td class="col-id">
+                  <span class="id-badge">{{ contrato.id }}</span>
+                </td>
+                <td class="col-cliente">
+                  <div class="contrato-cliente">
+                    <strong>{{ getClienteNome(contrato) }}</strong>
+                  </div>
+                </td>
+                <td class="col-data-inicio">
+                  <span class="data-texto">
+                    {{ contrato.dataInicio | date:'dd/MM/yyyy' }}
+                  </span>
+                </td>
+                <td class="col-data-fim">
+                  <span class="data-texto">
+                    {{ contrato.dataFim ? (contrato.dataFim | date:'dd/MM/yyyy') : '-' }}
+                  </span>
+                </td>
+                <td class="col-status">
+                  <span class="status-badge" 
+                        [class.pendente]="contrato.status === 'PENDENTE'"
+                        [class.ativo]="contrato.status === 'ATIVO'"
+                        [class.concluido]="contrato.status === 'CONCLUIDO'"
+                        [class.cancelado]="contrato.status === 'CANCELADO'">
+                    <span>{{ getStatusTexto(contrato.status) }}</span>
+                  </span>
+                </td>
+                <td class="col-valor">
+                  <span class="valor-texto">
+                    {{ formatarValor(contrato.valorTotal) }}
+                  </span>
+                </td>
+                <td class="col-actions">
+                  <div class="action-buttons">
+                    <a [routerLink]="['/contratos', contrato.id, 'editar']" 
+                       class="btn-action btn-editar"
+                       title="Editar dados do contrato"
+                       attr.aria-label="Editar contrato {{ contrato.id }}">
+                      <span class="action-text">Editar</span>
+                    </a>
+                    <button class="btn-action btn-excluir" 
+                            (click)="confirmarExclusao(contrato)"
+                            title="Excluir contrato permanentemente"
+                            attr.aria-label="Excluir contrato {{ contrato.id }}">
+                      <span class="action-text">Excluir</span>
+                    </button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              @for (contrato of contratosFiltrados; track contrato.id) {
-                <tr>
-                  <td>{{ contrato.id }}</td>
-                  <td>{{ getClienteNome(contrato) }}</td>
-                  <td>{{ contrato.dataInicio }}</td>
-                  <td>{{ contrato.dataFim || '-' }}</td>
-                  <td>
-                    <span class="badge" 
-                          [class.badge-success]="contrato.status === 'ATIVO'"
-                          [class.badge-warning]="contrato.status === 'PENDENTE'"
-                          [class.badge-danger]="contrato.status === 'CANCELADO'"
-                          [class.badge-secondary]="contrato.status === 'INATIVO'">
-                      {{ contrato.status || 'PENDENTE' }}
-                    </span>
-                  </td>
-                  <td>{{ formatarValor(contrato.valorTotal) }}</td>
-                  <td>
-                    <div class="actions">
-                      <a [routerLink]="['/contratos', contrato.id, 'editar']" class="btn-action btn-edit">
-                        <lucide-icon name="edit"></lucide-icon>
-                      </a>
-                      <button (click)="deletarContrato(contrato)" class="btn-action btn-delete">
-                        <lucide-icon name="trash-2"></lucide-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Cards Mobile -->
+      <div class="cards-mobile">
+        @for (contrato of contratosFiltrados; track contrato.id) {
+          <div class="contrato-card">
+            <div class="card-header">
+              <div class="contrato-info">
+                <span class="id-badge">{{ contrato.id }}</span>
+                <h4 class="contrato-cliente">{{ getClienteNome(contrato) }}</h4>
+              </div>
+              <div class="status-badge" 
+                   [class.pendente]="contrato.status === 'PENDENTE'"
+                   [class.ativo]="contrato.status === 'ATIVO'"
+                   [class.concluido]="contrato.status === 'CONCLUIDO'"
+                   [class.cancelado]="contrato.status === 'CANCELADO'">
+                <span>{{ getStatusTexto(contrato.status) }}</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div class="info-item">
+                <span class="label">Data Início:</span>
+                <span class="value">{{ contrato.dataInicio | date:'dd/MM/yyyy' }}</span>
+              </div>
+              
+              @if (contrato.dataFim) {
+                <div class="info-item">
+                  <span class="label">Data Fim:</span>
+                  <span class="value">{{ contrato.dataFim | date:'dd/MM/yyyy' }}</span>
+                </div>
               }
-            </tbody>
-          </table>
-        </div>
-      } @else {
-        <div class="empty-state">
-          <lucide-icon name="inbox" class="empty-icon"></lucide-icon>
-          <p>Nenhum contrato encontrado</p>
-          <p class="empty-subtitle">Crie o primeiro contrato para começar</p>
-        </div>
-      }
+              
+              <div class="info-item">
+                <span class="label">Valor Total:</span>
+                <span class="value valor-destaque">{{ formatarValor(contrato.valorTotal) }}</span>
+              </div>
+              
+              @if (contrato.observacoes) {
+                <div class="info-item">
+                  <span class="label">Observações:</span>
+                  <span class="value">{{ contrato.observacoes }}</span>
+                </div>
+              }
+            </div>
+            
+            <div class="card-footer">
+              <a [routerLink]="['/contratos', contrato.id, 'editar']" 
+                 class="btn-action btn-editar">
+                <span>Editar</span>
+              </a>
+              <button class="btn-action btn-excluir" 
+                      (click)="confirmarExclusao(contrato)">
+                <span>Excluir</span>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     }
   </div>
 </div>

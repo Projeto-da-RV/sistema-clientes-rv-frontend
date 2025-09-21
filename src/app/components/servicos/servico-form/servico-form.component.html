@@ -1,113 +1,222 @@
-<div class="servico-form">
-  <div class="form-card">
-    <div class="form-header">
-      <lucide-icon name="settings" class="header-icon"></lucide-icon>
-      <h2>{{ isEditMode ? 'Editar' : 'Novo' }} Serviço</h2>
+<div class="page-container">
+  <!-- Header da página -->
+  <div class="page-header">
+    <div class="page-title">
+      <div>
+        <h1>{{ isEdicao ? 'Editar Serviço' : 'Novo Serviço' }}</h1>
+        <span class="subtitle">
+          {{ isEdicao ? 'Atualizar informações do serviço' : 'Adicionar novo serviço' }}
+        </span>
+      </div>
     </div>
-    
+    <button class="btn-back" (click)="voltar()">
+      Voltar
+    </button>
+  </div>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/servicos" class="breadcrumb-item">
+      Serviços
+    </a>
+    <span class="breadcrumb-separator">></span>
+    <span class="breadcrumb-item active">
+      {{ isEdicao ? 'Editar' : 'Novo Serviço' }}
+    </span>
+  </nav>
+
+  <!-- Container do formulário -->
+  <div class="form-container">
     <form [formGroup]="servicoForm" (ngSubmit)="onSubmit()">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="nome">Nome *</label>
-          <input 
-            type="text" 
-            id="nome"
-            class="form-control"
-            formControlName="nome"
-            [class.is-invalid]="isFieldInvalid('nome')"
-            placeholder="Digite o nome do serviço">
-          @if (isFieldInvalid('nome')) {
-            <div class="invalid-feedback">
-              <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-              {{ getFieldError('nome') }}
-            </div>
-          }
-        </div>
-        
-        <div class="form-group">
-          <label for="categoria">Categoria *</label>
-          <input 
-            type="text" 
-            id="categoria"
-            class="form-control"
-            formControlName="categoria"
-            [class.is-invalid]="isFieldInvalid('categoria')"
-            placeholder="Digite a categoria">
-          @if (isFieldInvalid('categoria')) {
-            <div class="invalid-feedback">
-              <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-              {{ getFieldError('categoria') }}
-            </div>
-          }
-        </div>
-      </div>
       
-      <div class="form-group">
-        <label for="descricao">Descrição *</label>
-        <textarea 
-          id="descricao"
-          class="form-control"
-          formControlName="descricao"
-          [class.is-invalid]="isFieldInvalid('descricao')"
-          rows="3"
-          placeholder="Descreva o serviço"></textarea>
-        @if (isFieldInvalid('descricao')) {
-          <div class="invalid-feedback">
-            <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-            {{ getFieldError('descricao') }}
+      <!-- Card de informações principais -->
+      <div class="form-card">
+        <div class="form-header">
+          <h3>Informações do Serviço</h3>
+        </div>
+
+        <div class="form-content">
+          <!-- Nome do serviço -->
+          <div class="form-group full-width">
+            <label for="nome" class="form-label required">
+              Nome do Serviço
+            </label>
+            <input
+              id="nome"
+              type="text"
+              class="form-control"
+              [class.error]="isFieldInvalid('nome')"
+              formControlName="nome"
+              placeholder="Digite o nome do serviço"
+              maxlength="100">
+            
+            @if (isFieldInvalid('nome')) {
+              <div class="error-message">
+                @if (servicoForm.get('nome')?.errors?.['required']) {
+                  O nome do serviço é obrigatório
+                }
+                @if (servicoForm.get('nome')?.errors?.['minlength']) {
+                  O nome deve ter pelo menos 3 caracteres
+                }
+              </div>
+            }
           </div>
-        }
-      </div>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="valor">Valor (R$) *</label>
-          <input 
-            type="number" 
-            id="valor"
-            class="form-control"
-            formControlName="valor"
-            [class.is-invalid]="isFieldInvalid('valor')"
-            step="0.01"
-            min="0.01"
-            placeholder="0,00">
-          @if (isFieldInvalid('valor')) {
-            <div class="invalid-feedback">
-              <lucide-icon name="alert-circle" class="error-icon"></lucide-icon>
-              {{ getFieldError('valor') }}
+
+          <!-- Categoria e Valor na mesma linha -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="categoria" class="form-label required">
+                Categoria
+              </label>
+              <input
+                id="categoria"
+                type="text"
+                class="form-control"
+                [class.error]="isFieldInvalid('categoria')"
+                formControlName="categoria"
+                placeholder="Digite a categoria"
+                maxlength="50">
+              
+              @if (isFieldInvalid('categoria')) {
+                <div class="error-message">
+                  A categoria é obrigatória
+                </div>
+              }
             </div>
-          }
-        </div>
-        
-        <div class="form-group checkbox-group">
-          <label>
-            <input 
-              type="checkbox" 
-              formControlName="ativo">
-            Serviço Ativo
-          </label>
+
+            <div class="form-group">
+              <label for="valor" class="form-label required">
+                Valor (R$)
+              </label>
+              <input
+                id="valor"
+                type="number"
+                class="form-control"
+                [class.error]="isFieldInvalid('valor')"
+                formControlName="valor"
+                placeholder="0,00"
+                step="0.01"
+                min="0.01">
+              
+              @if (isFieldInvalid('valor')) {
+                <div class="error-message">
+                  @if (servicoForm.get('valor')?.errors?.['required']) {
+                    O valor é obrigatório
+                  }
+                  @if (servicoForm.get('valor')?.errors?.['min']) {
+                    O valor deve ser maior que zero
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Descrição -->
+          <div class="form-group full-width">
+            <label for="descricao" class="form-label required">
+              Descrição
+            </label>
+            <textarea
+              id="descricao"
+              class="form-control textarea"
+              [class.error]="isFieldInvalid('descricao')"
+              formControlName="descricao"
+              placeholder="Descreva o serviço"
+              rows="4"
+              maxlength="500"></textarea>
+            
+            <div class="field-info">
+              <span class="char-count">
+                {{ servicoForm.get('descricao')?.value?.length || 0 }}/500 caracteres
+              </span>
+            </div>
+
+            @if (isFieldInvalid('descricao')) {
+              <div class="error-message">
+                A descrição é obrigatória
+              </div>
+            }
+          </div>
         </div>
       </div>
-      
+
+      <!-- Card de configurações -->
+      <div class="form-card">
+        <div class="form-header">
+          <h3>Configurações</h3>
+        </div>
+
+        <div class="form-content">
+          <div class="form-row">
+            <div class="form-group">
+              <div class="checkbox-group">
+                <div class="custom-checkbox-large">
+                  <input
+                    id="ativo"
+                    type="checkbox"
+                    formControlName="ativo">
+                  <span class="checkmark-large"></span>
+                </div>
+                <div class="checkbox-content">
+                  <label for="ativo" class="checkbox-label">
+                    Serviço Ativo
+                  </label>
+                  <span class="checkbox-description">
+                    Serviços ativos ficam disponíveis para contratação
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card de metadados (apenas para edição) -->
+      @if (isEdicao && servico) {
+        <div class="metadata-card">
+          <div class="metadata-header">
+            <h4>Informações do Sistema</h4>
+          </div>
+          
+          <div class="metadata-grid">
+            <div class="metadata-item">
+              <span class="metadata-label">ID:</span>
+              <span class="metadata-value">{{ servico.id }}</span>
+            </div>
+            
+            @if (servico.createdAt) {
+              <div class="metadata-item">
+                <span class="metadata-label">Criado em:</span>
+                <span class="metadata-value">{{ servico.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+            
+            @if (servico.updatedAt) {
+              <div class="metadata-item">
+                <span class="metadata-label">Atualizado em:</span>
+                <span class="metadata-value">{{ servico.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Botões de ação -->
       <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn btn-secondary"
-          (click)="cancelar()"
-          [disabled]="loading">
-          <lucide-icon name="arrow-left"></lucide-icon>
+        <button type="button" class="btn-cancel" (click)="voltar()">
           Cancelar
         </button>
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="loading">
+        
+        <button type="submit" 
+                class="btn-save" 
+                [disabled]="servicoForm.invalid || loading"
+                [class.loading]="loading"
+                [class.disabled]="servicoForm.invalid || loading">
           @if (loading) {
-            <lucide-icon name="loader" class="loading-icon-small"></lucide-icon>
-            Salvando...
+            <div class="spinner-small"></div>
+            <span>Salvando...</span>
           } @else {
-            <lucide-icon name="save"></lucide-icon>
-            {{ isEditMode ? 'Atualizar' : 'Cadastrar' }}
+            <span>{{ isEdicao ? 'Atualizar' : 'Cadastrar' }} Serviço</span>
           }
         </button>
       </div>
