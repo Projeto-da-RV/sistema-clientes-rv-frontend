@@ -1,4 +1,5 @@
 import { BaseEntity } from '../shared/interfaces/base-entity.interface';
+import { Cliente } from './cliente.model';
 
 export interface Endereco extends BaseEntity {
   rua: string;
@@ -7,5 +8,6 @@ export interface Endereco extends BaseEntity {
   estado: string;
   cep: string;
   principal: boolean;
-  cliente?: { id: number };
+  createdAt?: string;
+  cliente?: Cliente | { id: number };
 }

@@ -1,56 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Cliente } from '../models/cliente.model';
-import { environment } from '../../environments/environment';
+import { BaseCrudService } from '../shared/services/base-crud.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClienteService {
-  private apiUrl = `${environment.apiBaseUrl}/clientes`;
+export class ClienteService extends BaseCrudService<Cliente> {
+  protected readonly resourcePath = 'clientes';
 
-  constructor(private http: HttpClient) {}
-
-  // GET /clientes
-  listarTodos(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(this.apiUrl);
+  constructor(http: HttpClient) {
+    super(http);
   }
 
-  // GET /clientes/{id}
-  buscarPorId(id: number): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
-  }
-
-  // POST /clientes
-  criar(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(this.apiUrl, cliente);
-  }
-
-  // PUT /clientes/{id}
-  atualizar(id: number, cliente: Cliente): Observable<Cliente> {
-    return this.http.put<Cliente>(`${this.apiUrl}/${id}`, cliente);
-  }
-
-  // DELETE /clientes/{id}
-  deletar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
-  }
-
-  // GET /clientes/buscar?nome={string}
-  buscarPorNome(nome: string): Observable<Cliente[]> {
+  override buscarPorNome(nome: string): Observable<Cliente[]> {
     const params = new HttpParams().set('nome', nome);
-    return this.http.get<Cliente[]>(`${this.apiUrl}/buscar`, { params });
+    return this.http.get<Cliente[]>(`${this.apiUrl}/buscar`, { params })
+      .pipe(catchError(this.handleError));
   }
 
-  // GET /clientes/cpf?cpf={string}
   buscarPorCpf(cpf: string): Observable<Cliente> {
     const params = new HttpParams().set('cpf', cpf);
-    return this.http.get<Cliente>(`${this.apiUrl}/cpf`, { params });
+    return this.http.get<Cliente>(`${this.apiUrl}/cpf`, { params })
+      .pipe(catchError(this.handleError));
   }
 
-  // GET /clientes/categoria/{categoriaId}
   buscarPorCategoria(categoriaId: number): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(`${this.apiUrl}/categoria/${categoriaId}`);
+    return this.http.get<Cliente[]>(`${this.apiUrl}/categoria/${categoriaId}`)
+      .pipe(catchError(this.handleError));
   }
 }

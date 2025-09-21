@@ -7,31 +7,38 @@
     
     <form (ngSubmit)="onLogin()" class="login-form">
       <div class="form-group">
-        <label for="username">Usuário</label>
+        <label for="cpfOuEmail">CPF ou Email</label>
         <input 
           type="text" 
-          id="username"
+          id="cpfOuEmail"
           class="form-control" 
-          [(ngModel)]="username" 
-          name="username"
-          placeholder="Digite seu usuário"
+          [(ngModel)]="cpfOuEmail" 
+          name="cpfOuEmail"
+          placeholder="Digite seu CPF ou email"
+          [disabled]="loading"
           required>
       </div>
       
       <div class="form-group">
-        <label for="password">Senha</label>
+        <label for="senha">Senha</label>
         <input 
           type="password" 
-          id="password"
+          id="senha"
           class="form-control" 
-          [(ngModel)]="password" 
-          name="password"
+          [(ngModel)]="senha" 
+          name="senha"
           placeholder="Digite sua senha"
+          [disabled]="loading"
           required>
       </div>
       
-      <button type="submit" class="btn btn-primary btn-block">
-        Entrar
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
+        @if (loading) {
+          <span class="spinner-small"></span>
+          Entrando...
+        } @else {
+          Entrar
+        }
       </button>
     </form>
   </div>

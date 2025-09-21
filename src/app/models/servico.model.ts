@@ -6,4 +6,6 @@ export interface Servico extends BaseEntity {
   valor: number;
   categoria: string;
   ativo: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }

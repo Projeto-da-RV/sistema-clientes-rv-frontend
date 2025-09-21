@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Categoria } from '../models/categoria.model';
@@ -15,14 +15,14 @@ export class CategoriaService extends BaseCrudService<Categoria> {
     super(http);
   }
 
-  // Alias for compatibility with existing code
-  listarTodas(): Observable<Categoria[]> {
-    return this.listarTodos();
-  }
-
-  // GET /categorias/ativas
   buscarAtivas(): Observable<Categoria[]> {
     return this.http.get<Categoria[]>(`${this.apiUrl}/ativas`)
+      .pipe(catchError(this.handleError));
+  }
+
+  override buscarPorNome(nome: string): Observable<Categoria[]> {
+    const params = new HttpParams().set('nome', nome);
+    return this.http.get<Categoria[]>(`${this.apiUrl}/buscar`, { params })
       .pipe(catchError(this.handleError));
   }
 }

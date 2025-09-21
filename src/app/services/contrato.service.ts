@@ -15,13 +15,11 @@ export class ContratoService extends BaseCrudService<Contrato> {
     super(http);
   }
 
-  // GET /contratos/cliente/{clienteId}
   buscarPorCliente(clienteId: number): Observable<Contrato[]> {
     return this.http.get<Contrato[]>(`${this.apiUrl}/cliente/${clienteId}`)
       .pipe(catchError(this.handleError));
   }
 
-  // GET /contratos/status/{status}
   buscarPorStatus(status: string): Observable<Contrato[]> {
     return this.http.get<Contrato[]>(`${this.apiUrl}/status/${status}`)
       .pipe(catchError(this.handleError));

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://api.rvdigital.com.br'
+  apiBaseUrl: 'http://localhost:8080'
 };

@@ -15,13 +15,11 @@ export class ItemService extends BaseCrudService<Item> {
     super(http);
   }
 
-  // GET /itens/contrato/{contratoId}
   buscarPorContrato(contratoId: number): Observable<Item[]> {
     return this.http.get<Item[]>(`${this.apiUrl}/contrato/${contratoId}`)
       .pipe(catchError(this.handleError));
   }
 
-  // GET /itens/servico/{servicoId}
   buscarPorServico(servicoId: number): Observable<Item[]> {
     return this.http.get<Item[]>(`${this.apiUrl}/servico/${servicoId}`)
       .pipe(catchError(this.handleError));

@@ -78,6 +78,48 @@
             placeholder="(00) 00000-0000">
         </div>
       </div>
+
+      @if (!isEditMode) {
+        <div class="form-row">
+          <div class="form-group">
+            <label for="senha">
+              <lucide-icon name="lock" size="16"></lucide-icon>
+              Senha *
+            </label>
+            <input 
+              type="password" 
+              id="senha"
+              class="form-control"
+              formControlName="senha"
+              [class.is-invalid]="isFieldInvalid('senha')"
+              placeholder="Mínimo 6 caracteres">
+            @if (isFieldInvalid('senha')) {
+              <div class="invalid-feedback">
+                {{ getFieldError('senha') }}
+              </div>
+            }
+          </div>
+          
+          <div class="form-group">
+            <label for="confirmarSenha">
+              <lucide-icon name="lock" size="16"></lucide-icon>
+              Confirmar Senha *
+            </label>
+            <input 
+              type="password" 
+              id="confirmarSenha"
+              class="form-control"
+              formControlName="confirmarSenha"
+              [class.is-invalid]="isFieldInvalid('confirmarSenha')"
+              placeholder="Confirme a senha">
+            @if (isFieldInvalid('confirmarSenha')) {
+              <div class="invalid-feedback">
+                {{ getFieldError('confirmarSenha') }}
+              </div>
+            }
+          </div>
+        </div>
+      }
       
       <div class="form-row">
         <div class="form-group">

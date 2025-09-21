@@ -15,13 +15,11 @@ export class EnderecoService extends BaseCrudService<Endereco> {
     super(http);
   }
 
-  // GET /enderecos/cliente/{clienteId}
   buscarPorCliente(clienteId: number): Observable<Endereco[]> {
     return this.http.get<Endereco[]>(`${this.apiUrl}/cliente/${clienteId}`)
       .pipe(catchError(this.handleError));
   }
 
-  // GET /enderecos/buscar?cidade={string}
   buscarPorCidade(cidade: string): Observable<Endereco[]> {
     const params = new HttpParams().set('cidade', cidade);
     return this.http.get<Endereco[]>(`${this.apiUrl}/buscar`, { params })

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Servico } from '../models/servico.model';
@@ -15,13 +15,17 @@ export class ServicoService extends BaseCrudService<Servico> {
     super(http);
   }
 
-  // GET /servicos/ativos
   buscarAtivos(): Observable<Servico[]> {
     return this.http.get<Servico[]>(`${this.apiUrl}/ativos`)
       .pipe(catchError(this.handleError));
   }
 
-  // GET /servicos/categoria/{categoria}
+  override buscarPorNome(nome: string): Observable<Servico[]> {
+    const params = new HttpParams().set('nome', nome);
+    return this.http.get<Servico[]>(`${this.apiUrl}/buscar`, { params })
+      .pipe(catchError(this.handleError));
+  }
+
   buscarPorCategoria(categoria: string): Observable<Servico[]> {
     return this.http.get<Servico[]>(`${this.apiUrl}/categoria/${categoria}`)
       .pipe(catchError(this.handleError));

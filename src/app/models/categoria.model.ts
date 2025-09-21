@@ -5,4 +5,6 @@ export interface Categoria extends BaseEntity {
   descricao: string;
   beneficios?: string;
   ativo: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }

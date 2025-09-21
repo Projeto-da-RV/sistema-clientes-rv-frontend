@@ -7,6 +7,7 @@ export interface Item extends BaseEntity {
   valor: number;
   desconto?: number;
   valorFinal?: number;
+  createdAt?: string;
   contrato: Contrato | { id: number };
   servico: Servico | { id: number };
 }

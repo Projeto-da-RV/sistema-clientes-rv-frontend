@@ -9,8 +9,14 @@ export interface Cliente extends BaseEntity {
   email?: string;
   telefone?: string;
   dataNascimento: string; // formato YYYY-MM-DD
+  senha?: string; // Apenas para criação/edição
   ativo: boolean;
-  statusCadastro?: string;
+  statusCadastro?: string; // COMPLETO, INCOMPLETO
+  tentativasLogin?: number;
+  contaBloqueada?: boolean;
+  ultimoLogin?: string;
+  createdAt?: string;
+  updatedAt?: string;
   categoria?: Categoria;
   enderecos?: Endereco[];
   contratos?: Contrato[];
