@@ -1,86 +1,241 @@
 <div class="item-list">
+  <!-- Header da página -->
   <div class="page-header">
-    <h1>
-      <lucide-icon name="package"></lucide-icon>
-      Itens de Contrato
-    </h1>
+    <div class="header-left">
+      <div class="title-group">
+        <h1>Itens de Contrato</h1>
+        <span class="subtitle">Gestão de Itens</span>
+      </div>
+    </div>
+    <!-- Nota: Itens geralmente são criados via contrato, sem botão "novo" separado -->
   </div>
 
-  <div class="filters-card">
-    <div class="filters">
-      <div class="filter-group">
-        <label>Filtrar por contrato:</label>
-        <select 
-          class="form-control" 
-          [(ngModel)]="contratoSelecionado"
-          (change)="filtrarPorContrato()">
-          <option [value]="null">Todos</option>
-          @for (contrato of contratos; track contrato.id) {
-            <option [value]="contrato.id">Contrato #{{ contrato.id }}</option>
-          }
-        </select>
+  <!-- Card de Filtros -->
+  <div class="filtros-container">
+    <div class="filtros-header">
+      <h3>Filtros de Busca</h3>
+    </div>
+    
+    <div class="filtros-content">
+      <div class="filtros-inputs">
+        <!-- Campo de filtro por contrato -->
+        <div class="input-group">
+          <label>Filtrar por contrato</label>
+          <div class="input-wrapper">
+            <select 
+              class="input-field" 
+              [(ngModel)]="contratoSelecionado"
+              (change)="filtrarPorContrato()">
+              <option [value]="null">Todos os contratos</option>
+              @for (contrato of contratos; track contrato.id) {
+                <option [value]="contrato.id">Contrato #{{ contrato.id }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        
+        <!-- Campo de busca por serviço -->
+        <div class="input-group">
+          <label>Buscar por serviço</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              class="input-field" 
+              [(ngModel)]="filtroServico"
+              (keyup.enter)="buscarPorServico()"
+              (input)="aplicarFiltros()"
+              placeholder="Digite o nome do serviço">
+          </div>
+        </div>
+        
+        <!-- Campo vazio para manter grid -->
+        <div class="input-group">
+          <label>&nbsp;</label>
+          <div class="input-wrapper">
+            <!-- Campo vazio para manter layout -->
+          </div>
+        </div>
       </div>
       
-      <div class="filter-actions">
-        <button class="btn btn-clear" (click)="limparFiltros()">
-          <lucide-icon name="filter"></lucide-icon>
-          Limpar Filtros
+      <!-- Botões de ação -->
+      <div class="filtros-actions">
+        <button class="btn-filtrar" (click)="filtrar()">
+          <span>Filtrar</span>
+        </button>
+        
+        <button class="btn-limpar" (click)="limparFiltros()">
+          <span>Limpar</span>
         </button>
       </div>
     </div>
   </div>
 
-  <div class="table-card">
+  <!-- Contador de resultados -->
+  <div class="resultados-info">
+    <div class="contador">
+      <span>{{ contadorResultados }}</span>
+    </div>
+  </div>
+
+  <!-- Tabela de resultados -->
+  <div class="tabela-container">
     @if (loading) {
-      <div class="loading">
-        <lucide-icon name="loader" class="loading-icon"></lucide-icon>
+      <div class="loading-wrapper">
+        <div class="loading-spinner"></div>
         <p>Carregando itens...</p>
       </div>
+    } @else if (itensFiltrados.length === 0) {
+      <div class="empty-wrapper">
+        <h3>Nenhum item encontrado</h3>
+        <p>{{ itens.length === 0 ? 'Não há itens cadastrados.' : 'Não há itens que correspondam aos filtros selecionados.' }}</p>
+        
+        @if (itens.length === 0) {
+          <!-- Se não há itens no total -->
+          <p class="empty-subtitle">Itens são criados através dos contratos</p>
+        } @else {
+          <!-- Se há itens mas filtro não encontrou -->
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <span>Limpar Filtros</span>
+          </button>
+        }
+      </div>
     } @else {
-      @if (itensFiltrados.length > 0) {
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Contrato</th>
-                <th>Serviço</th>
-                <th>Quantidade</th>
-                <th>Valor Unit.</th>
-                <th>Desconto</th>
-                <th>Valor Final</th>
-                <th>Ações</th>
+      <!-- Tabela Desktop -->
+      <div class="tabela-desktop">
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th class="col-id">
+                <div class="th-content">
+                  <span>ID</span>
+                </div>
+              </th>
+              <th class="col-contrato">
+                <div class="th-content">
+                  <span>Contrato</span>
+                </div>
+              </th>
+              <th class="col-servico">
+                <div class="th-content">
+                  <span>Serviço</span>
+                </div>
+              </th>
+              <th class="col-quantidade">
+                <div class="th-content">
+                  <span>Quantidade</span>
+                </div>
+              </th>
+              <th class="col-valor">
+                <div class="th-content">
+                  <span>Valor Unit.</span>
+                </div>
+              </th>
+              <th class="col-desconto">
+                <div class="th-content">
+                  <span>Desconto</span>
+                </div>
+              </th>
+              <th class="col-valor-final">
+                <div class="th-content">
+                  <span>Valor Final</span>
+                </div>
+              </th>
+              <th class="col-actions">
+                <div class="th-content">
+                  <span>Ações</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of itensFiltrados; track item.id) {
+              <tr class="tabela-row">
+                <td class="col-id">
+                  <span class="id-badge">{{ item.id }}</span>
+                </td>
+                <td class="col-contrato">
+                  <div class="item-contrato">
+                    <strong>#{{ getContratoId(item) }}</strong>
+                  </div>
+                </td>
+                <td class="col-servico">
+                  <span class="servico-texto">{{ getServicoNome(item) }}</span>
+                </td>
+                <td class="col-quantidade">
+                  <span class="quantidade-texto">{{ item.quantidade }}</span>
+                </td>
+                <td class="col-valor">
+                  <span class="valor-texto">{{ formatarValor(item.valor) }}</span>
+                </td>
+                <td class="col-desconto">
+                  <span class="desconto-texto">{{ formatarValor(item.desconto) }}</span>
+                </td>
+                <td class="col-valor-final">
+                  <span class="valor-final-texto">{{ formatarValor(calcularValorFinal(item)) }}</span>
+                </td>
+                <td class="col-actions">
+                  <div class="action-buttons">
+                    <button class="btn-action btn-excluir" 
+                            (click)="confirmarExclusao(item)"
+                            title="Excluir item do contrato"
+                            attr.aria-label="Excluir item {{ item.id }}">
+                      <span class="action-text">Excluir</span>
+                    </button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              @for (item of itensFiltrados; track item.id) {
-                <tr>
-                  <td>{{ item.id }}</td>
-                  <td>#{{ typeof item.contrato === 'object' && item.contrato.id ? item.contrato.id : '-' }}</td>
-                  <td>{{ getServicoNome(item) }}</td>
-                  <td>{{ item.quantidade }}</td>
-                  <td>{{ formatarValor(item.valor) }}</td>
-                  <td>{{ formatarValor(item.desconto) }}</td>
-                  <td><strong>{{ formatarValor(calcularValorFinal(item)) }}</strong></td>
-                  <td>
-                    <div class="actions">
-                      <button (click)="deletarItem(item)" class="btn-action btn-delete">
-                        <lucide-icon name="trash-2"></lucide-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Cards Mobile -->
+      <div class="cards-mobile">
+        @for (item of itensFiltrados; track item.id) {
+          <div class="item-card">
+            <div class="card-header">
+              <div class="item-info">
+                <span class="id-badge">{{ item.id }}</span>
+                <h4 class="item-contrato">Contrato #{{ getContratoId(item) }}</h4>
+              </div>
+              <div class="valor-badge">
+                <span>{{ formatarValor(calcularValorFinal(item)) }}</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <div class="info-item">
+                <span class="label">Serviço:</span>
+                <span class="value">{{ getServicoNome(item) }}</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="label">Quantidade:</span>
+                <span class="value">{{ item.quantidade }}</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="label">Valor Unitário:</span>
+                <span class="value">{{ formatarValor(item.valor) }}</span>
+              </div>
+              
+              @if (item.desconto && item.desconto > 0) {
+                <div class="info-item">
+                  <span class="label">Desconto:</span>
+                  <span class="value desconto">{{ formatarValor(item.desconto) }}</span>
+                </div>
               }
-            </tbody>
-          </table>
-        </div>
-      } @else {
-        <div class="empty-state">
-          <lucide-icon name="inbox" class="empty-icon"></lucide-icon>
-          <p>Nenhum item encontrado</p>
-          <p class="empty-subtitle">Itens de contrato aparecerão aqui</p>
-        </div>
-      }
+            </div>
+            
+            <div class="card-footer">
+              <button class="btn-action btn-excluir" 
+                      (click)="confirmarExclusao(item)">
+                <span>Excluir</span>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
     }
   </div>
 </div>
