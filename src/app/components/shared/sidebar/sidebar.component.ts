@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideAngularModule, Home, Users, Tag, Settings, Briefcase, FileText, MapPin, Package, User, LogOut, Menu, X, ChevronDown, ChevronRight } from 'lucide-angular';
 import { SidebarService } from '../../../services/sidebar.service';
+import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -30,16 +31,100 @@ export class SidebarComponent implements OnInit {
   readonly ChevronRight = ChevronRight;
   
   username: string = '';
+  userRole: string = '';
   cadastrosOpen: boolean = false;
   gestaoOpen: boolean = false;
 
   constructor(
     private router: Router,
+    private authService: AuthService,
     public sidebarService: SidebarService
   ) {}
 
   ngOnInit() {
-    this.username = localStorage.getItem('user') || 'Usuário';
+    this.loadUserInfo();
+  }
+
+  /**
+   * Carrega as informações do usuário logado
+   */
+  private loadUserInfo(): void {
+    const currentUser = this.authService.getCurrentUser();
+    
+    if (currentUser) {
+      // Extrai apenas o primeiro nome para exibição
+      this.username = this.extractFirstName(currentUser.nome);
+      
+      // Define o cargo baseado na categoria ou status do usuário
+      this.userRole = this.defineUserRole(currentUser);
+    } else {
+      // Fallback para casos onde não há usuário logado
+      this.username = 'Usuário';
+      this.userRole = 'Visitante';
+    }
+  }
+
+  /**
+   * Extrai nome e sobrenome do usuário
+   */
+  private extractFirstName(fullName: string): string {
+    if (!fullName || typeof fullName !== 'string') {
+      return 'Usuário';
+    }
+    
+    const nameParts = fullName.split(' ');
+    
+    // Se tem apenas um nome, retorna ele
+    if (nameParts.length === 1) {
+      return nameParts[0];
+    }
+    
+    // Se tem dois ou mais nomes, retorna primeiro nome + último sobrenome
+    if (nameParts.length >= 2) {
+      const firstName = nameParts[0];
+      const lastName = nameParts[nameParts.length - 1];
+      return `${firstName} ${lastName}`;
+    }
+    
+    return fullName;
+  }
+
+  /**
+   * Define o cargo do usuário baseado em suas informações
+   */
+  private defineUserRole(user: any): string {
+    // Verifica se é um administrador (você pode ajustar essa lógica conforme necessário)
+    if (user.email && user.email.includes('admin')) {
+      return 'Administrador';
+    }
+    
+    // Verifica a categoria do usuário
+    if (user.categoria) {
+      switch (user.categoria.nome) {
+        case 'PESSOA_FISICA':
+          return 'Cliente PF';
+        case 'PESSOA_JURIDICA':
+          return 'Cliente PJ';
+        case 'PREMIUM':
+          return 'Cliente Premium';
+        case 'VIP':
+          return 'Cliente VIP';
+        default:
+          return 'Cliente';
+      }
+    }
+    
+    // Verifica se tem contratos (pode indicar cliente ativo)
+    if (user.contratos && user.contratos.length > 0) {
+      return 'Cliente Ativo';
+    }
+    
+    // Fallback baseado no status
+    if (user.statusCadastro === 'COMPLETO') {
+      return 'Cliente';
+    }
+    
+    return 'Usuário';
   }
 
   get sidebarCollapsed(): boolean {
@@ -124,7 +209,8 @@ export class SidebarComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem('user');
+        // Usa o serviço de autenticação para fazer logout
+        this.authService.logout();
         this.router.navigate(['/login']);
       }
     });
