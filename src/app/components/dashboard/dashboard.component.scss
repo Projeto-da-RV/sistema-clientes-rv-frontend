@@ -74,6 +74,25 @@
       color: var(--text-primary);
       margin: 0;
       font-weight: 700;
+      min-height: 2.5rem;
+      display: flex;
+      align-items: center;
+      
+      .loading-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        
+        .spinner-small {
+          width: 24px;
+          height: 24px;
+          border: 3px solid var(--border-light);
+          border-top: 3px solid var(--primary-orange);
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+      }
     }
     
     p {
@@ -166,4 +185,9 @@
   &:hover .action-icon {
     background: rgba(255, 255, 255, 0.2);
   }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

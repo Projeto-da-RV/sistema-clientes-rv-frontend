@@ -8,7 +8,15 @@
         <lucide-icon [img]="Users"></lucide-icon>
       </div>
       <div class="stat-content">
-        <h3>{{ stats.clientes }}</h3>
+        <h3>
+          @if (loading) {
+            <div class="loading-number">
+              <div class="spinner-small"></div>
+            </div>
+          } @else {
+            {{ stats.clientes }}
+          }
+        </h3>
         <p>Clientes</p>
         <a routerLink="/clientes" class="stat-link">
           Ver todos 
@@ -22,7 +30,15 @@
         <lucide-icon [img]="FileText"></lucide-icon>
       </div>
       <div class="stat-content">
-        <h3>{{ stats.contratos }}</h3>
+        <h3>
+          @if (loading) {
+            <div class="loading-number">
+              <div class="spinner-small"></div>
+            </div>
+          } @else {
+            {{ stats.contratos }}
+          }
+        </h3>
         <p>Contratos</p>
         <a routerLink="/contratos" class="stat-link">
           Ver todos 
@@ -36,7 +52,15 @@
         <lucide-icon [img]="Settings"></lucide-icon>
       </div>
       <div class="stat-content">
-        <h3>{{ stats.servicos }}</h3>
+        <h3>
+          @if (loading) {
+            <div class="loading-number">
+              <div class="spinner-small"></div>
+            </div>
+          } @else {
+            {{ stats.servicos }}
+          }
+        </h3>
         <p>Serviços</p>
         <a routerLink="/servicos" class="stat-link">
           Ver todos 
@@ -50,7 +74,15 @@
         <lucide-icon [img]="Tag"></lucide-icon>
       </div>
       <div class="stat-content">
-        <h3>{{ stats.categorias }}</h3>
+        <h3>
+          @if (loading) {
+            <div class="loading-number">
+              <div class="spinner-small"></div>
+            </div>
+          } @else {
+            {{ stats.categorias }}
+          }
+        </h3>
         <p>Categorias</p>
         <a routerLink="/categorias" class="stat-link">
           Ver todas 
