@@ -14,8 +14,9 @@ import { NotificationService } from '../../shared/services/notification.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  cpfOuEmail: string = '';
-  senha: string = '';
+  // MUDANÇA: username e password ao invés de cpfOuEmail e senha
+  username: string = '';
+  password: string = '';
   loading: boolean = false;
 
   constructor(
@@ -26,29 +27,30 @@ export class LoginComponent {
   ) {}
 
   onLogin() {
-    if (!this.cpfOuEmail || !this.senha) {
+    // MUDANÇA: validar username e password
+    if (!this.username || !this.password) {
       this.notificationService.error('Por favor, preencha todos os campos');
       return;
     }
 
     this.loading = true;
-    this.cdr.markForCheck(); // ✅ Forçar atualização da UI
+    this.cdr.markForCheck();
 
+    // MUDANÇA: usar username e password na chamada da API
     this.authService.login({
-      cpfOuEmail: this.cpfOuEmail,
-      senha: this.senha
+      username: this.username,
+      password: this.password
     }).subscribe({
       next: (response) => {
         this.loading = false;
-        this.cdr.markForCheck(); // ✅ Forçar atualização da UI
-        this.notificationService.success('Login realizado com sucesso!').then(() => {
+        this.cdr.markForCheck();
+        this.notificationService.success(`Bem-vindo, ${response.username}!`).then(() => {
           this.router.navigate(['/dashboard']);
         });
       },
       error: (error) => {
         this.loading = false;
-        this.cdr.markForCheck(); // ✅ Forçar atualização da UI
-        // A mensagem de erro já vem tratada do BaseCrudService
+        this.cdr.markForCheck();
         this.notificationService.error(error.message);
       }
     });

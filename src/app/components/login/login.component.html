@@ -7,26 +7,26 @@
     
     <form (ngSubmit)="onLogin()" class="login-form">
       <div class="form-group">
-        <label for="cpfOuEmail">CPF ou Email</label>
+        <label for="username">Usuário</label>
         <input 
           type="text" 
-          id="cpfOuEmail"
+          id="username"
           class="form-control" 
-          [(ngModel)]="cpfOuEmail" 
-          name="cpfOuEmail"
-          placeholder="Digite seu CPF ou email"
+          [(ngModel)]="username" 
+          name="username"
+          placeholder="Digite seu usuário"
           [disabled]="loading"
           required>
       </div>
       
       <div class="form-group">
-        <label for="senha">Senha</label>
+        <label for="password">Senha</label>
         <input 
           type="password" 
-          id="senha"
+          id="password"
           class="form-control" 
-          [(ngModel)]="senha" 
-          name="senha"
+          [(ngModel)]="password" 
+          name="password"
           placeholder="Digite sua senha"
           [disabled]="loading"
           required>
@@ -41,5 +41,12 @@
         }
       </button>
     </form>
+
+    <!-- Seção de usuários de teste para desenvolvimento -->
+    <div class="test-users-info" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.85rem;">
+      <p style="margin: 0 0 8px 0; font-weight: 600; color: #495057;">👥 Usuários de Teste:</p>
+      <p style="margin: 4px 0; color: #6c757d;">🔹 <strong>user</strong> / user123 (Usuário comum)</p>
+      <p style="margin: 4px 0; color: #6c757d;">🔸 <strong>admin</strong> / admin123 (Administrador)</p>
+    </div>
   </div>
 </div>
