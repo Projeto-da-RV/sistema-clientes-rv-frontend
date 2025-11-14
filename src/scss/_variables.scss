@@ -1,46 +1,58 @@
 /* ===================================================================
-   RV Digital - Modern Design System 2.0
-   Complete UI Redesign with Modern Color Palette
+   RV Digital - Official Brand Design System
+   Corporate Identity Colors & Design Tokens
    ================================================================ */
 
 /* ===================================================================
-   NOVA PALETA DE CORES - MODERN & VIBRANT
+   PALETA OFICIAL RV DIGITAL
    ================================================================ */
 :root {
   /* ============================================
-     PRIMARY COLORS - Indigo/Violet Gradient
+     PRIMARY COLORS - Navy Blue (RV Digital)
      ============================================ */
-  --primary-600: #6366f1;
-  --primary-500: #8b5cf6;
-  --primary-400: #a78bfa;
-  --primary-700: #4f46e5;
-  --primary-800: #4338ca;
+  --primary-600: #01124f;
+  --primary-500: #012063;
+  --primary-400: #023080;
+  --primary-700: #000d3a;
+  --primary-800: #000a2b;
 
   /* ============================================
-     SECONDARY COLORS - Emerald/Teal
+     SECONDARY COLORS - Cyan Blue (RV Digital)
      ============================================ */
-  --secondary-600: #10b981;
-  --secondary-500: #14b8a6;
-  --secondary-400: #2dd4bf;
-  --secondary-700: #059669;
+  --secondary-600: #9ae7f4;
+  --secondary-500: #b0edf7;
+  --secondary-400: #c6f3fa;
+  --secondary-700: #7dd9ed;
+  --secondary-800: #5fcbe6;
 
   /* ============================================
-     ACCENT COLORS - Rose/Pink
+     ACCENT COLORS - Gold/Yellow (RV Digital)
      ============================================ */
-  --accent-600: #f43f5e;
-  --accent-500: #ec4899;
-  --accent-400: #f472b6;
+  --accent-600: #fecc01;
+  --accent-500: #fed734;
+  --accent-400: #fee15c;
+  --accent-700: #e5b801;
+  --accent-800: #cca301;
 
   /* ============================================
-     GRADIENTS - Modern & Smooth
+     TERTIARY COLORS - Orange Gold (RV Digital)
      ============================================ */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --gradient-secondary: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
-  --gradient-accent: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%);
-  --gradient-purple-pink: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-  --gradient-blue-teal: linear-gradient(135deg, #6366f1 0%, #14b8a6 100%);
-  --gradient-sunset: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
-  --gradient-ocean: linear-gradient(135deg, #0ea5e9 0%, #14b8a6 100%);
+  --tertiary-600: #e3a331;
+  --tertiary-500: #e8b14d;
+  --tertiary-400: #edbf69;
+  --tertiary-700: #ce9222;
+  --tertiary-800: #b98215;
+
+  /* ============================================
+     GRADIENTS - RV Digital Brand
+     ============================================ */
+  --gradient-primary: linear-gradient(135deg, #01124f 0%, #023080 100%);
+  --gradient-secondary: linear-gradient(135deg, #9ae7f4 0%, #5fcbe6 100%);
+  --gradient-accent: linear-gradient(135deg, #fecc01 0%, #e3a331 100%);
+  --gradient-hero: linear-gradient(135deg, #01124f 0%, #012063 50%, #023080 100%);
+  --gradient-gold: linear-gradient(135deg, #fecc01 0%, #e3a331 100%);
+  --gradient-cyan: linear-gradient(135deg, #9ae7f4 0%, #7dd9ed 100%);
+  --gradient-sunset: linear-gradient(135deg, #e3a331 0%, #fecc01 100%);
 
   /* ============================================
      BACKGROUNDS - Light Mode
@@ -67,6 +79,7 @@
   --text-disabled: #cbd5e1;
   --text-on-primary: #ffffff;
   --text-on-dark: #f8fafc;
+  --text-on-accent: #01124f;
 
   /* ============================================
      BORDERS - Subtle & Clean
@@ -74,23 +87,25 @@
   --border-light: #e2e8f0;
   --border-medium: #cbd5e1;
   --border-dark: #94a3b8;
-  --border-primary: #6366f1;
-  --border-secondary: #10b981;
+  --border-primary: #01124f;
+  --border-secondary: #9ae7f4;
+  --border-accent: #fecc01;
 
   /* ============================================
      SHADOWS - Elevated & Soft
      ============================================ */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 2px 8px rgba(99, 102, 241, 0.08);
-  --shadow-md: 0 4px 16px rgba(99, 102, 241, 0.12);
-  --shadow-lg: 0 8px 32px rgba(99, 102, 241, 0.16);
-  --shadow-xl: 0 12px 48px rgba(99, 102, 241, 0.2);
-  --shadow-2xl: 0 24px 64px rgba(99, 102, 241, 0.24);
+  --shadow-sm: 0 2px 8px rgba(1, 18, 79, 0.08);
+  --shadow-md: 0 4px 16px rgba(1, 18, 79, 0.12);
+  --shadow-lg: 0 8px 32px rgba(1, 18, 79, 0.16);
+  --shadow-xl: 0 12px 48px rgba(1, 18, 79, 0.2);
+  --shadow-2xl: 0 24px 64px rgba(1, 18, 79, 0.24);
 
-  /* Colored shadows */
-  --shadow-primary: 0 8px 24px rgba(99, 102, 241, 0.25);
-  --shadow-secondary: 0 8px 24px rgba(16, 185, 129, 0.25);
-  --shadow-accent: 0 8px 24px rgba(244, 63, 94, 0.25);
+  /* Colored shadows - RV Digital */
+  --shadow-primary: 0 8px 24px rgba(1, 18, 79, 0.25);
+  --shadow-secondary: 0 8px 24px rgba(154, 231, 244, 0.3);
+  --shadow-accent: 0 8px 24px rgba(254, 204, 1, 0.35);
+  --shadow-gold: 0 8px 24px rgba(227, 163, 49, 0.3);
 
   /* ============================================
      STATUS COLORS - Clear & Vibrant
@@ -103,24 +118,25 @@
   --error-light: #fee2e2;
   --error-dark: #dc2626;
 
-  --warning: #f59e0b;
+  --warning: #fecc01;
   --warning-light: #fef3c7;
-  --warning-dark: #d97706;
+  --warning-dark: #e5b801;
 
-  --info: #3b82f6;
-  --info-light: #dbeafe;
-  --info-dark: #2563eb;
+  --info: #9ae7f4;
+  --info-light: #e8f9fc;
+  --info-dark: #5fcbe6;
 
   /* ============================================
      RGB VALUES - Para transparências
      ============================================ */
-  --primary-rgb: 99, 102, 241;
-  --secondary-rgb: 16, 185, 129;
-  --accent-rgb: 244, 63, 94;
+  --primary-rgb: 1, 18, 79;
+  --secondary-rgb: 154, 231, 244;
+  --accent-rgb: 254, 204, 1;
+  --tertiary-rgb: 227, 163, 49;
   --success-rgb: 16, 185, 129;
   --error-rgb: 239, 68, 68;
-  --warning-rgb: 245, 158, 11;
-  --info-rgb: 59, 130, 246;
+  --warning-rgb: 254, 204, 1;
+  --info-rgb: 154, 231, 244;
 
   /* ============================================
      SPACING SCALE - Consistent 8px Grid
