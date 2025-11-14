@@ -1,79 +1,73 @@
 <div class="contrato-list">
-  <!-- Header da página -->
+  <!-- Header da página com novo padrão -->
   <div class="page-header">
-    <div class="header-left">
-      <div class="title-group">
-        <h1>Contratos</h1>
-        <span class="subtitle">Gestão de Contratos</span>
-      </div>
+    <div class="header-content">
+      <h1>Contratos</h1>
+      <span class="subtitle">Gestão completa de contratos cadastrados</span>
     </div>
-    <a routerLink="/contratos/novo" class="btn-novo">
-      <span>Novo Contrato</span>
-    </a>
+    <div class="header-actions">
+      <a routerLink="/contratos/novo" class="btn btn-primary">
+        <span>Novo Contrato</span>
+      </a>
+    </div>
   </div>
 
-  <!-- Card de Filtros -->
-  <div class="filtros-container">
-    <div class="filtros-header">
-      <h3>Filtros de Busca</h3>
-    </div>
-    
-    <div class="filtros-content">
-      <div class="filtros-inputs">
-        <!-- Campo de filtro por status -->
-        <div class="input-group">
-          <label>Filtrar por status</label>
-          <div class="input-wrapper">
-            <select 
-              class="input-field" 
-              [(ngModel)]="filtroStatus"
-              (change)="aplicarFiltros()">
-              <option value="">Todos os status</option>
-              <option value="PENDENTE">Pendente</option>
-              <option value="ATIVO">Ativo</option>
-              <option value="CONCLUIDO">Concluído</option>
-              <option value="CANCELADO">Cancelado</option>
-            </select>
-          </div>
-        </div>
-        
-        <!-- Campo de busca por cliente -->
-        <div class="input-group">
-          <label>Buscar por cliente</label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="input-field" 
-              [(ngModel)]="filtroCliente"
-              (keyup.enter)="buscarPorCliente()"
-              (input)="aplicarFiltros()"
-              placeholder="Digite o nome do cliente">
-          </div>
-        </div>
-        
-        <!-- Campo de filtro especial -->
-        <div class="input-group">
-          <label>Filtros Especiais</label>
-          <div class="checkbox-wrapper">
-            <input 
-              type="checkbox" 
-              id="mostrarAtivos"
-              [(ngModel)]="mostrarAtivos"
-              (change)="toggleMostrarAtivos()">
-            <label for="mostrarAtivos" class="checkbox-label">
-              Apenas contratos ativos
-            </label>
-          </div>
+  <!-- Card de Filtros com novo padrão -->
+  <div class="filter-bar">
+    <div class="filter-content">
+      <!-- Campo de filtro por status -->
+      <div class="input-group">
+        <label>Filtrar por status</label>
+        <div class="input-wrapper">
+          <select
+            class="input-field"
+            [(ngModel)]="filtroStatus"
+            (change)="aplicarFiltros()">
+            <option value="">Todos os status</option>
+            <option value="PENDENTE">Pendente</option>
+            <option value="ATIVO">Ativo</option>
+            <option value="CONCLUIDO">Concluído</option>
+            <option value="CANCELADO">Cancelado</option>
+          </select>
         </div>
       </div>
-      
+
+      <!-- Campo de busca por cliente -->
+      <div class="input-group">
+        <label>Buscar por cliente</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroCliente"
+            (keyup.enter)="buscarPorCliente()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite o nome do cliente">
+        </div>
+      </div>
+
+      <!-- Campo de filtro especial -->
+      <div class="input-group">
+        <label>Filtros Especiais</label>
+        <div class="checkbox-wrapper">
+          <input
+            type="checkbox"
+            id="mostrarAtivos"
+            [(ngModel)]="mostrarAtivos"
+            (change)="toggleMostrarAtivos()">
+          <label for="mostrarAtivos" class="checkbox-label">
+            Apenas contratos ativos
+          </label>
+        </div>
+      </div>
+
       <!-- Botões de ação -->
-      <div class="filtros-actions">
-        <button class="btn-filtrar" (click)="filtrar()">
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="filtrar()">
           <span>Filtrar</span>
         </button>
-        
-        <button class="btn-limpar" (click)="limparFiltros()">
+
+        <button class="btn btn-secondary" (click)="limparFiltros()">
           <span>Limpar</span>
         </button>
       </div>
@@ -82,31 +76,30 @@
 
   <!-- Contador de resultados -->
   <div class="resultados-info">
-    <div class="contador">
-      <span>{{ contadorResultados }}</span>
-    </div>
+    <span class="text-secondary">{{ contadorResultados }}</span>
   </div>
 
-  <!-- Tabela de resultados -->
-  <div class="tabela-container">
+  <!-- Tabela de resultados com novo padrão -->
+  <div class="table-container">
     @if (loading) {
-      <div class="loading-wrapper">
+      <div class="loading-state">
         <div class="loading-spinner"></div>
         <p>Carregando contratos...</p>
       </div>
     } @else if (contratosFiltrados.length === 0) {
-      <div class="empty-wrapper">
+      <div class="empty-state">
+        <div class="empty-icon">📄</div>
         <h3>Nenhum contrato encontrado</h3>
         <p>{{ contratos.length === 0 ? 'Você ainda não possui contratos cadastrados.' : 'Não há contratos que correspondam aos filtros selecionados.' }}</p>
-        
+
         @if (contratos.length === 0) {
           <!-- Se não há contratos no total, mostra botão para cadastrar -->
-          <a routerLink="/contratos/novo" class="btn-novo">
+          <a routerLink="/contratos/novo" class="btn btn-primary">
             <span>Cadastrar Primeiro Contrato</span>
           </a>
         } @else {
           <!-- Se há contratos mas filtro não encontrou, mostra botão para limpar filtros -->
-          <button class="btn-limpar" (click)="limparFiltros()">
+          <button class="btn btn-secondary" (click)="limparFiltros()">
             <span>Limpar Filtros</span>
           </button>
         }

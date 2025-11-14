@@ -1,61 +1,55 @@
 <div class="cliente-list">
-  <!-- Header da página -->
+  <!-- Header da página com novo padrão -->
   <div class="page-header">
-    <div class="header-left">
-      <div class="title-group">
-        <h1>Clientes</h1>
-        <span class="subtitle">Gestão de Clientes</span>
-      </div>
+    <div class="header-content">
+      <h1>Clientes</h1>
+      <span class="subtitle">Gestão completa de clientes cadastrados</span>
     </div>
-    <a routerLink="/clientes/novo" class="btn-novo">
-      <span>Novo Cliente</span>
-    </a>
+    <div class="header-actions">
+      <a routerLink="/clientes/novo" class="btn btn-primary">
+        <span>Novo Cliente</span>
+      </a>
+    </div>
   </div>
 
-  <!-- Card de Filtros -->
-  <div class="filtros-container">
-    <div class="filtros-header">
-      <h3>Filtros de Busca</h3>
-    </div>
-    
-    <div class="filtros-content">
-      <div class="filtros-inputs">
-        <!-- Campo de busca por nome -->
-        <div class="input-group">
-          <label>Buscar por nome</label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="input-field" 
-              [(ngModel)]="filtroNome"
-              (keyup.enter)="buscarPorNome()"
-              (input)="aplicarFiltros()"
-              placeholder="Digite o nome do cliente">
-          </div>
-        </div>
-        
-        <!-- Campo de busca por CPF -->
-        <div class="input-group">
-          <label>Buscar por CPF</label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="input-field" 
-              [(ngModel)]="filtroCpf"
-              (keyup.enter)="buscarPorCpf()"
-              (input)="aplicarFiltros()"
-              placeholder="Digite o CPF">
-          </div>
+  <!-- Card de Filtros com novo padrão -->
+  <div class="filter-bar">
+    <div class="filter-content">
+      <!-- Campo de busca por nome -->
+      <div class="input-group">
+        <label>Buscar por nome</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroNome"
+            (keyup.enter)="buscarPorNome()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite o nome do cliente">
         </div>
       </div>
-      
+
+      <!-- Campo de busca por CPF -->
+      <div class="input-group">
+        <label>Buscar por CPF</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroCpf"
+            (keyup.enter)="buscarPorCpf()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite o CPF">
+        </div>
+      </div>
+
       <!-- Botões de ação -->
-      <div class="filtros-actions">
-        <button class="btn-filtrar" (click)="filtrar()">
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="filtrar()">
           <span>Filtrar</span>
         </button>
-        
-        <button class="btn-limpar" (click)="limparFiltros()">
+
+        <button class="btn btn-secondary" (click)="limparFiltros()">
           <span>Limpar</span>
         </button>
       </div>
@@ -64,31 +58,30 @@
 
   <!-- Contador de resultados -->
   <div class="resultados-info">
-    <div class="contador">
-      <span>{{ contadorResultados }}</span>
-    </div>
+    <span class="text-secondary">{{ contadorResultados }}</span>
   </div>
 
-  <!-- Tabela de resultados -->
-  <div class="tabela-container">
+  <!-- Tabela de resultados com novo padrão -->
+  <div class="table-container">
     @if (loading) {
-      <div class="loading-wrapper">
+      <div class="loading-state">
         <div class="loading-spinner"></div>
         <p>Carregando clientes...</p>
       </div>
     } @else if (clientesFiltrados.length === 0) {
-      <div class="empty-wrapper">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
         <h3>Nenhum cliente encontrado</h3>
         <p>{{ clientes.length === 0 ? 'Você ainda não possui clientes cadastrados.' : 'Não há clientes que correspondam aos filtros selecionados.' }}</p>
-        
+
         @if (clientes.length === 0) {
           <!-- Se não há clientes no total, mostra botão para cadastrar -->
-          <a routerLink="/clientes/novo" class="btn-novo">
+          <a routerLink="/clientes/novo" class="btn btn-primary">
             <span>Cadastrar Primeiro Cliente</span>
           </a>
         } @else {
           <!-- Se há clientes mas filtro não encontrou, mostra botão para limpar filtros -->
-          <button class="btn-limpar" (click)="limparFiltros()">
+          <button class="btn btn-secondary" (click)="limparFiltros()">
             <span>Limpar Filtros</span>
           </button>
         }

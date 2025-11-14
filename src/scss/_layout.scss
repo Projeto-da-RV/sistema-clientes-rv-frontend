@@ -1,0 +1,414 @@
+/* ===================================================================
+   LAYOUT UTILITIES - RV Digital Design System
+   Componentes de layout padronizados e reutilizáveis
+   ================================================================ */
+
+/* ===================================================================
+   PAGE HEADER
+   Cabeçalho padrão para todas as páginas do sistema
+   ================================================================ */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border-light);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+
+  .header-content {
+    flex: 1;
+    min-width: 0;
+
+    h1 {
+      font-size: var(--text-3xl);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+      margin: 0 0 var(--space-1);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: var(--font-normal);
+      margin: 0;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 640px) {
+    .header-content h1 {
+      font-size: var(--text-2xl);
+    }
+
+    .header-actions {
+      width: 100%;
+      justify-content: stretch;
+
+      > * {
+        flex: 1;
+      }
+    }
+  }
+}
+
+/* ===================================================================
+   SECTION HEADER
+   Cabeçalhos de seções dentro das páginas
+   ================================================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+  gap: var(--space-4);
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .section-actions {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+}
+
+/* ===================================================================
+   CARD CONTAINER
+   Container padrão para conteúdo em cards
+   ================================================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-header {
+    padding: var(--space-6);
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-secondary);
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    p {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin: var(--space-1) 0 0;
+    }
+  }
+
+  .card-body {
+    padding: var(--space-6);
+  }
+
+  .card-footer {
+    padding: var(--space-6);
+    border-top: 1px solid var(--border-light);
+    background: var(--bg-secondary);
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;
+  }
+
+  &.card-compact {
+    .card-header,
+    .card-body,
+    .card-footer {
+      padding: var(--space-4);
+    }
+  }
+}
+
+/* ===================================================================
+   GRID LAYOUTS
+   Sistemas de grid padronizados
+   ================================================================ */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-5);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-5);
+}
+
+@media (max-width: 768px) {
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================================================
+   BUTTON GROUPS
+   Agrupamento padronizado de botões
+   ================================================================ */
+.btn-group {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+
+  &.btn-group-sm {
+    gap: var(--space-2);
+  }
+
+  &.btn-group-vertical {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    width: 100%;
+
+    > * {
+      width: 100%;
+    }
+  }
+}
+
+/* ===================================================================
+   EMPTY STATES
+   Estados vazios padronizados
+   ================================================================ */
+.empty-state {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-6);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-6);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ===================================================================
+   LOADING STATES
+   Estados de loading padronizados
+   ================================================================ */
+.loading-state {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto var(--space-4);
+    border: 3px solid var(--border-light);
+    border-top-color: var(--primary-600);
+    border-radius: var(--radius-full);
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===================================================================
+   STATS ROW
+   Linha de estatísticas/métricas
+   ================================================================ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+
+  .stat-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    text-align: center;
+
+    .stat-label {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: var(--font-semibold);
+      margin-bottom: var(--space-2);
+    }
+
+    .stat-value {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+    }
+  }
+}
+
+/* ===================================================================
+   FILTER BAR
+   Barra de filtros padronizada
+   ================================================================ */
+.filter-bar {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  box-shadow: var(--shadow-sm);
+
+  .filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+
+    h3 {
+      font-size: var(--text-base);
+      font-weight: var(--font-semibold);
+      color: var(--text-primary);
+      margin: 0;
+    }
+  }
+
+  .filter-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 640px) {
+    .filter-content {
+      grid-template-columns: 1fr;
+    }
+
+    .filter-actions {
+      flex-direction: column;
+
+      > * {
+        width: 100%;
+      }
+    }
+  }
+}
+
+/* ===================================================================
+   TABLE CONTAINER
+   Container padronizado para tabelas
+   ================================================================ */
+.table-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+
+  .table-header {
+    padding: var(--space-4) var(--space-6);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .results-count {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      font-weight: var(--font-medium);
+    }
+
+    .table-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+  }
+
+  .table-body {
+    overflow-x: auto;
+  }
+
+  .table-footer {
+    padding: var(--space-4) var(--space-6);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

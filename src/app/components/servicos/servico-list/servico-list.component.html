@@ -1,76 +1,70 @@
 <div class="servico-list">
-  <!-- Header da página -->
+  <!-- Header da página com novo padrão -->
   <div class="page-header">
-    <div class="header-left">
-      <div class="title-group">
-        <h1>Serviços</h1>
-        <span class="subtitle">Gestão de Serviços</span>
-      </div>
+    <div class="header-content">
+      <h1>Serviços</h1>
+      <span class="subtitle">Gestão completa de serviços cadastrados</span>
     </div>
-    <a routerLink="/servicos/novo" class="btn-novo">
-      <span>Novo Serviço</span>
-    </a>
+    <div class="header-actions">
+      <a routerLink="/servicos/novo" class="btn btn-primary">
+        <span>Novo Serviço</span>
+      </a>
+    </div>
   </div>
 
-  <!-- Card de Filtros -->
-  <div class="filtros-container">
-    <div class="filtros-header">
-      <h3>Filtros de Busca</h3>
-    </div>
-    
-    <div class="filtros-content">
-      <div class="filtros-inputs">
-        <!-- Campo de busca por nome -->
-        <div class="input-group">
-          <label>Buscar por nome</label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="input-field" 
-              [(ngModel)]="filtroNome"
-              (keyup.enter)="buscarPorNome()"
-              (input)="aplicarFiltros()"
-              placeholder="Digite o nome do serviço">
-          </div>
-        </div>
-        
-        <!-- Campo de busca por categoria -->
-        <div class="input-group">
-          <label>Buscar por categoria</label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="input-field" 
-              [(ngModel)]="filtroCategoria"
-              (keyup.enter)="buscarPorCategoria()"
-              (input)="aplicarFiltros()"
-              placeholder="Digite a categoria">
-          </div>
-        </div>
-        
-        <!-- Campo de filtro especial -->
-        <div class="input-group">
-          <label>Filtros Especiais</label>
-          <div class="checkbox-wrapper">
-            <input 
-              type="checkbox" 
-              id="mostrarAtivos"
-              [(ngModel)]="mostrarAtivos"
-              (change)="toggleMostrarAtivos()">
-            <label for="mostrarAtivos" class="checkbox-label">
-              Apenas serviços ativos
-            </label>
-          </div>
+  <!-- Card de Filtros com novo padrão -->
+  <div class="filter-bar">
+    <div class="filter-content">
+      <!-- Campo de busca por nome -->
+      <div class="input-group">
+        <label>Buscar por nome</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroNome"
+            (keyup.enter)="buscarPorNome()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite o nome do serviço">
         </div>
       </div>
-      
+
+      <!-- Campo de busca por categoria -->
+      <div class="input-group">
+        <label>Buscar por categoria</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroCategoria"
+            (keyup.enter)="buscarPorCategoria()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite a categoria">
+        </div>
+      </div>
+
+      <!-- Campo de filtro especial -->
+      <div class="input-group">
+        <label>Filtros Especiais</label>
+        <div class="checkbox-wrapper">
+          <input
+            type="checkbox"
+            id="mostrarAtivos"
+            [(ngModel)]="mostrarAtivos"
+            (change)="toggleMostrarAtivos()">
+          <label for="mostrarAtivos" class="checkbox-label">
+            Apenas serviços ativos
+          </label>
+        </div>
+      </div>
+
       <!-- Botões de ação -->
-      <div class="filtros-actions">
-        <button class="btn-filtrar" (click)="filtrar()">
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="filtrar()">
           <span>Filtrar</span>
         </button>
-        
-        <button class="btn-limpar" (click)="limparFiltros()">
+
+        <button class="btn btn-secondary" (click)="limparFiltros()">
           <span>Limpar</span>
         </button>
       </div>
@@ -79,31 +73,30 @@
 
   <!-- Contador de resultados -->
   <div class="resultados-info">
-    <div class="contador">
-      <span>{{ contadorResultados }}</span>
-    </div>
+    <span class="text-secondary">{{ contadorResultados }}</span>
   </div>
 
-  <!-- Tabela de resultados -->
-  <div class="tabela-container">
+  <!-- Tabela de resultados com novo padrão -->
+  <div class="table-container">
     @if (loading) {
-      <div class="loading-wrapper">
+      <div class="loading-state">
         <div class="loading-spinner"></div>
         <p>Carregando serviços...</p>
       </div>
     } @else if (servicosFiltrados.length === 0) {
-      <div class="empty-wrapper">
+      <div class="empty-state">
+        <div class="empty-icon">🔧</div>
         <h3>Nenhum serviço encontrado</h3>
         <p>{{ servicos.length === 0 ? 'Você ainda não possui serviços cadastrados.' : 'Não há serviços que correspondam aos filtros selecionados.' }}</p>
-        
+
         @if (servicos.length === 0) {
           <!-- Se não há serviços no total, mostra botão para cadastrar -->
-          <a routerLink="/servicos/novo" class="btn-novo">
+          <a routerLink="/servicos/novo" class="btn btn-primary">
             <span>Cadastrar Primeiro Serviço</span>
           </a>
         } @else {
           <!-- Se há serviços mas filtro não encontrou, mostra botão para limpar filtros -->
-          <button class="btn-limpar" (click)="limparFiltros()">
+          <button class="btn btn-secondary" (click)="limparFiltros()">
             <span>Limpar Filtros</span>
           </button>
         }

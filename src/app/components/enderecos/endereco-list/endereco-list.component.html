@@ -1,76 +1,68 @@
 <div class="endereco-list">
-  <!-- Header da página -->
+  <!-- Header da página com novo padrão -->
   <div class="page-header">
-    <div class="header-left">
-      <div class="title-group">
-        <h1>Endereços</h1>
-        <span class="subtitle">Gestão de Endereços</span>
-      </div>
+    <div class="header-content">
+      <h1>Endereços</h1>
+      <span class="subtitle">Gestão completa de endereços cadastrados</span>
     </div>
     <!-- Nota: Endereços geralmente são criados via cliente, sem botão "novo" separado -->
   </div>
 
-  <!-- Card de Filtros -->
-  <div class="filtros-container">
-    <div class="filtros-header">
-      <h3>Filtros de Busca</h3>
-    </div>
-    
-    <div class="filtros-content">
-      <div class="filtros-inputs">
-        <!-- Campo de filtro por cliente -->
-        <div class="input-group">
-          <label>Filtrar por cliente</label>
-          <div class="input-wrapper">
-            <select 
-              class="input-field" 
-              [(ngModel)]="clienteSelecionado"
-              (change)="filtrarPorCliente()">
-              <option [value]="null">Todos os clientes</option>
-              @for (cliente of clientes; track cliente.id) {
-                <option [value]="cliente.id">{{ cliente.nome }}</option>
-              }
-            </select>
-          </div>
-        </div>
-        
-        <!-- Campo de busca por cidade -->
-        <div class="input-group">
-          <label>Buscar por cidade</label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="input-field" 
-              [(ngModel)]="filtroCidade"
-              (keyup.enter)="filtrarPorCidade()"
-              (input)="aplicarFiltros()"
-              placeholder="Digite a cidade">
-          </div>
-        </div>
-        
-        <!-- Campo de filtro especial -->
-        <div class="input-group">
-          <label>Filtros Especiais</label>
-          <div class="checkbox-wrapper">
-            <input 
-              type="checkbox" 
-              id="apenasPrivados"
-              [(ngModel)]="apenasPrivados"
-              (change)="toggleApenasPrivados()">
-            <label for="apenasPrivados" class="checkbox-label">
-              Apenas endereços principais
-            </label>
-          </div>
+  <!-- Card de Filtros com novo padrão -->
+  <div class="filter-bar">
+    <div class="filter-content">
+      <!-- Campo de filtro por cliente -->
+      <div class="input-group">
+        <label>Filtrar por cliente</label>
+        <div class="input-wrapper">
+          <select
+            class="input-field"
+            [(ngModel)]="clienteSelecionado"
+            (change)="filtrarPorCliente()">
+            <option [value]="null">Todos os clientes</option>
+            @for (cliente of clientes; track cliente.id) {
+              <option [value]="cliente.id">{{ cliente.nome }}</option>
+            }
+          </select>
         </div>
       </div>
-      
+
+      <!-- Campo de busca por cidade -->
+      <div class="input-group">
+        <label>Buscar por cidade</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroCidade"
+            (keyup.enter)="filtrarPorCidade()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite a cidade">
+        </div>
+      </div>
+
+      <!-- Campo de filtro especial -->
+      <div class="input-group">
+        <label>Filtros Especiais</label>
+        <div class="checkbox-wrapper">
+          <input
+            type="checkbox"
+            id="apenasPrivados"
+            [(ngModel)]="apenasPrivados"
+            (change)="toggleApenasPrivados()">
+          <label for="apenasPrivados" class="checkbox-label">
+            Apenas endereços principais
+          </label>
+        </div>
+      </div>
+
       <!-- Botões de ação -->
-      <div class="filtros-actions">
-        <button class="btn-filtrar" (click)="filtrar()">
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="filtrar()">
           <span>Filtrar</span>
         </button>
-        
-        <button class="btn-limpar" (click)="limparFiltros()">
+
+        <button class="btn btn-secondary" (click)="limparFiltros()">
           <span>Limpar</span>
         </button>
       </div>
@@ -79,15 +71,13 @@
 
   <!-- Contador de resultados -->
   <div class="resultados-info">
-    <div class="contador">
-      <span>{{ contadorResultados }}</span>
-    </div>
+    <span class="text-secondary">{{ contadorResultados }}</span>
   </div>
 
-  <!-- Tabela de resultados -->
-  <div class="tabela-container">
+  <!-- Tabela de resultados com novo padrão -->
+  <div class="table-container">
     @if (loading) {
-      <div class="loading-wrapper">
+      <div class="loading-state">
         <div class="loading-spinner"></div>
         <p>Carregando endereços...</p>
       </div>

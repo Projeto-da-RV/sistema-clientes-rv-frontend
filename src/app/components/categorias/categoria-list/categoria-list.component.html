@@ -1,62 +1,56 @@
 <div class="categoria-list">
-  <!-- Header da página -->
+  <!-- Header da página com novo padrão -->
   <div class="page-header">
-    <div class="header-left">
-      <div class="title-group">
-        <h1>Categorias</h1>
-        <span class="subtitle">Gestão de Categorias</span>
-      </div>
+    <div class="header-content">
+      <h1>Categorias</h1>
+      <span class="subtitle">Gestão completa de categorias cadastradas</span>
     </div>
-    <a routerLink="/categorias/novo" class="btn-novo">
-      <span>Nova Categoria</span>
-    </a>
+    <div class="header-actions">
+      <a routerLink="/categorias/novo" class="btn btn-primary">
+        <span>Nova Categoria</span>
+      </a>
+    </div>
   </div>
 
-  <!-- Card de Filtros -->
-  <div class="filtros-container">
-    <div class="filtros-header">
-      <h3>Filtros de Busca</h3>
-    </div>
-    
-    <div class="filtros-content">
-      <div class="filtros-inputs">
-        <!-- Campo de busca por nome -->
-        <div class="input-group">
-          <label>Buscar por nome</label>
-          <div class="input-wrapper">
-            <input 
-              type="text" 
-              class="input-field" 
-              [(ngModel)]="filtroNome"
-              (keyup.enter)="buscarPorNome()"
-              (input)="aplicarFiltros()"
-              placeholder="Digite o nome da categoria">
-          </div>
-        </div>
-        
-        <!-- Campo de filtro especial -->
-        <div class="input-group">
-          <label>Filtros Especiais</label>
-          <div class="checkbox-wrapper">
-            <input 
-              type="checkbox" 
-              id="mostrarAtivas"
-              [(ngModel)]="mostrarAtivas"
-              (change)="toggleMostrarAtivas()">
-            <label for="mostrarAtivas" class="checkbox-label">
-              Apenas categorias ativas
-            </label>
-          </div>
+  <!-- Card de Filtros com novo padrão -->
+  <div class="filter-bar">
+    <div class="filter-content">
+      <!-- Campo de busca por nome -->
+      <div class="input-group">
+        <label>Buscar por nome</label>
+        <div class="input-wrapper">
+          <input
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroNome"
+            (keyup.enter)="buscarPorNome()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite o nome da categoria">
         </div>
       </div>
-      
+
+      <!-- Campo de filtro especial -->
+      <div class="input-group">
+        <label>Filtros Especiais</label>
+        <div class="checkbox-wrapper">
+          <input
+            type="checkbox"
+            id="mostrarAtivas"
+            [(ngModel)]="mostrarAtivas"
+            (change)="toggleMostrarAtivas()">
+          <label for="mostrarAtivas" class="checkbox-label">
+            Apenas categorias ativas
+          </label>
+        </div>
+      </div>
+
       <!-- Botões de ação -->
-      <div class="filtros-actions">
-        <button class="btn-filtrar" (click)="filtrar()">
+      <div class="btn-group">
+        <button class="btn btn-primary" (click)="filtrar()">
           <span>Filtrar</span>
         </button>
-        
-        <button class="btn-limpar" (click)="limparFiltros()">
+
+        <button class="btn btn-secondary" (click)="limparFiltros()">
           <span>Limpar</span>
         </button>
       </div>
@@ -65,26 +59,25 @@
 
   <!-- Contador de resultados -->
   <div class="resultados-info">
-    <div class="contador">
-      <span>{{ contadorResultados }}</span>
-    </div>
+    <span class="text-secondary">{{ contadorResultados }}</span>
   </div>
 
-  <!-- Tabela de resultados -->
-  <div class="tabela-container">
+  <!-- Tabela de resultados com novo padrão -->
+  <div class="table-container">
     @if (loading) {
-      <div class="loading-wrapper">
+      <div class="loading-state">
         <div class="loading-spinner"></div>
         <p>Carregando categorias...</p>
       </div>
     } @else if (categoriasFiltradas.length === 0) {
-      <div class="empty-wrapper">
+      <div class="empty-state">
+        <div class="empty-icon">🏷️</div>
         <h3>Nenhuma categoria encontrada</h3>
         <p>{{ categorias.length === 0 ? 'Você ainda não possui categorias cadastradas.' : 'Não há categorias que correspondam aos filtros selecionados.' }}</p>
-        
+
         @if (categorias.length === 0) {
           <!-- Se não há categorias no total, mostra botão para cadastrar -->
-          <a routerLink="/categorias/novo" class="btn-novo">
+          <a routerLink="/categorias/novo" class="btn btn-primary">
             <span>Cadastrar Primeira Categoria</span>
           </a>
         } @else {
