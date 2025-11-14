@@ -169,12 +169,12 @@
   .action-icon {
     width: 48px;
     height: 48px;
-    background: rgba(var(--primary-rgb), 0.1);
+    background: rgba(var(--secondary-rgb), 0.15);
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-600);
+    color: var(--secondary-700);
     transition: all var(--transition-normal);
     flex-shrink: 0;
 
