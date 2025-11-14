@@ -1,131 +1,91 @@
 .dashboard {
-  animation: fadeIn 0.5s ease-out;
-
   h1 {
     color: var(--text-primary);
     margin-bottom: var(--space-2);
-    font-weight: var(--font-extrabold);
-    font-size: var(--text-4xl);
-    letter-spacing: -0.02em;
+    font-weight: var(--font-bold);
+    font-size: var(--text-3xl);
   }
 
   .subtitle {
     color: var(--text-secondary);
-    margin-bottom: var(--space-10);
-    font-size: var(--text-lg);
-    font-weight: var(--font-medium);
+    margin-bottom: var(--space-8);
+    font-size: var(--text-base);
+    font-weight: var(--font-normal);
   }
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-6);
-  margin-bottom: var(--space-12);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-10);
 }
 
 .stat-card {
   background: var(--bg-card);
-  border-radius: var(--radius-2xl);
-  padding: var(--space-8);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-light);
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
   transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-  animation: slideUp 0.6s ease-out both;
-
-  // Subtle background gradient
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 120px;
-    height: 120px;
-    border-radius: var(--radius-full);
-    opacity: 0.05;
-    pointer-events: none;
-  }
+  cursor: pointer;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-md);
     border-color: var(--border-medium);
   }
 
   .stat-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: var(--radius-xl);
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    flex-shrink: 0;
-    position: relative;
-    box-shadow: var(--shadow-md);
+    margin-bottom: var(--space-4);
 
     lucide-icon {
-      width: 32px;
-      height: 32px;
-      position: relative;
-      z-index: 1;
+      width: 24px;
+      height: 24px;
     }
 
     &.clients {
-      background: var(--gradient-primary);
-
-      &::before {
-        background: var(--gradient-primary);
-      }
+      background: rgba(var(--primary-rgb), 0.1);
+      color: var(--primary-600);
     }
 
     &.contracts {
-      background: var(--gradient-accent);
-      box-shadow: var(--shadow-accent);
-
-      &::before {
-        background: var(--gradient-accent);
-      }
+      background: rgba(var(--accent-rgb), 0.1);
+      color: var(--accent-700);
     }
 
     &.services {
-      background: var(--gradient-secondary);
-      box-shadow: var(--shadow-secondary);
-
-      &::before {
-        background: var(--gradient-secondary);
-      }
+      background: rgba(var(--secondary-rgb), 0.1);
+      color: var(--secondary-700);
     }
 
     &.categories {
-      background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-
-      &::before {
-        background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
-      }
+      background: rgba(var(--success-rgb), 0.1);
+      color: var(--success);
     }
   }
 
   .stat-content {
-    flex: 1;
-    position: relative;
-    z-index: 1;
+    p {
+      color: var(--text-tertiary);
+      margin: 0 0 var(--space-2);
+      font-weight: var(--font-medium);
+      font-size: var(--text-sm);
+    }
 
     h3 {
-      font-size: var(--text-4xl);
+      font-size: var(--text-3xl);
       color: var(--text-primary);
-      margin: 0 0 var(--space-1);
-      font-weight: var(--font-extrabold);
-      min-height: 3rem;
+      margin: 0 0 var(--space-4);
+      font-weight: var(--font-bold);
+      min-height: 2.5rem;
       display: flex;
       align-items: center;
-      letter-spacing: -0.02em;
 
       .loading-number {
         display: flex;
@@ -134,8 +94,8 @@
         width: 100%;
 
         .spinner-small {
-          width: 28px;
-          height: 28px;
+          width: 24px;
+          height: 24px;
           border: 3px solid var(--border-light);
           border-top: 3px solid var(--primary-600);
           border-radius: 50%;
@@ -144,136 +104,89 @@
       }
     }
 
-    p {
-      color: var(--text-secondary);
-      margin: 0 0 var(--space-3);
-      font-weight: var(--font-semibold);
-      font-size: var(--text-sm);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
     .stat-link {
-      color: var(--primary-600);
+      color: var(--text-secondary);
       text-decoration: none;
       font-size: var(--text-sm);
-      font-weight: var(--font-semibold);
+      font-weight: var(--font-medium);
       display: inline-flex;
       align-items: center;
       gap: var(--space-1);
       transition: all var(--transition-fast);
 
       &:hover {
-        color: var(--primary-700);
+        color: var(--primary-600);
         gap: var(--space-2);
       }
 
       lucide-icon {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
       }
-    }
-  }
-
-  // Different animations for each card
-  @for $i from 1 through 4 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{($i - 1) * 0.1}s;
     }
   }
 }
 
 .quick-actions {
-  animation: slideUp 0.6s ease-out 0.4s both;
-
   h2 {
     color: var(--text-primary);
-    margin-bottom: var(--space-6);
-    font-weight: var(--font-extrabold);
-    font-size: var(--text-3xl);
-    letter-spacing: -0.02em;
+    margin-bottom: var(--space-5);
+    font-weight: var(--font-bold);
+    font-size: var(--text-2xl);
   }
 }
 
 .actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
 }
 
 .action-card {
   background: var(--bg-card);
   border-radius: var(--radius-xl);
-  padding: var(--space-8);
-  text-align: center;
+  padding: var(--space-6);
   text-decoration: none;
   color: var(--text-primary);
   box-shadow: var(--shadow-sm);
-  border: 2px solid var(--border-light);
+  border: 1px solid var(--border-light);
   transition: all var(--transition-normal);
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  font-weight: var(--font-semibold);
-  position: relative;
-  overflow: hidden;
-
-  // Shimmer effect on hover
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.1),
-      transparent
-    );
-    transition: left 0.5s;
-  }
-
-  &:hover::before {
-    left: 100%;
-  }
+  font-weight: var(--font-medium);
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-primary);
-    background: var(--gradient-primary);
-    color: white;
+    box-shadow: var(--shadow-md);
     border-color: var(--primary-600);
 
     .action-icon {
-      transform: scale(1.1) rotate(5deg);
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+      background: var(--primary-600);
+      color: white;
     }
   }
 
   .action-icon {
-    width: 64px;
-    height: 64px;
-    background: var(--gradient-primary);
-    border-radius: var(--radius-xl);
+    width: 48px;
+    height: 48px;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--primary-600);
     transition: all var(--transition-normal);
-    box-shadow: var(--shadow-primary);
+    flex-shrink: 0;
 
     lucide-icon {
-      width: 28px;
-      height: 28px;
+      width: 22px;
+      height: 22px;
     }
   }
 
   span {
     font-size: var(--text-base);
+    flex: 1;
   }
 }
 
@@ -284,35 +197,11 @@
   }
 
   .actions-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .dashboard h1 {
-    font-size: var(--text-3xl);
-  }
-
-  .stat-card {
-    padding: var(--space-6);
-
-    .stat-icon {
-      width: 64px;
-      height: 64px;
-
-      lucide-icon {
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    .stat-content h3 {
-      font-size: var(--text-3xl);
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .actions-grid {
-    grid-template-columns: 1fr;
+    font-size: var(--text-2xl);
   }
 }
 
