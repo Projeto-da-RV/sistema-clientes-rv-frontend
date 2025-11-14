@@ -6,23 +6,13 @@
 
 .content {
   flex: 1;
-  margin-left: 220px; // Reduzido de 260px para 220px
-  padding: 0;
+  margin-left: 220px;
+  padding: var(--space-8) var(--space-6);
   transition: all var(--transition-normal);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 
   &.sidebar-collapsed {
-    margin-left: 64px; // Reduzido de 72px para 64px
-  }
-
-  // Container interno com max-width e padding
-  > * {
-    max-width: 1400px;
-    width: 100%;
-    margin: 0 auto;
-    padding: var(--space-8) var(--space-6);
+    margin-left: 64px;
   }
 
   @media (max-width: 768px) {
