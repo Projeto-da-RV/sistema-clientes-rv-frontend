@@ -10,7 +10,13 @@
   --primary-blue: #020096;
   --secondary-blue: #00124f;
   --header-gradient: linear-gradient(135deg, #020096 0%, #00124f 100%);
-  
+
+  /* RGB versions para transparências */
+  --primary-blue-rgb: 2, 0, 150;
+  --secondary-blue-rgb: 0, 18, 79;
+  --primary-orange-rgb: 255, 172, 0;
+  --secondary-cyan-rgb: 0, 206, 255;
+
   /* Cores dos botões */
   --primary-orange: #ffac00;
   --primary-orange-hover: #e69a00;
@@ -18,6 +24,7 @@
   --secondary-cyan-hover: #00b8e6;
   
   /* Background system */
+  --bg-primary: #fcfcfc;
   --bg-main: #fcfcfc;
   --bg-card: #ffffff;
   --bg-hover: #f8f9fa;
