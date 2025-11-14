@@ -50,23 +50,23 @@
     }
 
     &.clients {
-      background: rgba(var(--primary-rgb), 0.1);
-      color: var(--primary-600);
-    }
-
-    &.contracts {
-      background: rgba(var(--accent-rgb), 0.1);
-      color: var(--accent-700);
-    }
-
-    &.services {
-      background: rgba(var(--secondary-rgb), 0.1);
+      background: rgba(var(--secondary-rgb), 0.15);
       color: var(--secondary-700);
     }
 
+    &.contracts {
+      background: rgba(var(--accent-rgb), 0.15);
+      color: var(--accent-800);
+    }
+
+    &.services {
+      background: rgba(var(--tertiary-rgb), 0.15);
+      color: var(--tertiary-700);
+    }
+
     &.categories {
-      background: rgba(var(--success-rgb), 0.1);
-      color: var(--success);
+      background: rgba(var(--success-rgb), 0.15);
+      color: var(--success-dark);
     }
   }
 
