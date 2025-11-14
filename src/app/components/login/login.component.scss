@@ -226,21 +226,21 @@
         .badge {
           display: inline-block;
           padding: var(--space-2) var(--space-4);
-          background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15), rgba(var(--tertiary-rgb), 0.15));
-          color: var(--accent-700);
+          background: rgba(var(--primary-rgb), 0.08);
+          color: var(--text-primary);
           border-radius: var(--radius-full);
           font-size: var(--text-sm);
           font-weight: var(--font-bold);
           text-transform: uppercase;
           letter-spacing: 0.05em;
           margin-bottom: var(--space-4);
-          border: 1px solid rgba(var(--accent-rgb), 0.3);
+          border: 1px solid rgba(var(--primary-rgb), 0.15);
         }
 
         h2 {
           font-size: var(--text-3xl);
           font-weight: var(--font-extrabold);
-          color: var(--accent-700);
+          color: var(--text-primary);
           margin-bottom: var(--space-3);
         }
 
@@ -329,13 +329,13 @@
           }
 
           .forgot-password {
-            color: var(--accent-700);
+            color: var(--text-primary);
             text-decoration: none;
             font-weight: var(--font-semibold);
             transition: all var(--transition-fast);
 
             &:hover {
-              color: var(--accent-800);
+              color: var(--primary-600);
               text-decoration: underline;
             }
           }
