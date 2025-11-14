@@ -6,7 +6,7 @@
 
 .content {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 220px; // Reduzido de 260px para 220px
   padding: 0;
   transition: all var(--transition-normal);
   min-height: 100vh;
@@ -14,7 +14,7 @@
   flex-direction: column;
 
   &.sidebar-collapsed {
-    margin-left: 72px;
+    margin-left: 64px; // Reduzido de 72px para 64px
   }
 
   // Container interno com max-width e padding

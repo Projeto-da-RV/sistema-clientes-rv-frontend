@@ -24,16 +24,17 @@
     h1 {
       font-size: var(--text-3xl);
       font-weight: var(--font-bold);
-      color: var(--text-primary);
+      color: var(--text-primary); // #0f172a - Muito escuro para ótimo contraste
       margin: 0 0 var(--space-1);
       letter-spacing: -0.02em;
     }
 
     .subtitle {
       font-size: var(--text-sm);
-      color: var(--text-secondary);
-      font-weight: var(--font-normal);
+      color: var(--text-primary); // Mudado de text-secondary para text-primary para melhor contraste
+      font-weight: var(--font-medium);
       margin: 0;
+      opacity: 0.7; // Leve transparência para diferenciar do h1
     }
   }
 
@@ -208,6 +209,16 @@
 }
 
 /* ===================================================================
+   TEXT UTILITIES
+   Utilitários para texto com melhor contraste
+   ================================================================ */
+.text-secondary {
+  color: var(--text-primary) !important; // Mudado para text-primary para melhor contraste
+  opacity: 0.8; // Leve transparência para diferenciar
+  font-weight: var(--font-medium);
+}
+
+/* ===================================================================
    EMPTY STATES
    Estados vazios padronizados
    ================================================================ */
@@ -351,6 +362,56 @@
     display: flex;
     gap: var(--space-3);
     justify-content: flex-end;
+  }
+
+  // Estilos para labels e inputs com melhor contraste
+  .input-group {
+    label {
+      display: block;
+      font-weight: var(--font-semibold);
+      color: var(--text-primary); // Mudado de text-secondary para text-primary
+      margin-bottom: var(--space-2);
+      font-size: var(--text-sm);
+      opacity: 0.85; // Leve transparência para diferenciar dos valores
+    }
+
+    .input-wrapper {
+      .input-field {
+        width: 100%;
+        padding: var(--space-3);
+        border: 1.5px solid var(--border-medium); // Borda mais visível
+        border-radius: var(--radius-md);
+        background: var(--bg-card);
+        color: var(--text-primary); // Texto escuro para ótimo contraste
+        font-size: var(--text-base);
+        font-weight: var(--font-medium);
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: var(--primary-600);
+          box-shadow: 0 0 0 3px rgba(1, 18, 79, 0.1);
+        }
+
+        &::placeholder {
+          color: var(--text-muted);
+          font-weight: var(--font-normal);
+        }
+      }
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+
+      .checkbox-label {
+        font-weight: var(--font-medium);
+        color: var(--text-primary); // Texto escuro para melhor contraste
+        font-size: var(--text-sm);
+        margin: 0;
+      }
+    }
   }
 
   @media (max-width: 640px) {

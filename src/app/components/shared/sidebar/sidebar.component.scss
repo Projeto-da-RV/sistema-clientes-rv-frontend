@@ -5,7 +5,7 @@
   top: 0;
   left: 0;
   height: 100vh;
-  width: 260px;
+  width: 220px; // Reduzido de 260px para 220px
   background: var(--bg-card);
   border-right: 1px solid var(--border-light);
   box-shadow: var(--shadow-sm);
@@ -16,7 +16,7 @@
   overflow: hidden;
 
   &.collapsed {
-    width: 72px;
+    width: 64px; // Reduzido de 72px para 64px
 
     .sidebar-header .brand h3 {
       opacity: 0;
