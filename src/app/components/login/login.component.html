@@ -1,52 +1,89 @@
 <div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <h2>RV Digital</h2>
-      <p>Sistema de Gestão de Clientes</p>
-    </div>
-    
-    <form (ngSubmit)="onLogin()" class="login-form">
-      <div class="form-group">
-        <label for="username">Usuário</label>
-        <input 
-          type="text" 
-          id="username"
-          class="form-control" 
-          [(ngModel)]="username" 
-          name="username"
-          placeholder="Digite seu usuário"
-          [disabled]="loading"
-          required>
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <input 
-          type="password" 
-          id="password"
-          class="form-control" 
-          [(ngModel)]="password" 
-          name="password"
-          placeholder="Digite sua senha"
-          [disabled]="loading"
-          required>
-      </div>
-      
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
-        @if (loading) {
-          <span class="spinner-small"></span>
-          Entrando...
-        } @else {
-          Entrar
-        }
-      </button>
-    </form>
+  <!-- Left Side - Hero Section -->
+  <div class="login-hero">
+    <div class="hero-content">
+      <div class="logo">RV</div>
 
-    <!-- Seção de usuários de teste para desenvolvimento -->
-    <div class="test-users-info" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 0.85rem;">
-      <p style="margin: 0 0 8px 0; font-weight: 600; color: #495057;">👥 Usuários de Teste:</p>
-      <p style="margin: 4px 0; color: #6c757d;">🔹 <strong>user</strong> / user123 (Usuário comum)</p>
-      <p style="margin: 4px 0; color: #6c757d;">🔸 <strong>admin</strong> / admin123 (Administrador)</p>
+      <h1>
+        <span class="gradient-text">RV Digital</span>
+      </h1>
+
+      <p>Sistema Moderno de Gestão de Clientes e Contratos</p>
+
+      <div class="features">
+        <div class="feature-item">
+          <div class="icon">✨</div>
+          <span>Interface Moderna e Intuitiva</span>
+        </div>
+        <div class="feature-item">
+          <div class="icon">🔒</div>
+          <span>Segurança com JWT</span>
+        </div>
+        <div class="feature-item">
+          <div class="icon">⚡</div>
+          <span>Performance Otimizada</span>
+        </div>
+        <div class="feature-item">
+          <div class="icon">📊</div>
+          <span>Dashboard Analítico</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side - Login Form -->
+  <div class="login-form-section">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Entre com suas credenciais</p>
+      </div>
+
+      <form (ngSubmit)="onLogin()" class="login-form">
+        <div class="form-group">
+          <label for="username">Usuário</label>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="Digite seu usuário"
+            [disabled]="loading"
+            required
+            autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Digite sua senha"
+            [disabled]="loading"
+            required
+            autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner-small"></span>
+            <span>Entrando...</span>
+          } @else {
+            <span>Entrar no Sistema</span>
+          }
+        </button>
+      </form>
+
+      <!-- Test Users Info -->
+      <div class="test-users-info">
+        <p>👥 Usuários de Teste:</p>
+        <p>🔹 <strong>user</strong> / user123 (Usuário comum)</p>
+        <p>🔸 <strong>admin</strong> / admin123 (Administrador)</p>
+      </div>
     </div>
   </div>
 </div>
