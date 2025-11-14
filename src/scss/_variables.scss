@@ -44,15 +44,22 @@
   --tertiary-800: #b98215;
 
   /* ============================================
-     GRADIENTS - RV Digital Brand
+     WHITE & NEUTRAL COLORS
+     ============================================ */
+  --white: #ffffff;
+  --white-90: rgba(255, 255, 255, 0.9);
+  --white-80: rgba(255, 255, 255, 0.8);
+  --white-70: rgba(255, 255, 255, 0.7);
+  --white-60: rgba(255, 255, 255, 0.6);
+  --white-50: rgba(255, 255, 255, 0.5);
+
+  /* ============================================
+     GRADIENTS - RV Digital Brand (Simplificados)
      ============================================ */
   --gradient-primary: linear-gradient(135deg, #01124f 0%, #023080 100%);
   --gradient-secondary: linear-gradient(135deg, #9ae7f4 0%, #5fcbe6 100%);
-  --gradient-accent: linear-gradient(135deg, #fecc01 0%, #e3a331 100%);
+  --gradient-accent: linear-gradient(135deg, #fecc01 0%, #fed734 100%);
   --gradient-hero: linear-gradient(135deg, #01124f 0%, #012063 50%, #023080 100%);
-  --gradient-gold: linear-gradient(135deg, #fecc01 0%, #e3a331 100%);
-  --gradient-cyan: linear-gradient(135deg, #9ae7f4 0%, #7dd9ed 100%);
-  --gradient-sunset: linear-gradient(135deg, #e3a331 0%, #fecc01 100%);
 
   /* ============================================
      BACKGROUNDS - Light Mode
