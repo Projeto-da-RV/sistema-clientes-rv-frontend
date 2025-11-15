@@ -43,18 +43,18 @@
    STAT CARD - Card Individual com Alto Contraste
    ================================================================ */
 .stat-card {
-  background: rgba(255, 255, 255, 0.05); // ✓ Reduzido para interface mais leve (era 0.08)
+  background: rgba(255, 255, 255, 0.02); // ✓ REDUÇÃO DRÁSTICA - muito translúcido (era 0.05)
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); // ✓ Shadow levemente reduzido
-  border: 1px solid rgba(255, 255, 255, 0.10); // ✓ Borda mais sutil (era 0.15)
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); // ✓ Shadow muito mais suave
+  border: 1px solid rgba(255, 255, 255, 0.05); // ✓ Borda muito sutil (era 0.10)
   transition: all var(--transition-normal);
   cursor: pointer;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.09); // ✓ Aumenta opacidade no hover (era 0.12)
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    border-color: rgba(255, 255, 255, 0.20); // ✓ Borda mais sutil no hover
+    background: rgba(255, 255, 255, 0.06); // ✓ REDUÇÃO SUBSTANCIAL no hover (era 0.09)
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.12); // ✓ Borda mais visível no hover
     transform: translateY(-4px); // ✓ Elevação mais pronunciada
   }
 
@@ -70,34 +70,34 @@
     justify-content: center;
     margin-bottom: var(--space-4);
     transition: all var(--transition-normal);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); // ✓ Shadow mais suave
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); // ✓ Shadow muito reduzido
 
     lucide-icon {
       width: 24px;
       height: 24px;
     }
 
-    // ✓ CLIENTES - Cyan com background mais leve
+    // ✓ CLIENTES - Cyan com background MUITO translúcido
     &.clients {
-      background: rgba(var(--secondary-rgb), 0.20); // ✓ Reduzido para 20% (era 25%)
+      background: rgba(var(--secondary-rgb), 0.10); // ✓ REDUÇÃO DRÁSTICA - 50% menos (era 0.20)
       color: var(--secondary-600); // ✓ Cyan vibrante
     }
 
-    // ✓ CONTRATOS - Gold com background mais leve
+    // ✓ CONTRATOS - Gold com background MUITO translúcido
     &.contracts {
-      background: rgba(var(--accent-rgb), 0.20); // ✓ Reduzido para 20% (era 25%)
+      background: rgba(var(--accent-rgb), 0.10); // ✓ REDUÇÃO DRÁSTICA - 50% menos (era 0.20)
       color: var(--accent-600); // ✓ Gold vibrante
     }
 
-    // ✓ SERVIÇOS - Orange com background mais leve
+    // ✓ SERVIÇOS - Orange com background MUITO translúcido
     &.services {
-      background: rgba(var(--tertiary-rgb), 0.20); // ✓ Reduzido para 20% (era 25%)
+      background: rgba(var(--tertiary-rgb), 0.10); // ✓ REDUÇÃO DRÁSTICA - 50% menos (era 0.20)
       color: var(--tertiary-600); // ✓ Orange vibrante
     }
 
-    // ✓ CATEGORIAS - Green com background mais leve
+    // ✓ CATEGORIAS - Green com background MUITO translúcido
     &.categories {
-      background: rgba(var(--success-rgb), 0.20); // ✓ Reduzido para 20% (era 25%)
+      background: rgba(var(--success-rgb), 0.10); // ✓ REDUÇÃO DRÁSTICA - 50% menos (era 0.20)
       color: var(--success); // ✓ Green vibrante
     }
   }
@@ -105,22 +105,22 @@
   // ✓ Hover aumenta opacidade dos ícones
   &:hover .stat-icon {
     &.clients {
-      background: rgba(var(--secondary-rgb), 0.30); // ✓ Reduzido para 30% (era 35%)
+      background: rgba(var(--secondary-rgb), 0.20); // ✓ REDUÇÃO SUBSTANCIAL - 33% menos (era 0.30)
       transform: scale(1.05);
     }
 
     &.contracts {
-      background: rgba(var(--accent-rgb), 0.30); // ✓ Reduzido para 30% (era 35%)
+      background: rgba(var(--accent-rgb), 0.20); // ✓ REDUÇÃO SUBSTANCIAL - 33% menos (era 0.30)
       transform: scale(1.05);
     }
 
     &.services {
-      background: rgba(var(--tertiary-rgb), 0.30); // ✓ Reduzido para 30% (era 35%)
+      background: rgba(var(--tertiary-rgb), 0.20); // ✓ REDUÇÃO SUBSTANCIAL - 33% menos (era 0.30)
       transform: scale(1.05);
     }
 
     &.categories {
-      background: rgba(var(--success-rgb), 0.30); // ✓ Reduzido para 30% (era 35%)
+      background: rgba(var(--success-rgb), 0.20); // ✓ REDUÇÃO SUBSTANCIAL - 33% menos (era 0.30)
       transform: scale(1.05);
     }
   }
@@ -226,13 +226,13 @@
    ACTION CARD - Cards de Ação com Alto Contraste
    ================================================================ */
 .action-card {
-  background: rgba(255, 255, 255, 0.05); // ✓ Reduzido para interface mais leve (era 0.08)
+  background: rgba(255, 255, 255, 0.02); // ✓ REDUÇÃO DRÁSTICA - muito translúcido (era 0.05)
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   text-decoration: none;
   color: var(--white); // ✓ BRANCO para texto
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); // ✓ Shadow levemente reduzido
-  border: 1px solid rgba(255, 255, 255, 0.10); // ✓ Borda mais sutil (era 0.15)
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); // ✓ Shadow muito mais suave
+  border: 1px solid rgba(255, 255, 255, 0.05); // ✓ Borda muito sutil (era 0.10)
   transition: all var(--transition-normal);
   display: flex;
   align-items: center;
@@ -240,9 +240,9 @@
   font-weight: var(--font-semibold);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.09); // ✓ Reduzido no hover (era 0.12)
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    border-color: rgba(255, 255, 255, 0.20); // ✓ Borda mais sutil
+    background: rgba(255, 255, 255, 0.06); // ✓ REDUÇÃO SUBSTANCIAL no hover (era 0.09)
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.12); // ✓ Borda mais visível no hover
     transform: translateY(-4px);
     color: var(--white); // ✓ Mantém branco
 
@@ -260,7 +260,7 @@
   .action-icon {
     width: 48px;
     height: 48px;
-    background: rgba(var(--secondary-rgb), 0.20); // ✓ Reduzido para 20% (era 25%)
+    background: rgba(var(--secondary-rgb), 0.10); // ✓ REDUÇÃO DRÁSTICA - 50% menos (era 0.20)
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
@@ -268,7 +268,7 @@
     color: var(--secondary-600); // ✓ Cyan vibrante
     transition: all var(--transition-normal);
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); // ✓ Shadow mais suave
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); // ✓ Shadow muito reduzido
 
     lucide-icon {
       width: 24px;
