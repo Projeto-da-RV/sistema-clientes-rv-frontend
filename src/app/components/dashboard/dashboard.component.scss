@@ -43,18 +43,18 @@
    STAT CARD - Card Individual com Alto Contraste
    ================================================================ */
 .stat-card {
-  background: rgba(255, 255, 255, 0.30) !important; // 🧪 TESTE: 30% para verificar se CSS está sendo aplicado
+  background: rgba(255, 255, 255, 0.08); // ✓ Translúcido mas visível (8%)
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.20) !important; // 🧪 TESTE: Shadow visível
-  border: 1px solid rgba(255, 255, 255, 0.30) !important; // 🧪 TESTE: Borda visível
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); // ✓ Shadow sutil mas visível
+  border: 1px solid rgba(255, 255, 255, 0.12); // ✓ Borda sutil mas visível
   transition: all var(--transition-normal);
   cursor: pointer;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.04); // ✓ Aparece levemente no hover (4%)
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border-color: rgba(255, 255, 255, 0.08); // ✓ Borda sutil no hover
+    background: rgba(255, 255, 255, 0.12); // ✓ Aumenta no hover (12%)
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    border-color: rgba(255, 255, 255, 0.18); // ✓ Borda mais visível no hover
     transform: translateY(-4px); // ✓ Elevação mais pronunciada
   }
 
@@ -70,57 +70,57 @@
     justify-content: center;
     margin-bottom: var(--space-4);
     transition: all var(--transition-normal);
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03) !important; // ✓ Shadow quase imperceptível
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08); // ✓ Shadow sutil mas visível
 
     lucide-icon {
       width: 24px;
       height: 24px;
     }
 
-    // 🧪 TESTE: CLIENTES - Cyan com 40% para verificar
+    // ✓ CLIENTES - Cyan translúcido mas visível
     &.clients {
-      background: rgba(var(--secondary-rgb), 0.40) !important; // 🧪 TESTE: 40% visível
+      background: rgba(var(--secondary-rgb), 0.18); // ✓ Translúcido mas visível (18%)
       color: var(--secondary-600); // ✓ Cyan vibrante
     }
 
-    // 🧪 TESTE: CONTRATOS - Gold com 40% para verificar
+    // ✓ CONTRATOS - Gold translúcido mas visível
     &.contracts {
-      background: rgba(var(--accent-rgb), 0.40) !important; // 🧪 TESTE: 40% visível
+      background: rgba(var(--accent-rgb), 0.18); // ✓ Translúcido mas visível (18%)
       color: var(--accent-600); // ✓ Gold vibrante
     }
 
-    // 🧪 TESTE: SERVIÇOS - Orange com 40% para verificar
+    // ✓ SERVIÇOS - Orange translúcido mas visível
     &.services {
-      background: rgba(var(--tertiary-rgb), 0.40) !important; // 🧪 TESTE: 40% visível
+      background: rgba(var(--tertiary-rgb), 0.18); // ✓ Translúcido mas visível (18%)
       color: var(--tertiary-600); // ✓ Orange vibrante
     }
 
-    // 🧪 TESTE: CATEGORIAS - Green com 40% para verificar
+    // ✓ CATEGORIAS - Green translúcido mas visível
     &.categories {
-      background: rgba(var(--success-rgb), 0.40) !important; // 🧪 TESTE: 40% visível
+      background: rgba(var(--success-rgb), 0.18); // ✓ Translúcido mas visível (18%)
       color: var(--success); // ✓ Green vibrante
     }
   }
 
-  // ✓ Hover aumenta levemente a opacidade dos ícones
+  // ✓ Hover aumenta a opacidade dos ícones
   &:hover .stat-icon {
     &.clients {
-      background: rgba(var(--secondary-rgb), 0.12); // ✓ Dobra no hover para 12%
+      background: rgba(var(--secondary-rgb), 0.28); // ✓ Aumenta no hover para 28%
       transform: scale(1.05);
     }
 
     &.contracts {
-      background: rgba(var(--accent-rgb), 0.12); // ✓ Dobra no hover para 12%
+      background: rgba(var(--accent-rgb), 0.28); // ✓ Aumenta no hover para 28%
       transform: scale(1.05);
     }
 
     &.services {
-      background: rgba(var(--tertiary-rgb), 0.12); // ✓ Dobra no hover para 12%
+      background: rgba(var(--tertiary-rgb), 0.28); // ✓ Aumenta no hover para 28%
       transform: scale(1.05);
     }
 
     &.categories {
-      background: rgba(var(--success-rgb), 0.12); // ✓ Dobra no hover para 12%
+      background: rgba(var(--success-rgb), 0.28); // ✓ Aumenta no hover para 28%
       transform: scale(1.05);
     }
   }
@@ -226,13 +226,13 @@
    ACTION CARD - Cards de Ação com Alto Contraste
    ================================================================ */
 .action-card {
-  background: rgba(255, 255, 255, 0.30) !important; // 🧪 TESTE: 30% para verificar se CSS está sendo aplicado
+  background: rgba(255, 255, 255, 0.08); // ✓ Translúcido mas visível (8%)
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   text-decoration: none;
   color: var(--white); // ✓ BRANCO para texto
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.20) !important; // 🧪 TESTE: Shadow visível
-  border: 1px solid rgba(255, 255, 255, 0.30) !important; // 🧪 TESTE: Borda visível
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); // ✓ Shadow sutil mas visível
+  border: 1px solid rgba(255, 255, 255, 0.12); // ✓ Borda sutil mas visível
   transition: all var(--transition-normal);
   display: flex;
   align-items: center;
@@ -240,9 +240,9 @@
   font-weight: var(--font-semibold);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.04); // ✓ Aparece levemente no hover (4%)
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border-color: rgba(255, 255, 255, 0.08); // ✓ Borda sutil no hover
+    background: rgba(255, 255, 255, 0.12); // ✓ Aumenta no hover (12%)
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    border-color: rgba(255, 255, 255, 0.18); // ✓ Borda mais visível no hover
     transform: translateY(-4px);
     color: var(--white); // ✓ Mantém branco
 
@@ -260,7 +260,7 @@
   .action-icon {
     width: 48px;
     height: 48px;
-    background: rgba(var(--secondary-rgb), 0.40) !important; // 🧪 TESTE: 40% visível
+    background: rgba(var(--secondary-rgb), 0.18); // ✓ Translúcido mas visível (18%)
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
@@ -268,7 +268,7 @@
     color: var(--secondary-600); // ✓ Cyan vibrante
     transition: all var(--transition-normal);
     flex-shrink: 0;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.20) !important; // 🧪 TESTE: Shadow visível
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08); // ✓ Shadow sutil mas visível
 
     lucide-icon {
       width: 24px;
