@@ -1,14 +1,15 @@
 /* Sidebar Component - RV Digital Modern Layout */
+/* Paleta de Cores Otimizada para Contraste */
 
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: 220px; // Reduzido de 260px para 220px
-  background: var(--bg-card);
-  border-right: 1px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
+  width: 220px;
+  background: var(--primary-600); // ✓ Fundo escuro (Navy Blue #01124f)
+  border-right: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda sutil clara
+  box-shadow: var(--shadow-primary);
   z-index: 1000;
   transition: all var(--transition-normal);
   display: flex;
@@ -43,12 +44,12 @@
 /* Header do Sidebar */
 .sidebar-header {
   padding: var(--space-6) var(--space-4);
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda clara sutil
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 72px;
-  background: var(--bg-card);
+  background: var(--primary-700); // ✓ Fundo um pouco mais escuro para diferenciação (#000d3a)
 
   .sidebar.collapsed & {
     padding: var(--space-4);
@@ -61,7 +62,7 @@
     transition: all var(--transition-normal);
 
     h3 {
-      color: var(--primary-600);
+      color: var(--white); // ✓ Branco para contraste em fundo escuro
       margin: 0;
       font-size: var(--text-xl);
       font-weight: var(--font-bold);
@@ -70,7 +71,7 @@
     }
 
     .brand-icon {
-      color: var(--primary-600);
+      color: var(--accent-600); // ✓ Dourado para destaque (#fecc01)
       font-size: var(--text-lg);
       font-weight: var(--font-extrabold);
       display: block;
@@ -85,9 +86,9 @@
   }
 
   .toggle-btn {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-light);
-    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.1); // ✓ Fundo semi-transparente
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white-80); // ✓ Branco com 80% opacidade
     padding: var(--space-2);
     border-radius: var(--radius-md);
     cursor: pointer;
@@ -104,9 +105,9 @@
     }
 
     &:hover {
-      background: var(--bg-hover);
-      border-color: var(--border-medium);
-      color: var(--primary-600);
+      background: rgba(255, 255, 255, 0.2); // ✓ Mais opaco no hover
+      border-color: rgba(255, 255, 255, 0.3);
+      color: var(--white); // ✓ Branco total no hover
     }
 
     lucide-icon {
@@ -128,15 +129,15 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.05); // ✓ Track escuro sutil
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--border-medium);
+    background: rgba(255, 255, 255, 0.2); // ✓ Thumb claro
     border-radius: var(--radius-sm);
 
     &:hover {
-      background: var(--border-dark);
+      background: rgba(255, 255, 255, 0.3); // ✓ Mais claro no hover
     }
   }
 }
@@ -155,8 +156,8 @@
 
     &.active {
       .nav-link.dropdown-toggle {
-        background: var(--bg-secondary);
-        color: var(--primary-600);
+        background: rgba(255, 255, 255, 0.1); // ✓ Fundo claro sutil
+        color: var(--accent-600); // ✓ Dourado para destaque
       }
     }
   }
@@ -176,7 +177,7 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  color: var(--text-secondary);
+  color: var(--white-80); // ✓ Branco com 80% opacidade (INATIVO)
   text-decoration: none;
   background: none;
   border: none;
@@ -199,14 +200,14 @@
   }
 
   &:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1); // ✓ Fundo branco com 10% (HOVER)
+    color: var(--white); // ✓ Branco total no hover
   }
 
   &.active,
   &.router-link-active {
-    background: rgba(var(--primary-rgb), 0.1);
-    color: var(--primary-600);
+    background: var(--accent-600); // ✓ Dourado vibrante para ATIVO (#fecc01)
+    color: var(--primary-800); // ✓ Azul muito escuro para contraste (#000a2b)
     font-weight: var(--font-semibold);
 
     &::before {
@@ -217,7 +218,7 @@
       transform: translateY(-50%);
       width: 3px;
       height: 60%;
-      background: var(--primary-600);
+      background: var(--primary-800); // ✓ Azul escuro
       border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     }
   }
@@ -267,10 +268,10 @@
     position: absolute;
     left: 74px;
     top: 0;
-    background: var(--bg-card);
+    background: var(--primary-700); // ✓ Fundo escuro para dropdown (#000d3a)
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border-light);
+    border: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda clara sutil
     min-width: 200px;
     z-index: 1001;
     max-height: none;
@@ -287,7 +288,7 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-4) var(--space-2) var(--space-10);
-  color: var(--text-tertiary);
+  color: var(--white-70); // ✓ Branco com 70% opacidade (INATIVO)
   text-decoration: none;
   font-size: var(--text-sm);
   transition: all var(--transition-fast);
@@ -297,30 +298,30 @@
 
   .collapsed-menu & {
     padding: var(--space-2) var(--space-4);
-    color: var(--text-secondary);
+    color: var(--white-70); // ✓ Mesma cor no dropdown colapsado
     margin: 0;
     width: 100%;
   }
 
   &:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1); // ✓ Fundo claro no hover
+    color: var(--white); // ✓ Branco total no hover
 
     .collapsed-menu & {
-      background: var(--bg-hover);
-      color: var(--primary-600);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent-600); // ✓ Dourado no hover do dropdown
     }
   }
 
   &.active,
   &.router-link-active {
-    background: rgba(var(--primary-rgb), 0.08);
-    color: var(--primary-600);
+    background: rgba(254, 204, 1, 0.2); // ✓ Dourado com 20% opacidade
+    color: var(--accent-600); // ✓ Dourado vibrante
     font-weight: var(--font-semibold);
 
     .collapsed-menu & {
-      background: rgba(var(--primary-rgb), 0.1);
-      color: var(--primary-600);
+      background: rgba(254, 204, 1, 0.2);
+      color: var(--accent-600);
     }
   }
 
@@ -333,9 +334,9 @@
 
 /* Footer/User Section */
 .sidebar-footer {
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda clara sutil
   padding: var(--space-4);
-  background: var(--bg-card);
+  background: var(--primary-700); // ✓ Fundo escuro (#000d3a)
 
   .user-info {
     display: flex;
@@ -343,7 +344,7 @@
     gap: var(--space-3);
     margin-bottom: var(--space-3);
     padding: var(--space-3);
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.05); // ✓ Fundo claro muito sutil
     border-radius: var(--radius-lg);
     transition: all var(--transition-normal);
 
@@ -359,7 +360,7 @@
     .user-avatar {
       width: 40px;
       height: 40px;
-      background: rgba(var(--primary-rgb), 0.1);
+      background: var(--accent-600); // ✓ Avatar dourado (#fecc01)
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
@@ -370,7 +371,7 @@
       lucide-icon {
         width: 20px;
         height: 20px;
-        color: var(--primary-600);
+        color: var(--primary-800); // ✓ Ícone azul escuro para contraste
       }
     }
 
@@ -380,7 +381,7 @@
 
       .user-name {
         display: block;
-        color: var(--text-primary);
+        color: var(--white); // ✓ Nome em branco
         font-weight: var(--font-semibold);
         font-size: var(--text-sm);
         margin-bottom: var(--space-1);
@@ -388,7 +389,7 @@
 
       .user-role {
         display: block;
-        color: var(--text-tertiary);
+        color: var(--white-60); // ✓ Role em branco com 60% opacidade
         font-size: var(--text-xs);
       }
     }
@@ -400,9 +401,9 @@
     gap: var(--space-2);
     width: 100%;
     padding: var(--space-3);
-    background: rgba(var(--error-rgb), 0.1);
-    border: 1px solid rgba(var(--error-rgb), 0.2);
-    color: var(--error);
+    background: rgba(239, 68, 68, 0.15); // ✓ Vermelho com 15% opacidade
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5; // ✓ Vermelho claro para contraste em fundo escuro
     border-radius: var(--radius-lg);
     cursor: pointer;
     transition: all var(--transition-fast);
