@@ -43,11 +43,11 @@
    STAT CARD - Card Individual com Alto Contraste
    ================================================================ */
 .stat-card {
-  background: rgba(255, 255, 255, 0.01); // ✓ ULTRA TRANSPARENTE - vidro quase invisível (1%)
+  background: rgba(255, 255, 255, 0.01) !important; // ✓ ULTRA TRANSPARENTE - vidro quase invisível (1%)
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); // ✓ Shadow mínima
-  border: 1px solid rgba(255, 255, 255, 0.03); // ✓ Borda quase invisível (3%)
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important; // ✓ Shadow mínima
+  border: 1px solid rgba(255, 255, 255, 0.03) !important; // ✓ Borda quase invisível (3%)
   transition: all var(--transition-normal);
   cursor: pointer;
 
@@ -70,7 +70,7 @@
     justify-content: center;
     margin-bottom: var(--space-4);
     transition: all var(--transition-normal);
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03); // ✓ Shadow quase imperceptível
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03) !important; // ✓ Shadow quase imperceptível
 
     lucide-icon {
       width: 24px;
@@ -79,25 +79,25 @@
 
     // ✓ CLIENTES - Cyan com background ULTRA translúcido
     &.clients {
-      background: rgba(var(--secondary-rgb), 0.06); // ✓ ULTRA TRANSPARENTE - 6%
+      background: rgba(var(--secondary-rgb), 0.06) !important; // ✓ ULTRA TRANSPARENTE - 6%
       color: var(--secondary-600); // ✓ Cyan vibrante
     }
 
     // ✓ CONTRATOS - Gold com background ULTRA translúcido
     &.contracts {
-      background: rgba(var(--accent-rgb), 0.06); // ✓ ULTRA TRANSPARENTE - 6%
+      background: rgba(var(--accent-rgb), 0.06) !important; // ✓ ULTRA TRANSPARENTE - 6%
       color: var(--accent-600); // ✓ Gold vibrante
     }
 
     // ✓ SERVIÇOS - Orange com background ULTRA translúcido
     &.services {
-      background: rgba(var(--tertiary-rgb), 0.06); // ✓ ULTRA TRANSPARENTE - 6%
+      background: rgba(var(--tertiary-rgb), 0.06) !important; // ✓ ULTRA TRANSPARENTE - 6%
       color: var(--tertiary-600); // ✓ Orange vibrante
     }
 
     // ✓ CATEGORIAS - Green com background ULTRA translúcido
     &.categories {
-      background: rgba(var(--success-rgb), 0.06); // ✓ ULTRA TRANSPARENTE - 6%
+      background: rgba(var(--success-rgb), 0.06) !important; // ✓ ULTRA TRANSPARENTE - 6%
       color: var(--success); // ✓ Green vibrante
     }
   }
@@ -226,13 +226,13 @@
    ACTION CARD - Cards de Ação com Alto Contraste
    ================================================================ */
 .action-card {
-  background: rgba(255, 255, 255, 0.01); // ✓ ULTRA TRANSPARENTE - vidro quase invisível (1%)
+  background: rgba(255, 255, 255, 0.01) !important; // ✓ ULTRA TRANSPARENTE - vidro quase invisível (1%)
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   text-decoration: none;
   color: var(--white); // ✓ BRANCO para texto
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); // ✓ Shadow mínima
-  border: 1px solid rgba(255, 255, 255, 0.03); // ✓ Borda quase invisível (3%)
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important; // ✓ Shadow mínima
+  border: 1px solid rgba(255, 255, 255, 0.03) !important; // ✓ Borda quase invisível (3%)
   transition: all var(--transition-normal);
   display: flex;
   align-items: center;
@@ -260,7 +260,7 @@
   .action-icon {
     width: 48px;
     height: 48px;
-    background: rgba(var(--secondary-rgb), 0.06); // ✓ ULTRA TRANSPARENTE - 6%
+    background: rgba(var(--secondary-rgb), 0.06) !important; // ✓ ULTRA TRANSPARENTE - 6%
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
@@ -268,7 +268,7 @@
     color: var(--secondary-600); // ✓ Cyan vibrante
     transition: all var(--transition-normal);
     flex-shrink: 0;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03); // ✓ Shadow quase imperceptível
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03) !important; // ✓ Shadow quase imperceptível
 
     lucide-icon {
       width: 24px;
