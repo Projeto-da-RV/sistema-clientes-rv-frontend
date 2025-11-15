@@ -82,7 +82,7 @@
       
       &.active {
         background: var(--primary-orange);
-        box-shadow: 0 4px 12px rgba(255, 172, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(var(--tertiary-rgb), 0.3);
       }
     }
     
@@ -186,14 +186,14 @@
       width: 100%;
       
       .nav-link {
-        color: #333;
+        color: var(--text-primary);
       }
       
       .dropdown-menu {
         position: static;
         display: none;
         box-shadow: none;
-        background: #f8f9fa;
+        background: var(--bg-hover);
         
         &.show {
           display: block;
@@ -206,14 +206,14 @@
       justify-content: space-between;
       margin-top: 2rem;
       padding-top: 2rem;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid var(--border-light);
       
       .user-name {
-        color: #333;
+        color: var(--text-primary);
       }
       
       .btn-logout {
-        background: #dc3545;
+        background: var(--error);
         color: white;
         border: none;
       }

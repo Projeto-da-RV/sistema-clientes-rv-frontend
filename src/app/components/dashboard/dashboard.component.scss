@@ -181,13 +181,13 @@
       padding: var(--space-2) var(--space-4);
       border-radius: var(--radius-md);
       transition: all var(--transition-fast);
-      box-shadow: 0 2px 8px rgba(254, 204, 1, 0.3);
+      box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.3);
 
       &:hover {
         background: var(--accent-700); // ✓ Dourado mais escuro no hover
         color: var(--primary-800);
         gap: var(--space-3); // ✓ Aumenta gap (seta se afasta)
-        box-shadow: 0 4px 16px rgba(254, 204, 1, 0.5);
+        box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.5);
         transform: translateY(-2px);
       }
 
@@ -250,7 +250,7 @@
       background: var(--accent-600); // ✓ Dourado no hover
       color: var(--primary-800); // ✓ Azul escuro para contraste
       transform: scale(1.1);
-      box-shadow: 0 4px 16px rgba(254, 204, 1, 0.4);
+      box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.4);
     }
   }
 

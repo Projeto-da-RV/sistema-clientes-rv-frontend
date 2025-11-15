@@ -315,12 +315,12 @@
 
   &.active,
   &.router-link-active {
-    background: rgba(254, 204, 1, 0.2); // ✓ Dourado com 20% opacidade
+    background: rgba(var(--accent-rgb), 0.2); // ✓ Dourado com 20% opacidade
     color: var(--accent-600); // ✓ Dourado vibrante
     font-weight: var(--font-semibold);
 
     .collapsed-menu & {
-      background: rgba(254, 204, 1, 0.2);
+      background: rgba(var(--accent-rgb), 0.2);
       color: var(--accent-600);
     }
   }
@@ -401,9 +401,9 @@
     gap: var(--space-2);
     width: 100%;
     padding: var(--space-3);
-    background: rgba(239, 68, 68, 0.15); // ✓ Vermelho com 15% opacidade
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #fca5a5; // ✓ Vermelho claro para contraste em fundo escuro
+    background: rgba(var(--error-rgb), 0.15); // ✓ Vermelho com 15% opacidade
+    border: 1px solid rgba(var(--error-rgb), 0.3);
+    color: var(--error-light); // ✓ Vermelho claro para contraste em fundo escuro
     border-radius: var(--radius-lg);
     cursor: pointer;
     transition: all var(--transition-fast);
