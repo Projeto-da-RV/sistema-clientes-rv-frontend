@@ -160,7 +160,7 @@
 
             &.required::after {
               content: ' *';
-              color: #ef4444;
+              color: var(--error); // ✓ Vermelho - DA PALETA
               font-weight: 700;
             }
 
@@ -203,11 +203,11 @@
             }
 
             &.error {
-              border-color: #ef4444;
-              background: rgba(239, 68, 68, 0.05);
+              border-color: var(--error); // ✓ Vermelho - DA PALETA
+              background: rgba(var(--error-rgb), 0.05); // ✓ Vermelho RGB - DA PALETA
 
               &:focus {
-                box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+                box-shadow: 0 0 0 4px rgba(var(--error-rgb), 0.1); // ✓ Vermelho RGB - DA PALETA
               }
             }
           }
@@ -223,7 +223,7 @@
 
           .error-message {
             margin-top: 0.5rem;
-            color: #ef4444;
+            color: var(--error); // ✓ Vermelho - DA PALETA
             font-size: 0.85rem;
             font-weight: 500;
             display: flex;
@@ -428,12 +428,12 @@
       }
 
       .btn-cancel {
-        background: white;
+        background: var(--white); // ✓ Branco - DA PALETA
         color: var(--text-secondary);
         border: 2px solid var(--border-medium);
 
         &:hover {
-          background: #f3f4f6;
+          background: var(--bg-hover); // ✓ Background hover - DA PALETA
           border-color: var(--text-secondary);
           color: var(--text-primary);
           transform: translateY(-2px);
