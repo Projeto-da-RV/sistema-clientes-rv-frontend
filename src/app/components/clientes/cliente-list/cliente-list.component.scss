@@ -10,6 +10,175 @@
   margin: calc(-1 * var(--space-8)) calc(-1 * var(--space-6));
 
   /* ===================================================================
+     PAGE HEADER - Cabeçalho da Página
+     ================================================================ */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-8);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+
+    .header-content {
+      h1 {
+        color: var(--white);
+        margin-bottom: var(--space-2);
+        font-weight: var(--font-bold);
+        font-size: var(--text-3xl);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .subtitle {
+        color: var(--white);
+        opacity: 0.85;
+        font-size: var(--text-base);
+        font-weight: var(--font-medium);
+      }
+    }
+
+    .header-actions {
+      .btn-primary {
+        background: var(--accent-600); // ✓ Dourado como botões "Ver todos" do Dashboard
+        color: var(--primary-800); // ✓ Azul escuro para contraste
+        text-decoration: none;
+        font-size: var(--text-sm);
+        font-weight: var(--font-bold);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-3) var(--space-5);
+        border-radius: var(--radius-md);
+        border: none;
+        transition: all var(--transition-fast);
+        box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.3);
+        cursor: pointer;
+
+        &:hover {
+          background: var(--accent-700);
+          box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.5);
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
+  /* ===================================================================
+     FILTER BAR - Barra de Filtros (mesmos estilos do Dashboard)
+     ================================================================ */
+  .filter-bar {
+    background: rgba(255, 255, 255, 0.08); // ✓ MESMA transparência do Dashboard (8%)
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+    border: 1px solid rgba(255, 255, 255, 0.12); // ✓ MESMA borda (12%)
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); // ✓ MESMA shadow
+    transition: all var(--transition-normal);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .filter-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: var(--space-4);
+      align-items: end;
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+
+        label {
+          color: var(--white);
+          font-size: var(--text-sm);
+          font-weight: var(--font-semibold);
+          opacity: 0.9;
+        }
+
+        .input-wrapper {
+          position: relative;
+
+          .input-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05); // ✓ Input translúcido
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: var(--space-3) var(--space-4);
+            color: var(--white);
+            font-size: var(--text-sm);
+            transition: all var(--transition-fast);
+
+            &::placeholder {
+              color: var(--white);
+              opacity: 0.5;
+            }
+
+            &:focus {
+              outline: none;
+              background: rgba(255, 255, 255, 0.08);
+              border-color: rgba(255, 255, 255, 0.2);
+              box-shadow: 0 0 0 3px rgba(var(--secondary-rgb), 0.15);
+            }
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.07);
+              border-color: rgba(255, 255, 255, 0.15);
+            }
+          }
+        }
+      }
+
+      .btn-group {
+        display: flex;
+        gap: var(--space-3);
+        align-items: flex-end;
+
+        .btn {
+          padding: var(--space-3) var(--space-5);
+          border-radius: var(--radius-md);
+          border: none;
+          cursor: pointer;
+          font-size: var(--text-sm);
+          font-weight: var(--font-bold);
+          transition: all var(--transition-fast);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          white-space: nowrap;
+
+          &.btn-primary {
+            background: var(--accent-600); // ✓ Dourado como Dashboard
+            color: var(--primary-800);
+            box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.3);
+
+            &:hover {
+              background: var(--accent-700);
+              box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.5);
+              transform: translateY(-2px);
+            }
+          }
+
+          &.btn-secondary {
+            background: rgba(var(--secondary-rgb), 0.18); // ✓ Cyan translúcido
+            color: var(--secondary-600);
+            border: 1px solid var(--secondary-600);
+
+            &:hover {
+              background: rgba(var(--secondary-rgb), 0.28);
+              transform: translateY(-2px);
+              box-shadow: 0 4px 16px rgba(var(--secondary-rgb), 0.4);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* ===================================================================
      CONTADOR DE RESULTADOS
      ================================================================ */
   .resultados-info {
@@ -21,6 +190,54 @@
       color: var(--white); // ✓ BRANCO
       opacity: 0.85;
       font-weight: var(--font-medium);
+    }
+  }
+
+  /* ===================================================================
+     LOADING & EMPTY STATES
+     ================================================================ */
+  .loading-state,
+  .empty-state {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    padding: var(--space-10);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top: 4px solid var(--accent-600);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto var(--space-4);
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: var(--space-4);
+    }
+
+    h3 {
+      color: var(--white);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      margin-bottom: var(--space-3);
+    }
+
+    p {
+      color: var(--white);
+      opacity: 0.8;
+      margin-bottom: var(--space-6);
+      font-size: var(--text-base);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
     }
   }
 
@@ -389,6 +606,33 @@
   @media (max-width: 768px) {
     padding: var(--space-4);
 
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: var(--space-6);
+
+      .header-content h1 {
+        font-size: var(--text-2xl);
+      }
+    }
+
+    .filter-bar {
+      padding: var(--space-4);
+
+      .filter-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+
+        .btn-group {
+          width: 100%;
+
+          .btn {
+            flex: 1;
+          }
+        }
+      }
+    }
+
     .tabela-desktop {
       display: none;
     }
@@ -399,6 +643,18 @@
   }
 
   @media (max-width: 480px) {
+    .page-header .header-content h1 {
+      font-size: var(--text-xl);
+    }
+
+    .filter-bar {
+      padding: var(--space-3);
+
+      .filter-content .btn-group {
+        flex-direction: column;
+      }
+    }
+
     .cards-mobile {
       padding: var(--space-2);
       gap: var(--space-3);
@@ -419,4 +675,12 @@
       }
     }
   }
+}
+
+/* ===================================================================
+   ANIMATIONS
+   ================================================================ */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
