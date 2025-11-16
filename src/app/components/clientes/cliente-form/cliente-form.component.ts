@@ -68,7 +68,8 @@ export class ClienteFormComponent implements OnInit, AfterViewInit {
       opacity: 0,
       y: -30,
       duration: 0.6,
-      ease: 'power3.out'
+      ease: 'power3.out',
+      clearProps: 'all' // ✓ Limpa props inline após animação
     });
 
     // 2. Animação de entrada do breadcrumb
@@ -77,7 +78,8 @@ export class ClienteFormComponent implements OnInit, AfterViewInit {
       x: -20,
       duration: 0.5,
       delay: 0.2,
-      ease: 'power2.out'
+      ease: 'power2.out',
+      clearProps: 'all' // ✓ Limpa props inline após animação
     });
 
     // 3. Animação sequencial dos form cards (stagger)
@@ -88,7 +90,8 @@ export class ClienteFormComponent implements OnInit, AfterViewInit {
       duration: 0.7,
       stagger: 0.15,
       delay: 0.3,
-      ease: 'power3.out'
+      ease: 'power3.out',
+      clearProps: 'all' // ✓ Limpa props inline após animação
     });
 
     // 4. Animação dos campos dentro de cada card (stagger)
@@ -99,7 +102,8 @@ export class ClienteFormComponent implements OnInit, AfterViewInit {
       duration: 0.5,
       stagger: 0.08,
       delay: 0.6,
-      ease: 'power2.out'
+      ease: 'power2.out',
+      clearProps: 'all' // ✓ Limpa props inline após animação
     });
 
     // 5. Animação dos botões de ação
@@ -108,7 +112,8 @@ export class ClienteFormComponent implements OnInit, AfterViewInit {
       y: 30,
       duration: 0.6,
       delay: 0.8,
-      ease: 'power3.out'
+      ease: 'power3.out',
+      clearProps: 'all' // ✓ Limpa props inline após animação
     });
 
     // 6. Adicionar listeners para animações de focus
