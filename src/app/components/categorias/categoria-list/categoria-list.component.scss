@@ -8,6 +8,20 @@
   min-height: calc(100vh - 4rem);
   padding: var(--space-6);
   margin: calc(-1 * var(--space-8)) calc(-1 * var(--space-6));
+  width: 100%; // ✓ Garante largura responsiva
+  max-width: 100vw; // ✓ CRÍTICO: Previne overflow horizontal
+  overflow-x: hidden; // ✓ CRÍTICO: Esconde overflow horizontal
+  box-sizing: border-box; // ✓ CRÍTICO: Inclui padding no cálculo de largura
+
+  // ✓ CRÍTICO: Box-sizing em TODOS os elementos filhos
+  * {
+    box-sizing: border-box;
+  }
+
+  // ✓ CRÍTICO: Garante que todos os filhos diretos respeitam a largura
+  > * {
+    max-width: 100%;
+  }
 
   /* ===================================================================
      PAGE HEADER - Cabeçalho da Página
@@ -74,6 +88,8 @@
     border: 1px solid rgba(255, 255, 255, 0.12); // ✓ MESMA borda (12%)
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); // ✓ MESMA shadow
     transition: all var(--transition-normal);
+    width: 100%; // ✓ Garante largura responsiva
+    max-width: 100%; // ✓ Não ultrapassa container
 
     &:hover {
       background: rgba(255, 255, 255, 0.10);
@@ -86,11 +102,15 @@
       grid-template-columns: 1fr 1fr auto;
       gap: var(--space-4);
       align-items: end;
+      width: 100%; // ✓ Garante largura responsiva
+      max-width: 100%; // ✓ Não ultrapassa container
 
       .input-group {
         display: flex;
         flex-direction: column;
         gap: var(--space-2);
+        min-width: 0; // ✓ Permite que o input encolha quando necessário
+        width: 100%; // ✓ Garante largura responsiva
 
         label {
           color: var(--white);
@@ -101,9 +121,12 @@
 
         .input-wrapper {
           position: relative;
+          width: 100%; // ✓ Garante largura responsiva
+          max-width: 100%; // ✓ Não ultrapassa container
 
           .input-field {
             width: 100%;
+            max-width: 100%; // ✓ Não ultrapassa container
             background: rgba(255, 255, 255, 0.05); // ✓ Input translúcido
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: var(--radius-md);
@@ -156,6 +179,7 @@
         display: flex;
         gap: var(--space-3);
         align-items: flex-end;
+        flex-wrap: wrap; // ✓ CRÍTICO: Permite quebra de linha em telas pequenas
 
         .btn {
           padding: var(--space-3) var(--space-5);
@@ -287,8 +311,11 @@
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.12); // ✓ MESMA borda (12%)
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12); // ✓ MESMA shadow
-    overflow: hidden;
+    overflow-x: auto; // ✓ CRÍTICO: Permite scroll horizontal apenas na tabela se necessário
+    overflow-y: visible; // ✓ Não corta conteúdo verticalmente
     transition: all var(--transition-normal);
+    width: 100%; // ✓ Garante largura responsiva
+    max-width: 100%; // ✓ Não ultrapassa container pai
 
     &:hover {
       background: rgba(255, 255, 255, 0.10); // ✓ Levemente mais visível no hover
@@ -298,6 +325,7 @@
 
     .tabela {
       width: 100%;
+      min-width: 800px; // ✓ Largura mínima para scroll horizontal em telas pequenas
       border-collapse: collapse;
 
       thead tr {
@@ -637,8 +665,31 @@
   /* ===================================================================
      RESPONSIVIDADE
      ================================================================ */
+
+  // ✓ TABLET: Ajustes intermediários
+  @media (max-width: 1024px) {
+    padding: var(--space-5);
+    margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-4));
+
+    .filter-bar .filter-content {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+
+      .btn-group {
+        width: 100%;
+        justify-content: stretch;
+
+        .btn {
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  // ✓ MOBILE: Layout mobile completo
   @media (max-width: 768px) {
     padding: var(--space-4);
+    margin: 0; // ✓ CRÍTICO: Remove margem negativa em mobile
 
     .page-header {
       flex-direction: column;
@@ -676,17 +727,51 @@
     }
   }
 
+  // ✓ MOBILE PEQUENO: Otimizações para telas muito pequenas
   @media (max-width: 480px) {
-    .page-header .header-content h1 {
-      font-size: var(--text-xl);
+    padding: var(--space-3); // ✓ Reduz padding ainda mais
+    margin: 0; // ✓ Garante que margem negativa não existe
+
+    .page-header {
+      margin-bottom: var(--space-4);
+
+      .header-content h1 {
+        font-size: var(--text-xl);
+      }
+
+      .header-actions {
+        width: 100%;
+
+        .btn-primary {
+          width: 100%; // ✓ Botão ocupa largura total
+          justify-content: center;
+        }
+      }
     }
 
     .filter-bar {
       padding: var(--space-3);
 
-      .filter-content .btn-group {
-        flex-direction: column;
+      .filter-content {
+        .input-group {
+          .input-field {
+            font-size: var(--text-xs); // ✓ Fonte menor em mobile pequeno
+          }
+        }
+
+        .btn-group {
+          flex-direction: column; // ✓ Empilha botões verticalmente
+          width: 100%;
+
+          .btn {
+            width: 100%; // ✓ Botões ocupam largura total
+          }
+        }
       }
+    }
+
+    .resultados-info {
+      font-size: var(--text-sm);
     }
 
     .cards-mobile {
