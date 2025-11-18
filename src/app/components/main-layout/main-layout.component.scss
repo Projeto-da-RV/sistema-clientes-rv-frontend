@@ -7,23 +7,27 @@
 .content {
   flex: 1;
   margin-left: 220px;
-  padding: var(--space-8) var(--space-6);
+  // ✓ SEM padding - componentes internos gerenciam seu próprio padding
   transition: all var(--transition-normal);
   min-height: 100vh;
+  width: calc(100% - 220px); // ✓ CRÍTICO: Largura disponível após sidebar
+  max-width: 100%; // ✓ Nunca ultrapassar espaço disponível
+  overflow-x: hidden; // ✓ CRÍTICO: Previne scroll horizontal
+  box-sizing: border-box; // ✓ CRÍTICO: Inclui padding no cálculo de largura
 
   &.sidebar-collapsed {
     margin-left: 64px;
+    width: calc(100% - 64px); // ✓ Largura disponível com sidebar colapsada
   }
 
   @media (max-width: 768px) {
     margin-left: 0;
-
-    > * {
-      padding: var(--space-4);
-    }
+    width: 100%; // ✓ Largura total em mobile
+    // ✓ SEM padding - componentes internos gerenciam responsividade
 
     &.sidebar-collapsed {
       margin-left: 0;
+      width: 100%; // ✓ Largura total em mobile
     }
   }
 }
