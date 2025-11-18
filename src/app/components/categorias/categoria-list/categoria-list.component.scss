@@ -308,7 +308,6 @@
 
     .tabela {
       width: 100%;
-      min-width: 800px; // ✓ Largura mínima para scroll horizontal em telas pequenas
       border-collapse: collapse;
 
       thead tr {
@@ -340,7 +339,7 @@
 
         &.col-id { width: 80px; }
         &.col-nome { width: 20%; }
-        &.col-descricao { width: 30%; }
+        &.col-descricao { width: 25%; }
         &.col-beneficios { width: 20%; }
         &.col-status { width: 15%; }
         &.col-actions { width: 120px; }
@@ -395,7 +394,6 @@
             opacity: 0.8;
             font-size: var(--text-sm);
             display: block;
-            max-width: 300px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
