@@ -7,7 +7,7 @@
 .content {
   flex: 1;
   margin-left: 220px;
-  // ✓ SEM padding - componentes internos gerenciam seu próprio padding
+  padding: var(--space-8) var(--space-6); // ✓ Padding restaurado para Dashboard e outros componentes
   transition: all var(--transition-normal);
   min-height: 100vh;
   width: calc(100% - 220px); // ✓ CRÍTICO: Largura disponível após sidebar
@@ -23,7 +23,10 @@
   @media (max-width: 768px) {
     margin-left: 0;
     width: 100%; // ✓ Largura total em mobile
-    // ✓ SEM padding - componentes internos gerenciam responsividade
+
+    > * {
+      padding: var(--space-4);
+    }
 
     &.sidebar-collapsed {
       margin-left: 0;

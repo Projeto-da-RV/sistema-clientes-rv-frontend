@@ -8,7 +8,11 @@
   background: var(--primary-600); // ✓ Navy Blue background - IGUAL ao Dashboard
   min-height: calc(100vh - 4rem);
   padding: var(--space-6);
-  margin: calc(-1 * var(--space-8)) calc(-1 * var(--space-6));
+  margin: calc(-1 * var(--space-8)) calc(-1 * var(--space-6)); // ✓ Compensa padding do MainLayout
+  width: 100%; // ✓ Garante largura responsiva
+  max-width: 100vw; // ✓ CRÍTICO: Previne overflow horizontal
+  overflow-x: hidden; // ✓ CRÍTICO: Esconde overflow horizontal
+  box-sizing: border-box; // ✓ CRÍTICO: Inclui padding no cálculo de largura
 
   /* ===================================================================
      PAGE HEADER - Cabeçalho da Página
