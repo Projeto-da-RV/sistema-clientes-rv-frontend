@@ -26,7 +26,7 @@ export class CategoriaListComponent implements OnInit {
   
   // Filtros
   filtroNome = '';
-  mostrarAtivas = false;
+  filtroDescricao = '';
   
   constructor(
     private categoriaService: CategoriaService,
@@ -63,19 +63,21 @@ export class CategoriaListComponent implements OnInit {
 
   aplicarFiltros(): void {
     let resultado = [...this.categorias];
-    
+
     // Filtro por nome
     if (this.filtroNome.trim()) {
-      resultado = resultado.filter(categoria => 
+      resultado = resultado.filter(categoria =>
         categoria.nome.toLowerCase().includes(this.filtroNome.toLowerCase())
       );
     }
-    
-    // Filtro por status ativo
-    if (this.mostrarAtivas) {
-      resultado = resultado.filter(categoria => categoria.ativo);
+
+    // Filtro por descrição
+    if (this.filtroDescricao.trim()) {
+      resultado = resultado.filter(categoria =>
+        categoria.descricao?.toLowerCase().includes(this.filtroDescricao.toLowerCase())
+      );
     }
-    
+
     this.categoriasFiltradas = resultado;
   }
 
@@ -83,13 +85,9 @@ export class CategoriaListComponent implements OnInit {
     this.aplicarFiltros();
   }
 
-  toggleMostrarAtivas(): void {
-    this.aplicarFiltros();
-  }
-
   limparFiltros(): void {
     this.filtroNome = '';
-    this.mostrarAtivas = false;
+    this.filtroDescricao = '';
     this.categoriasFiltradas = [...this.categorias];
   }
 
@@ -113,6 +111,11 @@ export class CategoriaListComponent implements OnInit {
     } else {
       this.carregarCategorias();
     }
+  }
+
+  buscarPorDescricao(): void {
+    // Por enquanto usa o filtro local, mas pode ser implementado no backend futuramente
+    this.aplicarFiltros();
   }
 
   confirmarExclusao(categoria: Categoria): void {

@@ -29,18 +29,17 @@
         </div>
       </div>
 
-      <!-- Campo de filtro especial -->
+      <!-- Campo de busca por descrição -->
       <div class="input-group">
-        <label>Filtros Especiais</label>
-        <div class="checkbox-wrapper">
+        <label>Buscar por descrição</label>
+        <div class="input-wrapper">
           <input
-            type="checkbox"
-            id="mostrarAtivas"
-            [(ngModel)]="mostrarAtivas"
-            (change)="toggleMostrarAtivas()">
-          <label for="mostrarAtivas" class="checkbox-label">
-            Apenas categorias ativas
-          </label>
+            type="text"
+            class="input-field"
+            [(ngModel)]="filtroDescricao"
+            (keyup.enter)="buscarPorDescricao()"
+            (input)="aplicarFiltros()"
+            placeholder="Digite a descrição">
         </div>
       </div>
 
