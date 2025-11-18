@@ -278,27 +278,10 @@
       font-size: var(--text-base);
     }
 
-    .btn,
-    .btn-limpar {
+    .btn {
       display: inline-flex;
       align-items: center;
       gap: var(--space-2);
-      background: var(--accent-600);
-      color: var(--primary-800);
-      padding: var(--space-3) var(--space-5);
-      border-radius: var(--radius-md);
-      border: none;
-      font-weight: var(--font-bold);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.3);
-      text-decoration: none;
-
-      &:hover {
-        background: var(--accent-700);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.5);
-      }
     }
   }
 
