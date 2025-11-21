@@ -1,97 +1,111 @@
 <div class="dashboard">
-  <h1>Dashboard</h1>
-  <p class="subtitle">Bem-vindo ao Sistema de Gestão RV Digital</p>
-  
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon clients">
-        <lucide-icon [img]="Users"></lucide-icon>
-      </div>
-      <div class="stat-content">
-        <h3>
+  <!-- Cabeçalho -->
+  <div class="dashboard-header">
+    <div class="header-info">
+      <h1>Painel de Controle</h1>
+      <p>Bem-vindo ao Sistema de Gestão RV Digital</p>
+    </div>
+  </div>
+
+  <!-- Grid de Estatísticas Principais -->
+  <div class="stats-grid-modern">
+    @for (stat of estatisticas; track stat.titulo) {
+      <a [routerLink]="stat.link" class="stat-card-modern">
+        <div class="card-header">
+          <div class="icon-container" [ngClass]="stat.corIcone">
+            <lucide-icon [img]="stat.icone"></lucide-icon>
+          </div>
+          <lucide-icon [img]="TrendingUp" class="trending-icon"></lucide-icon>
+        </div>
+        <h3>{{ stat.titulo }}</h3>
+        <p class="stat-value">
           @if (loading) {
-            <div class="loading-number">
-              <div class="spinner-small"></div>
-            </div>
+            <span class="loading-shimmer">--</span>
           } @else {
-            {{ stats.clientes }}
+            {{ stat.valor }}
           }
-        </h3>
-        <p>Clientes</p>
-        <a routerLink="/clientes" class="stat-link">
-          Ver todos 
-          <lucide-icon [img]="ArrowRight"></lucide-icon>
-        </a>
+        </p>
+        <p class="stat-variation">{{ stat.variacao }}</p>
+      </a>
+    }
+  </div>
+
+  <!-- Grid de Conteúdo Principal -->
+  <div class="content-grid">
+    <!-- Atividade Recente -->
+    <div class="activity-card">
+      <div class="card-title">
+        <h3>Atividade Recente</h3>
+        <button class="btn-link">Ver tudo</button>
+      </div>
+      <div class="activity-list">
+        @for (atividade of atividades; track atividade.titulo) {
+          <div class="activity-item">
+            <div class="activity-icon" [ngClass]="atividade.cor">
+              <lucide-icon [img]="atividade.icone"></lucide-icon>
+            </div>
+            <div class="activity-info">
+              <p class="activity-title">{{ atividade.titulo }}</p>
+              <p class="activity-description">{{ atividade.descricao }}</p>
+            </div>
+            <div class="activity-time">{{ atividade.tempo }}</div>
+          </div>
+        }
       </div>
     </div>
-    
-    <div class="stat-card">
-      <div class="stat-icon contracts">
-        <lucide-icon [img]="FileText"></lucide-icon>
+
+    <!-- Coluna Lateral -->
+    <div class="sidebar-column">
+      <!-- Estatísticas Rápidas -->
+      <div class="quick-stats-card">
+        <h3>Estatísticas Rápidas</h3>
+        <div class="stats-list">
+          <div class="stat-item">
+            <span class="label">Taxa de Conversão</span>
+            <span class="value">3.2%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress azul" style="width: 32%"></div>
+          </div>
+
+          <div class="stat-item">
+            <span class="label">Taxa de Retenção</span>
+            <span class="value">85%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress verde" style="width: 85%"></div>
+          </div>
+
+          <div class="stat-item">
+            <span class="label">Crescimento</span>
+            <span class="value">12%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress roxo" style="width: 72%"></div>
+          </div>
+        </div>
       </div>
-      <div class="stat-content">
-        <h3>
-          @if (loading) {
-            <div class="loading-number">
-              <div class="spinner-small"></div>
-            </div>
+
+      <!-- Top Serviços -->
+      <div class="top-products-card">
+        <h3>Serviços Principais</h3>
+        <div class="products-list">
+          @if (produtosTop.length > 0) {
+            @for (produto of produtosTop; track produto.nome) {
+              <div class="product-item">
+                <span class="product-name">{{ produto.nome }}</span>
+                <span class="product-price">R$ {{ produto.valor?.toFixed(2) || '0.00' }}</span>
+              </div>
+            }
           } @else {
-            {{ stats.contratos }}
+            <p class="empty-message">Nenhum serviço cadastrado</p>
           }
-        </h3>
-        <p>Contratos</p>
-        <a routerLink="/contratos" class="stat-link">
-          Ver todos 
-          <lucide-icon [img]="ArrowRight"></lucide-icon>
-        </a>
-      </div>
-    </div>
-    
-    <div class="stat-card">
-      <div class="stat-icon services">
-        <lucide-icon [img]="Settings"></lucide-icon>
-      </div>
-      <div class="stat-content">
-        <h3>
-          @if (loading) {
-            <div class="loading-number">
-              <div class="spinner-small"></div>
-            </div>
-          } @else {
-            {{ stats.servicos }}
-          }
-        </h3>
-        <p>Serviços</p>
-        <a routerLink="/servicos" class="stat-link">
-          Ver todos 
-          <lucide-icon [img]="ArrowRight"></lucide-icon>
-        </a>
-      </div>
-    </div>
-    
-    <div class="stat-card">
-      <div class="stat-icon categories">
-        <lucide-icon [img]="Tag"></lucide-icon>
-      </div>
-      <div class="stat-content">
-        <h3>
-          @if (loading) {
-            <div class="loading-number">
-              <div class="spinner-small"></div>
-            </div>
-          } @else {
-            {{ stats.categorias }}
-          }
-        </h3>
-        <p>Categorias</p>
-        <a routerLink="/categorias" class="stat-link">
-          Ver todas 
-          <lucide-icon [img]="ArrowRight"></lucide-icon>
-        </a>
+        </div>
       </div>
     </div>
   </div>
-  
+
+  <!-- Ações Rápidas -->
   <div class="quick-actions">
     <h2>Ações Rápidas</h2>
     <div class="actions-grid">
