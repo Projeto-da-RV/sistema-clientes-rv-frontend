@@ -28,6 +28,7 @@ export class ClienteModalComponent implements OnChanges, OnDestroy {
       telefone: ['', [Validators.required]],
       cpf: ['', [Validators.required]],
       dataNascimento: ['', [Validators.required]],
+      senha: ['', [Validators.required, Validators.minLength(6)]],
       ativo: [true, [Validators.required]]
     });
   }
@@ -44,10 +45,17 @@ export class ClienteModalComponent implements OnChanges, OnDestroy {
           telefone: this.cliente.telefone,
           cpf: this.cliente.cpf,
           dataNascimento: this.cliente.dataNascimento,
+          senha: '', // Deixar vazio no modo edição
           ativo: this.cliente.ativo
         });
+        // Remover validação de senha no modo edição (senha só é obrigatória na criação)
+        this.form.get('senha')?.clearValidators();
+        this.form.get('senha')?.updateValueAndValidity();
       } else {
         this.form.reset({ ativo: true });
+        // Adicionar validação de senha no modo criação
+        this.form.get('senha')?.setValidators([Validators.required, Validators.minLength(6)]);
+        this.form.get('senha')?.updateValueAndValidity();
       }
     } else {
       // Restaurar scroll da página

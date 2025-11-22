@@ -139,6 +139,28 @@
           </div>
         </div>
 
+        <!-- Linha 4: Senha -->
+        <div class="form-grid-single">
+          <!-- Senha -->
+          <div class="form-field">
+            <label class="form-label">
+              Senha <span *ngIf="modo === 'criar'" class="text-danger">*</span>
+              <span *ngIf="modo === 'editar'" class="text-muted" style="font-size: 0.75rem;">(deixe em branco para manter a senha atual)</span>
+            </label>
+            <input
+              type="password"
+              formControlName="senha"
+              placeholder="Digite a senha"
+              class="form-input"
+              [class.input-error]="form.get('senha')?.invalid && form.get('senha')?.touched"
+            />
+            <p *ngIf="form.get('senha')?.invalid && form.get('senha')?.touched" class="error-message">
+              <span *ngIf="form.get('senha')?.errors?.['required']">Senha é obrigatória</span>
+              <span *ngIf="form.get('senha')?.errors?.['minlength']">Senha deve ter no mínimo 6 caracteres</span>
+            </p>
+          </div>
+        </div>
+
       </form>
     </div>
 
