@@ -31,9 +31,9 @@
       <div class="search-filter-content">
         <!-- Campo de Busca -->
         <div class="search-box">
-          <span class="search-icon">
+          <div class="search-icon">
             <lucide-icon [img]="Search" [size]="20"></lucide-icon>
-          </span>
+          </div>
           <input
             type="text"
             placeholder="Buscar cliente..."
@@ -127,7 +127,7 @@
                   <lucide-icon
                     *ngIf="todosSelecionados()"
                     [img]="Check"
-                    [size]="12"
+                    [size]="14"
                   ></lucide-icon>
                 </span>
               </label>
@@ -237,7 +237,7 @@
                   <lucide-icon
                     *ngIf="selecionados.includes(cliente.id!)"
                     [img]="Check"
-                    [size]="12"
+                    [size]="14"
                   ></lucide-icon>
                 </span>
               </label>
