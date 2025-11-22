@@ -14,9 +14,8 @@ import { NotificationService } from '../../shared/services/notification.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  // MUDANÇA: username e password ao invés de cpfOuEmail e senha
-  username: string = '';
-  password: string = '';
+  cpfOuEmail: string = '';
+  senha: string = '';
   loading: boolean = false;
 
   constructor(
@@ -27,8 +26,7 @@ export class LoginComponent {
   ) {}
 
   onLogin() {
-    // MUDANÇA: validar username e password
-    if (!this.username || !this.password) {
+    if (!this.cpfOuEmail || !this.senha) {
       this.notificationService.error('Por favor, preencha todos os campos');
       return;
     }
@@ -36,15 +34,14 @@ export class LoginComponent {
     this.loading = true;
     this.cdr.markForCheck();
 
-    // MUDANÇA: usar username e password na chamada da API
     this.authService.login({
-      username: this.username,
-      password: this.password
+      cpfOuEmail: this.cpfOuEmail,
+      senha: this.senha
     }).subscribe({
       next: (response) => {
         this.loading = false;
         this.cdr.markForCheck();
-        this.notificationService.success(`Bem-vindo, ${response.username}!`).then(() => {
+        this.notificationService.success(`Bem-vindo, ${response.nome}!`).then(() => {
           this.router.navigate(['/dashboard']);
         });
       },

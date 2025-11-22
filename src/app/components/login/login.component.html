@@ -63,27 +63,27 @@
 
       <form (ngSubmit)="onLogin()" class="login-form">
         <div class="form-group">
-          <label for="username">
+          <label for="cpfOuEmail">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            Usuário
+            CPF ou Email
           </label>
           <input
             type="text"
-            id="username"
+            id="cpfOuEmail"
             class="form-control"
-            [(ngModel)]="username"
-            name="username"
-            placeholder="Digite seu usuário"
+            [(ngModel)]="cpfOuEmail"
+            name="cpfOuEmail"
+            placeholder="Digite seu CPF ou Email"
             [disabled]="loading"
             required
             autocomplete="username">
         </div>
 
         <div class="form-group">
-          <label for="password">
+          <label for="senha">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -92,10 +92,10 @@
           </label>
           <input
             type="password"
-            id="password"
+            id="senha"
             class="form-control"
-            [(ngModel)]="password"
-            name="password"
+            [(ngModel)]="senha"
+            name="senha"
             placeholder="Digite sua senha"
             [disabled]="loading"
             required
@@ -140,12 +140,12 @@
           Credenciais de Teste
         </p>
         <div class="test-user-item">
-          <span class="user-type user">Usuário</span>
-          <code>user</code> / <code>user123</code>
+          <span class="user-type user">Cliente</span>
+          <code>CPF do cliente cadastrado</code>
         </div>
         <div class="test-user-item">
-          <span class="user-type admin">Admin</span>
-          <code>admin</code> / <code>admin123</code>
+          <span class="user-type admin">Email</span>
+          <code>email&#64;exemplo.com</code>
         </div>
       </div>
 
