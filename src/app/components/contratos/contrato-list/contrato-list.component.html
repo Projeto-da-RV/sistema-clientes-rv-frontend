@@ -146,6 +146,11 @@
               </div>
             </th>
 
+            <!-- Coluna Descrição -->
+            <th>
+              <span class="th-label">Descrição</span>
+            </th>
+
             <!-- Coluna Cliente -->
             <th>
               <span class="th-label">Cliente</span>
@@ -217,6 +222,11 @@
             <!-- Nº Contrato -->
             <td>
               <span class="contrato-numero">#{{ contrato.id }}</span>
+            </td>
+
+            <!-- Descrição -->
+            <td>
+              <span class="text-primary">{{ contrato.descricao || '-' }}</span>
             </td>
 
             <!-- Cliente -->

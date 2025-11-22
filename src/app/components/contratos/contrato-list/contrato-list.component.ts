@@ -521,10 +521,22 @@ export class ContratoListComponent implements OnInit {
    * Helpers
    */
   getClienteNome(contrato: Contrato): string {
+    // Tenta obter do objeto completo
     if (typeof contrato.cliente === 'object' && contrato.cliente && 'nome' in contrato.cliente) {
       return contrato.cliente.nome;
     }
-    return '-';
+
+    // Fallback: busca pelo ID no array de clientes carregado
+    // Isso é necessário enquanto o backend retorna apenas { id: X } por causa de referências circulares
+    if (typeof contrato.cliente === 'object' && contrato.cliente && 'id' in contrato.cliente) {
+      const clienteId = contrato.cliente.id;
+      const cliente = this.clientes.find(c => c.id === clienteId);
+      if (cliente) {
+        return cliente.nome;
+      }
+    }
+
+    return 'Cliente não identificado';
   }
 
   getStatusLabel(status: string | undefined): string {
