@@ -653,6 +653,20 @@ $text-white: #FFFFFF;
         }
       }
 
+      &.success {
+        color: $success-bright !important;
+
+        lucide-icon,
+        lucide-icon svg {
+          color: $success-bright !important;
+          stroke: $success-bright !important;
+        }
+
+        &:hover {
+          background: $success-bg-visible;
+        }
+      }
+
       &.warning {
         color: $warning-bright !important;
 

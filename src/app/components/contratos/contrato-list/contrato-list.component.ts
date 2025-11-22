@@ -2,13 +2,16 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, NgZone, 
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, Download, Plus, Search, SlidersHorizontal, Eye, Edit, Trash2, MoreHorizontal, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Check, FileText, XCircle } from 'lucide-angular';
+import { LucideAngularModule, Download, Plus, Search, SlidersHorizontal, Eye, Edit, Trash2, MoreHorizontal, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Check, FileText, XCircle, CreditCard } from 'lucide-angular';
 import { ContratoService } from '../../../services/contrato.service';
 import { ClienteService } from '../../../services/cliente.service';
+import { MetodoPagamentoService } from '../../../services/metodo-pagamento.service';
 import { Contrato } from '../../../models/contrato.model';
 import { Cliente } from '../../../models/cliente.model';
+import { MetodoPagamento } from '../../../models/metodo-pagamento.model';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { ContratoModalComponent } from './contrato-modal.component';
+import { PaymentModalComponent } from './payment-modal.component';
 
 interface Ordenacao {
   coluna: string;
@@ -23,7 +26,8 @@ interface Ordenacao {
     RouterModule,
     FormsModule,
     LucideAngularModule,
-    ContratoModalComponent
+    ContratoModalComponent,
+    PaymentModalComponent
   ],
   templateUrl: './contrato-list.component.html',
   styleUrl: './contrato-list.component.scss',
@@ -46,6 +50,7 @@ export class ContratoListComponent implements OnInit {
   readonly Check = Check;
   readonly FileText = FileText;
   readonly XCircle = XCircle;
+  readonly CreditCard = CreditCard;
 
   // Dados
   contratos: Contrato[] = [];
@@ -63,10 +68,14 @@ export class ContratoListComponent implements OnInit {
   filtroStatus: string = '';
   menuAcoesAberto: number | null = null;
 
-  // Modal
+  // Modal Contrato
   modalAberto: boolean = false;
   modalModo: 'criar' | 'editar' = 'criar';
   contratoSelecionado: Contrato | null = null;
+
+  // Modal Pagamento
+  paymentModalAberto: boolean = false;
+  contratoPagamento: Contrato | null = null;
 
   // Ordenação
   ordenacao: Ordenacao = { coluna: 'id', direcao: 'desc' };
@@ -81,6 +90,7 @@ export class ContratoListComponent implements OnInit {
   constructor(
     private contratoService: ContratoService,
     private clienteService: ClienteService,
+    private metodoPagamentoService: MetodoPagamentoService,
     private notificationService: NotificationService,
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -357,6 +367,55 @@ export class ContratoListComponent implements OnInit {
     if (!contrato) return;
     this.abrirModalEditar(contrato);
     this.menuAcoesAberto = null;
+  }
+
+  pagarConta(id: number | undefined): void {
+    if (!id) return;
+    const contrato = this.contratos.find(c => c.id === id);
+    if (!contrato) return;
+
+    this.contratoPagamento = contrato;
+    this.paymentModalAberto = true;
+    this.menuAcoesAberto = null;
+  }
+
+  fecharPaymentModal(): void {
+    this.paymentModalAberto = false;
+    this.contratoPagamento = null;
+  }
+
+  processarPagamento(metodoPagamento: MetodoPagamento): void {
+    this.metodoPagamentoService.criar(metodoPagamento).subscribe({
+      next: (pagamento) => {
+        this.ngZone.run(() => {
+          this.notificationService.showSuccess('Pagamento registrado com sucesso!');
+          this.fecharPaymentModal();
+          // Atualizar status do contrato para PAGO
+          if (this.contratoPagamento?.id) {
+            const contratoAtualizado: Contrato = {
+              ...this.contratoPagamento,
+              status: 'PAGO',
+              dataPagamento: new Date().toISOString().split('T')[0]
+            };
+            this.contratoService.atualizar(this.contratoPagamento.id, contratoAtualizado).subscribe({
+              next: () => {
+                this.carregarContratos();
+              },
+              error: (error) => {
+                console.error('Erro ao atualizar status do contrato:', error);
+              }
+            });
+          }
+        });
+      },
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error('Erro ao processar pagamento:', error);
+          const mensagemErro = error.error?.erro || 'Erro ao processar pagamento';
+          this.notificationService.showError(mensagemErro);
+        });
+      }
+    });
   }
 
   baixarPDF(id: number | undefined): void {

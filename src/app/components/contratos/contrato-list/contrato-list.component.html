@@ -269,6 +269,13 @@
                   class="actions-dropdown"
                   (click)="$event.stopPropagation()">
                   <button
+                    *ngIf="contrato.status === 'PENDENTE' || contrato.status === 'VENCIDO'"
+                    (click)="pagarConta(contrato.id)"
+                    class="dropdown-item success">
+                    <lucide-icon [img]="CreditCard" [size]="16"></lucide-icon>
+                    <span>Pagar Agora</span>
+                  </button>
+                  <button
                     (click)="verDetalhes(contrato.id)"
                     class="dropdown-item">
                     <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
@@ -364,4 +371,12 @@
     (fecharModal)="fecharModal()"
     (salvarContrato)="salvarContrato($event)"
   ></app-contrato-modal>
+
+  <!-- ⭐ MODAL - Pagamento ⭐ -->
+  <app-payment-modal
+    [aberto]="paymentModalAberto"
+    [contrato]="contratoPagamento"
+    (fecharModal)="fecharPaymentModal()"
+    (pagamentoConfirmado)="processarPagamento($event)"
+  ></app-payment-modal>
 </div>
