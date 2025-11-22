@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Servico } from '../models/servico.model';
 import { BaseCrudService } from '../shared/services/base-crud.service';
 
@@ -21,8 +21,11 @@ export class ServicoService extends BaseCrudService<Servico> {
    * @returns Observable com lista de serviços ativos
    */
   buscarAtivos(): Observable<Servico[]> {
-    return this.http.get<Servico[]>(`${this.apiUrl}/ativos`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<Servico[]>(`${this.apiUrl}/ativos`, this.httpOptions)
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -33,8 +36,14 @@ export class ServicoService extends BaseCrudService<Servico> {
    */
   override buscarPorNome(nome: string): Observable<Servico[]> {
     const params = new HttpParams().set('nome', nome);
-    return this.http.get<Servico[]>(`${this.apiUrl}/buscar`, { params })
-      .pipe(catchError(this.handleError));
+    return this.http.get<Servico[]>(`${this.apiUrl}/buscar`, {
+      params,
+      headers: this.httpOptions.headers
+    })
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -44,7 +53,10 @@ export class ServicoService extends BaseCrudService<Servico> {
    * @returns Observable com lista de serviços
    */
   buscarPorTipo(tipo: string): Observable<Servico[]> {
-    return this.http.get<Servico[]>(`${this.apiUrl}/tipo/${tipo}`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<Servico[]>(`${this.apiUrl}/tipo/${tipo}`, this.httpOptions)
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 }

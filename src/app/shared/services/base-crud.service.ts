@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { BaseEntity, SearchConfig } from '../interfaces/base-entity.interface';
 
@@ -25,18 +25,33 @@ export abstract class BaseCrudService<T extends BaseEntity> {
   }
 
   /**
+   * Headers HTTP padrão para requisições JSON
+   */
+  protected get httpOptions() {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+    };
+  }
+
+  /**
    * Lista todas as entidades
    */
   listarTodos(): Observable<T[]> {
-    return this.http.get<T[]>(this.apiUrl)
-      .pipe(catchError(this.handleError));
+    return this.http.get<T[]>(this.apiUrl, this.httpOptions)
+      .pipe(
+        map(response => response || []), // Transforma null/undefined em array vazio
+        catchError(this.handleError)
+      );
   }
 
   /**
    * Busca entidade por ID
    */
   buscarPorId(id: number): Observable<T> {
-    return this.http.get<T>(`${this.apiUrl}/${id}`)
+    return this.http.get<T>(`${this.apiUrl}/${id}`, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -44,7 +59,7 @@ export abstract class BaseCrudService<T extends BaseEntity> {
    * Cria nova entidade
    */
   criar(entity: T): Observable<T> {
-    return this.http.post<T>(this.apiUrl, entity)
+    return this.http.post<T>(this.apiUrl, entity, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -52,7 +67,7 @@ export abstract class BaseCrudService<T extends BaseEntity> {
    * Atualiza entidade existente
    */
   atualizar(id: number, entity: T): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}/${id}`, entity)
+    return this.http.put<T>(`${this.apiUrl}/${id}`, entity, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -60,7 +75,7 @@ export abstract class BaseCrudService<T extends BaseEntity> {
    * Deleta entidade por ID
    */
   deletar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`)
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -69,15 +84,21 @@ export abstract class BaseCrudService<T extends BaseEntity> {
    */
   buscar(searchConfig: SearchConfig): Observable<T[]> {
     let params = new HttpParams();
-    
+
     Object.keys(searchConfig.params).forEach(key => {
       if (searchConfig.params[key] !== null && searchConfig.params[key] !== undefined) {
         params = params.set(key, searchConfig.params[key].toString());
       }
     });
 
-    return this.http.get<T[]>(`${this.apiUrl}/${searchConfig.endpoint}`, { params })
-      .pipe(catchError(this.handleError));
+    return this.http.get<T[]>(`${this.apiUrl}/${searchConfig.endpoint}`, {
+      params,
+      headers: this.httpOptions.headers
+    })
+      .pipe(
+        map(response => response || []), // Transforma null/undefined em array vazio
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -85,8 +106,14 @@ export abstract class BaseCrudService<T extends BaseEntity> {
    */
   buscarPorNome(nome: string): Observable<T[]> {
     const params = new HttpParams().set('nome', nome);
-    return this.http.get<T[]>(`${this.apiUrl}/buscar`, { params })
-      .pipe(catchError(this.handleError));
+    return this.http.get<T[]>(`${this.apiUrl}/buscar`, {
+      params,
+      headers: this.httpOptions.headers
+    })
+      .pipe(
+        map(response => response || []), // Transforma null/undefined em array vazio
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -94,13 +121,23 @@ export abstract class BaseCrudService<T extends BaseEntity> {
    */
   protected handleError = (error: HttpErrorResponse): Observable<never> => {
     let errorMessage = 'Erro desconhecido';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Erro do lado do cliente
       errorMessage = `Erro: ${error.error.message}`;
+    } else if (error.error instanceof ProgressEvent) {
+      // Erro de parsing (backend retornou vazio ou não-JSON)
+      errorMessage = 'Erro ao processar resposta do servidor. Verifique se o backend está retornando JSON válido.';
+      console.error('❌ Erro de parsing - Backend não retornou JSON válido');
+      console.error('URL:', error.url);
+      console.error('Status:', error.status);
+      console.error('Mensagem:', error.message);
     } else {
       // Erro do lado do servidor
       switch (error.status) {
+        case 0:
+          errorMessage = 'Não foi possível conectar ao servidor. Verifique se o backend está rodando.';
+          break;
         case 400:
           errorMessage = 'Dados inválidos';
           break;

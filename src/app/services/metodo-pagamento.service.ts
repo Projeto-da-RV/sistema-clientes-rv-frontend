@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { MetodoPagamento, GerarQRCodePIXRequest, StatusTransacao } from '../models/metodo-pagamento.model';
 import { BaseCrudService } from '../shared/services/base-crud.service';
 
@@ -22,8 +22,11 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
    * @returns Observable com lista de transações
    */
   buscarPorCliente(clienteId: number): Observable<MetodoPagamento[]> {
-    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/cliente/${clienteId}`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/cliente/${clienteId}`, this.httpOptions)
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -33,8 +36,11 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
    * @returns Observable com lista de transações
    */
   buscarPorContrato(contratoId: number): Observable<MetodoPagamento[]> {
-    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/contrato/${contratoId}`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/contrato/${contratoId}`, this.httpOptions)
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -44,8 +50,11 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
    * @returns Observable com lista de transações
    */
   buscarPorServico(servicoId: number): Observable<MetodoPagamento[]> {
-    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/servico/${servicoId}`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/servico/${servicoId}`, this.httpOptions)
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -55,8 +64,11 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
    * @returns Observable com lista de transações
    */
   buscarPorStatus(status: StatusTransacao): Observable<MetodoPagamento[]> {
-    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/status/${status}`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/status/${status}`, this.httpOptions)
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -65,8 +77,11 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
    * @returns Observable com lista de transações PIX com QR Code
    */
   buscarPIXComQRCode(): Observable<MetodoPagamento[]> {
-    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/pix-com-qrcode`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/pix-com-qrcode`, this.httpOptions)
+      .pipe(
+        map(response => response || []),
+        catchError(this.handleError)
+      );
   }
 
   /**
@@ -77,7 +92,7 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
    * @returns Observable com transação atualizada contendo o QR Code
    */
   gerarQRCodePIX(id: number, request: GerarQRCodePIXRequest): Observable<MetodoPagamento> {
-    return this.http.post<MetodoPagamento>(`${this.apiUrl}/${id}/gerar-qrcode-pix`, request)
+    return this.http.post<MetodoPagamento>(`${this.apiUrl}/${id}/gerar-qrcode-pix`, request, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 }
