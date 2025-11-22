@@ -106,8 +106,25 @@
           </div>
         </div>
 
-        <!-- Linha 3: Status -->
-        <div class="form-grid-single">
+        <!-- Linha 3: Data de Nascimento e Status -->
+        <div class="form-grid">
+          <!-- Data de Nascimento -->
+          <div class="form-field">
+            <label class="form-label">
+              Data de Nascimento <span class="text-danger">*</span>
+            </label>
+            <input
+              type="date"
+              formControlName="dataNascimento"
+              class="form-input"
+              [class.input-error]="form.get('dataNascimento')?.invalid && form.get('dataNascimento')?.touched"
+            />
+            <p *ngIf="form.get('dataNascimento')?.invalid && form.get('dataNascimento')?.touched" class="error-message">
+              Data de nascimento é obrigatória
+            </p>
+          </div>
+
+          <!-- Status -->
           <div class="form-field">
             <label class="form-label">
               Status <span class="text-danger">*</span>

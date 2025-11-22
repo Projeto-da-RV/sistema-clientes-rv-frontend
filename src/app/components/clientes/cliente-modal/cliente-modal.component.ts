@@ -27,6 +27,7 @@ export class ClienteModalComponent implements OnChanges, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', [Validators.required]],
       cpf: ['', [Validators.required]],
+      dataNascimento: ['', [Validators.required]],
       ativo: [true, [Validators.required]]
     });
   }
@@ -42,6 +43,7 @@ export class ClienteModalComponent implements OnChanges, OnDestroy {
           email: this.cliente.email,
           telefone: this.cliente.telefone,
           cpf: this.cliente.cpf,
+          dataNascimento: this.cliente.dataNascimento,
           ativo: this.cliente.ativo
         });
       } else {
