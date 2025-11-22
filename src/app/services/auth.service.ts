@@ -62,8 +62,6 @@ export class AuthService {
 
           this.setCurrentUser(user as Cliente);
           localStorage.setItem(this.ROLES_KEY, JSON.stringify(response.roles));
-
-          this.loadUserFromToken();
         }),
         catchError(error => {
           console.error('Erro no login:', error);
@@ -98,28 +96,35 @@ export class AuthService {
   }
 
   /**
-   * Verifica se o usuário está autenticado e o token é válido
+   * Verifica se o usuário está autenticado
+   * Verifica se existe token e usuário salvos
    */
   isAuthenticated(): boolean {
     const token = this.getToken();
-    if (!token) {
+    const user = this.getCurrentUser();
+
+    if (!token || !user) {
       return false;
     }
 
+    // Tenta validar o token, mas não faz logout em caso de erro
+    // pois o backend vai rejeitar requests inválidas de qualquer forma
     try {
       const decoded: JwtPayload = jwtDecode(token);
       const isExpired = decoded.exp * 1000 < Date.now();
 
       if (isExpired) {
+        console.warn('Token expirado');
         this.logout();
         return false;
       }
 
       return true;
     } catch (error) {
-      console.error('Erro ao decodificar token JWT:', error);
-      this.logout();
-      return false;
+      console.warn('Token inválido, mas usuário existe:', error);
+      // Retorna true pois o usuário está salvo
+      // Se o token for realmente inválido, o backend vai rejeitar as requests
+      return true;
     }
   }
 
@@ -212,6 +217,7 @@ export class AuthService {
 
       const isExpired = decoded.exp * 1000 < Date.now();
       if (isExpired) {
+        console.warn('Token expirado, fazendo logout');
         this.logout();
         return;
       }
@@ -221,8 +227,9 @@ export class AuthService {
         this.currentUserSubject.next(currentUser);
       }
     } catch (error) {
-      console.error('Erro ao carregar usuário do token:', error);
-      this.logout();
+      console.warn('Token inválido ou mal formado, ignorando:', error);
+      // Não faz logout aqui, pois pode ser um token temporariamente inválido
+      // O usuário ainda está salvo no localStorage
     }
   }
 
