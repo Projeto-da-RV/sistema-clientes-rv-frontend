@@ -575,10 +575,23 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
     border-radius: var(--radius);
     transition: all var(--transition-fast);
 
+    // Garantir que o ícone lucide também herde a cor
+    lucide-icon,
+    lucide-icon svg {
+      color: #bbb6c6 !important;
+      stroke: #bbb6c6 !important;
+    }
+
     &:hover {
       color: #FFFFFF !important; // Branco ao hover
       background: $bg-hover-dark;
       border-color: $border-visible;
+
+      lucide-icon,
+      lucide-icon svg {
+        color: #FFFFFF !important;
+        stroke: #FFFFFF !important;
+      }
     }
   }
 
@@ -602,7 +615,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
       padding: 0.625rem var(--space-4);
       font-size: var(--text-sm);
       font-weight: var(--font-medium);
-      color: var(--muted-foreground);
+      color: #bbb6c6 !important; // Cor explícita para garantir visibilidade
       background: transparent;
       border: none;
       border-radius: var(--radius);
@@ -610,21 +623,37 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
       text-align: left;
       transition: all var(--transition-fast);
 
+      // Garantir que os ícones tenham a mesma cor
+      lucide-icon,
+      lucide-icon svg {
+        color: #bbb6c6 !important;
+        stroke: #bbb6c6 !important;
+        flex-shrink: 0;
+      }
+
       &:hover {
         background: $bg-hover-dark;
-        color: var(--foreground);
+        color: #FFFFFF !important;
+
+        lucide-icon,
+        lucide-icon svg {
+          color: #FFFFFF !important;
+          stroke: #FFFFFF !important;
+        }
       }
 
       &.danger {
-        color: $danger-bright;
+        color: $danger-bright !important;
+
+        lucide-icon,
+        lucide-icon svg {
+          color: $danger-bright !important;
+          stroke: $danger-bright !important;
+        }
 
         &:hover {
           background: $danger-bg-visible;
         }
-      }
-
-      lucide-icon {
-        flex-shrink: 0;
       }
     }
   }
