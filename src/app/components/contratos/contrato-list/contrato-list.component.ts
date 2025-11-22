@@ -1,10 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, NgZone, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { LucideAngularModule, Download, Plus, Search, SlidersHorizontal, Eye, Edit, Trash2, MoreHorizontal, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Check, FileText, XCircle } from 'lucide-angular';
 import { ContratoService } from '../../../services/contrato.service';
+import { ClienteService } from '../../../services/cliente.service';
 import { Contrato } from '../../../models/contrato.model';
+import { Cliente } from '../../../models/cliente.model';
 import { NotificationService } from '../../../shared/services/notification.service';
+import { ContratoModalComponent } from './contrato-modal.component';
+
+interface Ordenacao {
+  coluna: string;
+  direcao: 'asc' | 'desc';
+}
 
 @Component({
   selector: 'app-contrato-list',
@@ -12,43 +21,116 @@ import { NotificationService } from '../../../shared/services/notification.servi
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    LucideAngularModule,
+    ContratoModalComponent
   ],
   templateUrl: './contrato-list.component.html',
   styleUrl: './contrato-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.Default // Força estratégia padrão
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class ContratoListComponent implements OnInit {
-  
+  // Lucide Icons
+  readonly Download = Download;
+  readonly Plus = Plus;
+  readonly Search = Search;
+  readonly SlidersHorizontal = SlidersHorizontal;
+  readonly Eye = Eye;
+  readonly Edit = Edit;
+  readonly Trash2 = Trash2;
+  readonly MoreHorizontal = MoreHorizontal;
+  readonly ChevronLeft = ChevronLeft;
+  readonly ChevronRight = ChevronRight;
+  readonly ChevronUp = ChevronUp;
+  readonly ChevronDown = ChevronDown;
+  readonly Check = Check;
+  readonly FileText = FileText;
+  readonly XCircle = XCircle;
+
+  // Dados
   contratos: Contrato[] = [];
   contratosFiltrados: Contrato[] = [];
-  loading = false;
-  
+  contratosPaginados: Contrato[] = [];
+  clientes: Cliente[] = [];
+
+  // Estados
+  loading: boolean = false;
+  selecionados: number[] = [];
+
   // Filtros
-  filtroStatus = '';
-  filtroCliente = '';
-  mostrarAtivos = false;
-  
+  termoBusca: string = '';
+  mostrarFiltro: boolean = false;
+  filtroStatus: string = '';
+  menuAcoesAberto: number | null = null;
+
+  // Modal
+  modalAberto: boolean = false;
+  modalModo: 'criar' | 'editar' = 'criar';
+  contratoSelecionado: Contrato | null = null;
+
+  // Ordenação
+  ordenacao: Ordenacao = { coluna: 'id', direcao: 'desc' };
+
+  // Paginação
+  paginaAtual: number = 1;
+  itensPorPagina: number = 10;
+  totalContratos: number = 0;
+  totalPaginas: number = 1;
+  paginas: number[] = [];
+
   constructor(
     private contratoService: ContratoService,
+    private clienteService: ClienteService,
     private notificationService: NotificationService,
+    private router: Router,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone // Adiciona NgZone para forçar detecção
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
+    this.carregarClientes();
     this.carregarContratos();
   }
 
+  /**
+   * Fecha dropdown ao clicar fora
+   */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.relative')) {
+      this.mostrarFiltro = false;
+      this.menuAcoesAberto = null;
+    }
+  }
+
+  /**
+   * Carrega lista de clientes para o modal
+   */
+  carregarClientes(): void {
+    this.clienteService.listarTodos().subscribe({
+      next: (clientes) => {
+        this.ngZone.run(() => {
+          this.clientes = clientes;
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar clientes:', error);
+      }
+    });
+  }
+
+  /**
+   * Carrega todos os contratos
+   */
   carregarContratos(): void {
     this.loading = true;
-    
+
     this.contratoService.listarTodos().subscribe({
       next: (contratos) => {
-        // Força execução dentro da zona do Angular
         this.ngZone.run(() => {
           this.contratos = contratos;
-          this.contratosFiltrados = [...contratos];
+          this.aplicarFiltros();
           this.loading = false;
         });
       },
@@ -62,70 +144,289 @@ export class ContratoListComponent implements OnInit {
     });
   }
 
+  /**
+   * Aplica filtros e ordenação
+   */
   aplicarFiltros(): void {
     let resultado = [...this.contratos];
-    
+
+    // Filtro por termo de busca (cliente nome, id)
+    if (this.termoBusca.trim()) {
+      const termo = this.termoBusca.toLowerCase();
+      resultado = resultado.filter(contrato => {
+        const clienteNome = this.getClienteNome(contrato).toLowerCase();
+        const contratoId = (contrato.id || '').toString();
+        return clienteNome.includes(termo) || contratoId.includes(termo);
+      });
+    }
+
     // Filtro por status
-    if (this.filtroStatus.trim()) {
-      resultado = resultado.filter(contrato => 
-        contrato.status === this.filtroStatus
+    if (this.filtroStatus) {
+      resultado = resultado.filter(contrato =>
+        (contrato.status || 'PENDENTE') === this.filtroStatus
       );
     }
-    
-    // Filtro por cliente
-    if (this.filtroCliente.trim()) {
-      resultado = resultado.filter(contrato => 
-        this.getClienteNome(contrato).toLowerCase().includes(this.filtroCliente.toLowerCase())
-      );
-    }
-    
-    // Filtro por status ativo
-    if (this.mostrarAtivos) {
-      resultado = resultado.filter(contrato => contrato.status === 'ATIVO');
-    }
-    
+
     this.contratosFiltrados = resultado;
+    this.aplicarOrdenacao();
+    this.atualizarPaginacao();
   }
 
-  filtrar(): void {
+  /**
+   * Aplica ordenação aos dados filtrados
+   */
+  aplicarOrdenacao(): void {
+    this.contratosFiltrados.sort((a, b) => {
+      let valorA: any;
+      let valorB: any;
+
+      switch (this.ordenacao.coluna) {
+        case 'id':
+          valorA = a.id || 0;
+          valorB = b.id || 0;
+          break;
+        case 'valorTotal':
+          valorA = a.valorTotal || 0;
+          valorB = b.valorTotal || 0;
+          break;
+        case 'dataInicio':
+          valorA = a.dataInicio || '';
+          valorB = b.dataInicio || '';
+          break;
+        default:
+          return 0;
+      }
+
+      if (valorA < valorB) {
+        return this.ordenacao.direcao === 'asc' ? -1 : 1;
+      }
+      if (valorA > valorB) {
+        return this.ordenacao.direcao === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
+  /**
+   * Atualiza paginação
+   */
+  atualizarPaginacao(): void {
+    this.totalContratos = this.contratosFiltrados.length;
+    this.totalPaginas = Math.ceil(this.totalContratos / this.itensPorPagina);
+
+    // Garante que página atual não exceda total de páginas
+    if (this.paginaAtual > this.totalPaginas && this.totalPaginas > 0) {
+      this.paginaAtual = this.totalPaginas;
+    }
+    if (this.paginaAtual < 1) {
+      this.paginaAtual = 1;
+    }
+
+    // Gera array de páginas
+    this.paginas = Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+
+    // Pagina os dados
+    const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+    const fim = inicio + this.itensPorPagina;
+    this.contratosPaginados = this.contratosFiltrados.slice(inicio, fim);
+  }
+
+  /**
+   * Getters para paginação
+   */
+  get itemInicial(): number {
+    if (this.totalContratos === 0) return 0;
+    return (this.paginaAtual - 1) * this.itensPorPagina + 1;
+  }
+
+  get itemFinal(): number {
+    return Math.min(this.paginaAtual * this.itensPorPagina, this.totalContratos);
+  }
+
+  /**
+   * Toggle filtro dropdown
+   */
+  toggleFiltro(): void {
+    this.mostrarFiltro = !this.mostrarFiltro;
+    this.menuAcoesAberto = null;
+  }
+
+  /**
+   * Aplica filtros do dropdown
+   */
+  aplicarFiltroDropdown(): void {
+    this.mostrarFiltro = false;
+    this.paginaAtual = 1;
     this.aplicarFiltros();
   }
 
-  toggleMostrarAtivos(): void {
-    this.aplicarFiltros();
-  }
-
+  /**
+   * Limpa todos os filtros
+   */
   limparFiltros(): void {
+    this.termoBusca = '';
     this.filtroStatus = '';
-    this.filtroCliente = '';
-    this.mostrarAtivos = false;
-    this.contratosFiltrados = [...this.contratos];
+    this.mostrarFiltro = false;
+    this.aplicarFiltros();
   }
 
-  buscarPorCliente(): void {
-    if (this.filtroCliente.trim()) {
-      this.loading = true;
-      // Simula busca por cliente (ajustar conforme service real)
-      setTimeout(() => {
-        this.aplicarFiltros();
-        this.loading = false;
-        this.cdr.detectChanges();
-      }, 300);
+  /**
+   * Ordena por coluna
+   */
+  ordenarPor(coluna: string): void {
+    if (this.ordenacao.coluna === coluna) {
+      this.ordenacao.direcao = this.ordenacao.direcao === 'asc' ? 'desc' : 'asc';
     } else {
-      this.carregarContratos();
+      this.ordenacao.coluna = coluna;
+      this.ordenacao.direcao = 'asc';
+    }
+    this.aplicarOrdenacao();
+    this.atualizarPaginacao();
+  }
+
+  /**
+   * Seleção múltipla
+   */
+  toggleSelecionarTodos(): void {
+    if (this.todosSelecionados()) {
+      this.selecionados = [];
+    } else {
+      this.selecionados = this.contratosPaginados.map(c => c.id!).filter(id => id !== undefined);
     }
   }
 
-  confirmarExclusao(contrato: Contrato): void {
+  todosSelecionados(): boolean {
+    return this.contratosPaginados.length > 0 &&
+           this.contratosPaginados.every(c => c.id && this.selecionados.includes(c.id));
+  }
+
+  toggleSelecao(id: number | undefined): void {
+    if (!id) return;
+
+    const index = this.selecionados.indexOf(id);
+    if (index > -1) {
+      this.selecionados.splice(index, 1);
+    } else {
+      this.selecionados.push(id);
+    }
+  }
+
+  /**
+   * Menu de ações
+   */
+  toggleMenuAcoes(id: number | undefined): void {
+    if (!id) return;
+    this.menuAcoesAberto = this.menuAcoesAberto === id ? null : id;
+    this.mostrarFiltro = false;
+  }
+
+  /**
+   * Navegação de páginas
+   */
+  irParaPagina(pagina: number): void {
+    this.paginaAtual = pagina;
+    this.atualizarPaginacao();
+  }
+
+  paginaAnterior(): void {
+    if (this.paginaAtual > 1) {
+      this.paginaAtual--;
+      this.atualizarPaginacao();
+    }
+  }
+
+  proximaPagina(): void {
+    if (this.paginaAtual < this.totalPaginas) {
+      this.paginaAtual++;
+      this.atualizarPaginacao();
+    }
+  }
+
+  /**
+   * Ações do contrato
+   */
+  verDetalhes(id: number | undefined): void {
+    if (!id) return;
+    this.router.navigate(['/contratos', id]);
+    this.menuAcoesAberto = null;
+  }
+
+  editar(id: number | undefined): void {
+    if (!id) return;
+    const contrato = this.contratos.find(c => c.id === id);
+    if (!contrato) return;
+    this.abrirModalEditar(contrato);
+    this.menuAcoesAberto = null;
+  }
+
+  baixarPDF(id: number | undefined): void {
+    if (!id) return;
+    // Placeholder para funcionalidade de download de PDF
+    this.notificationService.showSuccess('Funcionalidade de download de PDF em desenvolvimento');
+    this.menuAcoesAberto = null;
+  }
+
+  cancelar(id: number | undefined): void {
+    if (!id) return;
+
+    const contrato = this.contratos.find(c => c.id === id);
+    if (!contrato) return;
+
+    const status = contrato.status || 'PENDENTE';
+    if (status !== 'ATIVO' && status !== 'PENDENTE') {
+      this.notificationService.showError('Apenas contratos ativos ou pendentes podem ser cancelados');
+      this.menuAcoesAberto = null;
+      return;
+    }
+
     this.notificationService.showConfirm(
       'Confirmação',
-      `Tem certeza que deseja excluir o contrato ID ${contrato.id}?`,
+      `Tem certeza que deseja cancelar o contrato Nº ${contrato.id}?`,
       'question'
     ).then((result: any) => {
-      if (result.isConfirmed && contrato.id) {
-        this.excluirContrato(contrato.id);
+      if (result.isConfirmed) {
+        this.cancelarContrato(id);
       }
     });
+
+    this.menuAcoesAberto = null;
+  }
+
+  private cancelarContrato(id: number): void {
+    const contrato = this.contratos.find(c => c.id === id);
+    if (!contrato) return;
+
+    const contratoAtualizado = { ...contrato, status: 'CANCELADO' };
+
+    this.contratoService.atualizar(id, contratoAtualizado).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('Contrato cancelado com sucesso!');
+        this.carregarContratos();
+      },
+      error: (error) => {
+        console.error('Erro ao cancelar contrato:', error);
+        this.notificationService.showError('Erro ao cancelar contrato');
+      }
+    });
+  }
+
+  excluir(id: number | undefined): void {
+    if (!id) return;
+
+    const contrato = this.contratos.find(c => c.id === id);
+    if (!contrato) return;
+
+    this.notificationService.showConfirm(
+      'Confirmação',
+      `Tem certeza que deseja excluir o contrato Nº ${contrato.id}?`,
+      'question'
+    ).then((result: any) => {
+      if (result.isConfirmed) {
+        this.excluirContrato(id);
+      }
+    });
+
+    this.menuAcoesAberto = null;
   }
 
   private excluirContrato(id: number): void {
@@ -141,24 +442,109 @@ export class ContratoListComponent implements OnInit {
     });
   }
 
-  // Métodos auxiliares
+  /**
+   * Exportar dados (placeholder)
+   */
+  exportar(): void {
+    this.notificationService.showSuccess('Funcionalidade de exportação em desenvolvimento');
+  }
+
+  /**
+   * Métodos do Modal
+   */
+  abrirModalCriar(): void {
+    this.modalModo = 'criar';
+    this.contratoSelecionado = null;
+    this.modalAberto = true;
+  }
+
+  abrirModalEditar(contrato: Contrato): void {
+    this.modalModo = 'editar';
+    this.contratoSelecionado = { ...contrato }; // Clone para não alterar original
+    this.modalAberto = true;
+  }
+
+  fecharModal(): void {
+    this.modalAberto = false;
+    this.contratoSelecionado = null;
+  }
+
+  salvarContrato(contrato: Contrato): void {
+    if (this.modalModo === 'criar') {
+      this.criarContrato(contrato);
+    } else {
+      this.atualizarContrato(contrato);
+    }
+  }
+
+  private criarContrato(contrato: Contrato): void {
+    this.contratoService.criar(contrato).subscribe({
+      next: (contratoCriado) => {
+        this.ngZone.run(() => {
+          this.notificationService.showSuccess('Contrato cadastrado com sucesso!');
+          this.fecharModal();
+          this.carregarContratos();
+        });
+      },
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error('Erro ao criar contrato:', error);
+          const mensagemErro = error.error?.erro || 'Erro ao cadastrar contrato';
+          this.notificationService.showError(mensagemErro);
+        });
+      }
+    });
+  }
+
+  private atualizarContrato(contrato: Contrato): void {
+    if (!contrato.id) return;
+
+    this.contratoService.atualizar(contrato.id, contrato).subscribe({
+      next: (contratoAtualizado) => {
+        this.ngZone.run(() => {
+          this.notificationService.showSuccess('Contrato atualizado com sucesso!');
+          this.fecharModal();
+          this.carregarContratos();
+        });
+      },
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error('Erro ao atualizar contrato:', error);
+          const mensagemErro = error.error?.erro || 'Erro ao atualizar contrato';
+          this.notificationService.showError(mensagemErro);
+        });
+      }
+    });
+  }
+
+  /**
+   * Helpers
+   */
   getClienteNome(contrato: Contrato): string {
     if (typeof contrato.cliente === 'object' && contrato.cliente && 'nome' in contrato.cliente) {
       return contrato.cliente.nome;
     }
-    return contrato.cliente ? String(contrato.cliente) : '-';
+    return '-';
   }
 
-  getStatusTexto(status: string | undefined): string {
-    if (!status) return 'Pendente';
-    
+  getStatusLabel(status: string | undefined): string {
     const statusMap: { [key: string]: string } = {
       'PENDENTE': 'Pendente',
       'ATIVO': 'Ativo',
       'CONCLUIDO': 'Concluído',
       'CANCELADO': 'Cancelado'
     };
-    return statusMap[status] || status;
+    return statusMap[status || 'PENDENTE'] || 'Pendente';
+  }
+
+  getStatusClass(status: string | undefined): string {
+    const statusClassMap: { [key: string]: string } = {
+      'PENDENTE': 'status-pendente',
+      'ATIVO': 'status-ativo',
+      'CONCLUIDO': 'status-concluido',
+      'CANCELADO': 'status-cancelado'
+    };
+    return statusClassMap[status || 'PENDENTE'] || 'status-pendente';
   }
 
   formatarValor(valor: number | undefined): string {
@@ -169,10 +555,20 @@ export class ContratoListComponent implements OnInit {
     }).format(valor);
   }
 
-  get contadorResultados(): string {
-    const total = this.contratosFiltrados.length;
-    if (total === 0) return 'Nenhum contrato encontrado';
-    if (total === 1) return '1 contrato encontrado';
-    return `${total} contratos encontrados`;
+  formatarPeriodo(contrato: Contrato): string {
+    const dataInicio = this.formatarData(contrato.dataInicio);
+    const dataFim = contrato.dataFim ? this.formatarData(contrato.dataFim) : 'Indeterminado';
+    return `${dataInicio} - ${dataFim}`;
+  }
+
+  formatarData(data: string | undefined): string {
+    if (!data) return '-';
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  podeSerCancelado(contrato: Contrato): boolean {
+    const status = contrato.status || 'PENDENTE';
+    return status === 'ATIVO' || status === 'PENDENTE';
   }
 }

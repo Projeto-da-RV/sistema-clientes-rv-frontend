@@ -1,266 +1,357 @@
-<div class="contrato-list">
-  <!-- Header da página com novo padrão -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1>Contratos</h1>
-      <span class="subtitle">Gestão completa de contratos cadastrados</span>
-    </div>
-    <div class="header-actions">
-      <a routerLink="/contratos/novo" class="btn btn-primary">
-        <span>Novo Contrato</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- Card de Filtros com novo padrão -->
-  <div class="filter-bar">
-    <div class="filter-content">
-      <!-- Campo de filtro por status -->
-      <div class="input-group">
-        <label>Filtrar por status</label>
-        <div class="input-wrapper">
-          <select
-            class="input-field"
-            [(ngModel)]="filtroStatus"
-            (change)="aplicarFiltros()">
-            <option value="">Todos os status</option>
-            <option value="PENDENTE">Pendente</option>
-            <option value="ATIVO">Ativo</option>
-            <option value="CONCLUIDO">Concluído</option>
-            <option value="CANCELADO">Cancelado</option>
-          </select>
-        </div>
+<div class="cliente-list-container">
+  <!-- Card Container -->
+  <div class="card-wrapper">
+    <!-- Header -->
+    <div class="header-section">
+      <div class="header-info">
+        <h3 class="title">Lista de Contratos</h3>
+        <p class="subtitle">Gerencie os contratos cadastrados no sistema.</p>
       </div>
+      <div class="header-actions">
+        <!-- Botão Exportar -->
+        <button
+          (click)="exportar()"
+          class="btn-export"
+          title="Exportar dados">
+          <lucide-icon [img]="Download" [size]="20"></lucide-icon>
+          <span>Exportar</span>
+        </button>
+        <!-- Botão Novo Contrato -->
+        <button
+          (click)="abrirModalCriar()"
+          class="btn-primary">
+          <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+          <span>Novo Contrato</span>
+        </button>
+      </div>
+    </div>
 
-      <!-- Campo de busca por cliente -->
-      <div class="input-group">
-        <label>Buscar por cliente</label>
-        <div class="input-wrapper">
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-section">
+      <div class="search-filter-content">
+        <!-- Campo de Busca -->
+        <div class="search-box">
+          <div class="search-icon">
+            <lucide-icon [img]="Search" [size]="20"></lucide-icon>
+          </div>
           <input
             type="text"
-            class="input-field"
-            [(ngModel)]="filtroCliente"
-            (keyup.enter)="buscarPorCliente()"
-            (input)="aplicarFiltros()"
-            placeholder="Digite o nome do cliente">
+            placeholder="Buscar contrato..."
+            [(ngModel)]="termoBusca"
+            (ngModelChange)="aplicarFiltros()"
+            class="search-input"
+          />
+        </div>
+
+        <!-- Botão Filtro -->
+        <div class="filter-dropdown-wrapper relative">
+          <button
+            (click)="toggleFiltro(); $event.stopPropagation()"
+            class="btn-filter"
+            title="Filtros avançados">
+            <lucide-icon [img]="SlidersHorizontal" [size]="20"></lucide-icon>
+            <span>Filtrar</span>
+          </button>
+
+          <!-- Dropdown de Filtro -->
+          <div *ngIf="mostrarFiltro" class="filter-dropdown" (click)="$event.stopPropagation()">
+            <div class="filter-group">
+              <label class="filter-label">Status</label>
+              <select
+                [(ngModel)]="filtroStatus"
+                class="filter-select">
+                <option value="">Todos</option>
+                <option value="PENDENTE">Pendente</option>
+                <option value="ATIVO">Ativo</option>
+                <option value="CONCLUIDO">Concluído</option>
+                <option value="CANCELADO">Cancelado</option>
+              </select>
+            </div>
+            <button
+              (click)="aplicarFiltroDropdown()"
+              class="btn-apply-filter">
+              Aplicar
+            </button>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Campo de filtro especial -->
-      <div class="input-group">
-        <label>Filtros Especiais</label>
-        <div class="checkbox-wrapper">
-          <input
-            type="checkbox"
-            id="mostrarAtivos"
-            [(ngModel)]="mostrarAtivos"
-            (change)="toggleMostrarAtivos()">
-          <label for="mostrarAtivos" class="checkbox-label">
-            Apenas contratos ativos
-          </label>
-        </div>
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Carregando contratos...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && contratosPaginados.length === 0" class="empty-state">
+      <div class="empty-icon">📄</div>
+      <h3>Nenhum contrato encontrado</h3>
+      <p>{{ contratos.length === 0 ? 'Você ainda não possui contratos cadastrados.' : 'Não há contratos que correspondam aos filtros selecionados.' }}</p>
+
+      <button *ngIf="contratos.length === 0" (click)="abrirModalCriar()" class="btn-primary">
+        <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+        <span>Cadastrar Primeiro Contrato</span>
+      </button>
+
+      <button *ngIf="contratos.length > 0" (click)="limparFiltros()" class="btn-secondary">
+        <span>Limpar Filtros</span>
+      </button>
+    </div>
+
+    <!-- Tabela -->
+    <div *ngIf="!loading && contratosPaginados.length > 0" class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <!-- Checkbox All -->
+            <th class="col-checkbox">
+              <label class="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  class="checkbox-input"
+                  (change)="toggleSelecionarTodos()"
+                  [checked]="todosSelecionados()"
+                />
+                <span
+                  class="checkbox-custom"
+                  [class.checked]="todosSelecionados()">
+                  <lucide-icon
+                    *ngIf="todosSelecionados()"
+                    [img]="Check"
+                    [size]="14"
+                  ></lucide-icon>
+                </span>
+              </label>
+            </th>
+
+            <!-- Coluna Nº Contrato -->
+            <th
+              (click)="ordenarPor('id')"
+              class="col-sortable">
+              <div class="th-content">
+                <span class="th-label">Nº Contrato</span>
+                <div class="sort-icons">
+                  <lucide-icon
+                    [img]="ChevronUp"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'id' && ordenacao.direcao === 'asc'"
+                  ></lucide-icon>
+                  <lucide-icon
+                    [img]="ChevronDown"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'id' && ordenacao.direcao === 'desc'"
+                  ></lucide-icon>
+                </div>
+              </div>
+            </th>
+
+            <!-- Coluna Cliente -->
+            <th>
+              <span class="th-label">Cliente</span>
+            </th>
+
+            <!-- Coluna Valor -->
+            <th
+              (click)="ordenarPor('valorTotal')"
+              class="col-sortable">
+              <div class="th-content">
+                <span class="th-label">Valor</span>
+                <div class="sort-icons">
+                  <lucide-icon
+                    [img]="ChevronUp"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'valorTotal' && ordenacao.direcao === 'asc'"
+                  ></lucide-icon>
+                  <lucide-icon
+                    [img]="ChevronDown"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'valorTotal' && ordenacao.direcao === 'desc'"
+                  ></lucide-icon>
+                </div>
+              </div>
+            </th>
+
+            <!-- Coluna Período -->
+            <th>
+              <span class="th-label">Período</span>
+            </th>
+
+            <!-- Coluna Status -->
+            <th>
+              <span class="th-label">Status</span>
+            </th>
+
+            <!-- Coluna Ações -->
+            <th class="col-actions">
+              <span class="sr-only">Ações</span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let contrato of contratosPaginados"
+            class="table-row">
+            <!-- Checkbox -->
+            <td class="col-checkbox">
+              <label class="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  class="checkbox-input"
+                  [checked]="selecionados.includes(contrato.id!)"
+                  (change)="toggleSelecao(contrato.id)"
+                />
+                <span
+                  class="checkbox-custom"
+                  [class.checked]="selecionados.includes(contrato.id!)">
+                  <lucide-icon
+                    *ngIf="selecionados.includes(contrato.id!)"
+                    [img]="Check"
+                    [size]="14"
+                  ></lucide-icon>
+                </span>
+              </label>
+            </td>
+
+            <!-- Nº Contrato -->
+            <td>
+              <span class="contrato-numero">#{{ contrato.id }}</span>
+            </td>
+
+            <!-- Cliente -->
+            <td>
+              <span class="text-muted">{{ getClienteNome(contrato) }}</span>
+            </td>
+
+            <!-- Valor (green) -->
+            <td>
+              <span class="valor-total">{{ formatarValor(contrato.valorTotal) }}</span>
+            </td>
+
+            <!-- Período -->
+            <td>
+              <span class="text-muted">{{ formatarPeriodo(contrato) }}</span>
+            </td>
+
+            <!-- Status Badge (4 tipos) -->
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(contrato.status)">
+                {{ getStatusLabel(contrato.status) }}
+              </span>
+            </td>
+
+            <!-- Ações Dropdown -->
+            <td class="col-actions">
+              <div class="actions-dropdown-wrapper relative">
+                <button
+                  (click)="toggleMenuAcoes(contrato.id); $event.stopPropagation()"
+                  class="btn-actions"
+                  title="Mais ações">
+                  <lucide-icon [img]="MoreHorizontal" [size]="20"></lucide-icon>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div
+                  *ngIf="menuAcoesAberto === contrato.id"
+                  class="actions-dropdown"
+                  (click)="$event.stopPropagation()">
+                  <button
+                    (click)="verDetalhes(contrato.id)"
+                    class="dropdown-item">
+                    <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
+                    <span>Ver Detalhes</span>
+                  </button>
+                  <button
+                    (click)="editar(contrato.id)"
+                    class="dropdown-item">
+                    <lucide-icon [img]="Edit" [size]="16"></lucide-icon>
+                    <span>Editar</span>
+                  </button>
+                  <button
+                    (click)="baixarPDF(contrato.id)"
+                    class="dropdown-item">
+                    <lucide-icon [img]="FileText" [size]="16"></lucide-icon>
+                    <span>Baixar PDF</span>
+                  </button>
+                  <button
+                    *ngIf="podeSerCancelado(contrato)"
+                    (click)="cancelar(contrato.id)"
+                    class="dropdown-item warning">
+                    <lucide-icon [img]="XCircle" [size]="16"></lucide-icon>
+                    <span>Cancelar Contrato</span>
+                  </button>
+                  <button
+                    (click)="excluir(contrato.id)"
+                    class="dropdown-item danger">
+                    <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
+                    <span>Excluir</span>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação -->
+    <div *ngIf="!loading && contratosPaginados.length > 0" class="pagination-section">
+      <!-- Info -->
+      <div class="pagination-info">
+        <span>
+          Mostrando <strong>{{ itemInicial }}</strong> a <strong>{{ itemFinal }}</strong> de <strong>{{ totalContratos }}</strong>
+        </span>
       </div>
 
-      <!-- Botões de ação -->
-      <div class="btn-group">
-        <button class="btn btn-primary" (click)="filtrar()">
-          <span>Filtrar</span>
+      <!-- Controles -->
+      <div class="pagination-controls">
+        <!-- Botão Anterior -->
+        <button
+          (click)="paginaAnterior()"
+          [disabled]="paginaAtual === 1"
+          class="btn-pagination"
+          title="Página anterior">
+          <lucide-icon [img]="ChevronLeft" [size]="20"></lucide-icon>
         </button>
 
-        <button class="btn btn-secondary" (click)="limparFiltros()">
-          <span>Limpar</span>
+        <!-- Números de Página (Desktop) -->
+        <div class="page-numbers">
+          <button
+            *ngFor="let pagina of paginas"
+            (click)="irParaPagina(pagina)"
+            class="btn-page"
+            [class.active]="paginaAtual === pagina">
+            {{ pagina }}
+          </button>
+        </div>
+
+        <!-- Info Mobile -->
+        <span class="page-info-mobile">
+          Página {{ paginaAtual }} de {{ totalPaginas }}
+        </span>
+
+        <!-- Botão Próximo -->
+        <button
+          (click)="proximaPagina()"
+          [disabled]="paginaAtual === totalPaginas"
+          class="btn-pagination"
+          title="Próxima página">
+          <lucide-icon [img]="ChevronRight" [size]="20"></lucide-icon>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Contador de resultados -->
-  <div class="resultados-info">
-    <span class="text-secondary">{{ contadorResultados }}</span>
-  </div>
-
-  <!-- Tabela de resultados com novo padrão -->
-  <div class="table-container">
-    @if (loading) {
-      <div class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Carregando contratos...</p>
-      </div>
-    } @else if (contratosFiltrados.length === 0) {
-      <div class="empty-state">
-        <div class="empty-icon">📄</div>
-        <h3>Nenhum contrato encontrado</h3>
-        <p>{{ contratos.length === 0 ? 'Você ainda não possui contratos cadastrados.' : 'Não há contratos que correspondam aos filtros selecionados.' }}</p>
-
-        @if (contratos.length === 0) {
-          <!-- Se não há contratos no total, mostra botão para cadastrar -->
-          <a routerLink="/contratos/novo" class="btn btn-primary">
-            <span>Cadastrar Primeiro Contrato</span>
-          </a>
-        } @else {
-          <!-- Se há contratos mas filtro não encontrou, mostra botão para limpar filtros -->
-          <button class="btn btn-secondary" (click)="limparFiltros()">
-            <span>Limpar Filtros</span>
-          </button>
-        }
-      </div>
-    } @else {
-      <!-- Tabela Desktop -->
-      <div class="tabela-desktop">
-        <table class="tabela">
-          <thead>
-            <tr>
-              <th class="col-id">
-                <div class="th-content">
-                  <span>ID</span>
-                </div>
-              </th>
-              <th class="col-cliente">
-                <div class="th-content">
-                  <span>Cliente</span>
-                </div>
-              </th>
-              <th class="col-data-inicio">
-                <div class="th-content">
-                  <span>Data Início</span>
-                </div>
-              </th>
-              <th class="col-data-fim">
-                <div class="th-content">
-                  <span>Data Fim</span>
-                </div>
-              </th>
-              <th class="col-status">
-                <div class="th-content">
-                  <span>Status</span>
-                </div>
-              </th>
-              <th class="col-valor">
-                <div class="th-content">
-                  <span>Valor Total</span>
-                </div>
-              </th>
-              <th class="col-actions">
-                <div class="th-content">
-                  <span>Ações</span>
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (contrato of contratosFiltrados; track contrato.id) {
-              <tr class="tabela-row">
-                <td class="col-id">
-                  <span class="id-badge">{{ contrato.id }}</span>
-                </td>
-                <td class="col-cliente">
-                  <div class="contrato-cliente">
-                    <strong>{{ getClienteNome(contrato) }}</strong>
-                  </div>
-                </td>
-                <td class="col-data-inicio">
-                  <span class="data-texto">
-                    {{ contrato.dataInicio | date:'dd/MM/yyyy' }}
-                  </span>
-                </td>
-                <td class="col-data-fim">
-                  <span class="data-texto">
-                    {{ contrato.dataFim ? (contrato.dataFim | date:'dd/MM/yyyy') : '-' }}
-                  </span>
-                </td>
-                <td class="col-status">
-                  <span class="status-badge" 
-                        [class.pendente]="contrato.status === 'PENDENTE'"
-                        [class.ativo]="contrato.status === 'ATIVO'"
-                        [class.concluido]="contrato.status === 'CONCLUIDO'"
-                        [class.cancelado]="contrato.status === 'CANCELADO'">
-                    <span>{{ getStatusTexto(contrato.status) }}</span>
-                  </span>
-                </td>
-                <td class="col-valor">
-                  <span class="valor-texto">
-                    {{ formatarValor(contrato.valorTotal) }}
-                  </span>
-                </td>
-                <td class="col-actions">
-                  <div class="action-buttons">
-                    <a [routerLink]="['/contratos', contrato.id, 'editar']" 
-                       class="btn-action btn-editar"
-                       title="Editar dados do contrato"
-                       attr.aria-label="Editar contrato {{ contrato.id }}">
-                      <span class="action-text">Editar</span>
-                    </a>
-                    <button class="btn-action btn-excluir" 
-                            (click)="confirmarExclusao(contrato)"
-                            title="Excluir contrato permanentemente"
-                            attr.aria-label="Excluir contrato {{ contrato.id }}">
-                      <span class="action-text">Excluir</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Cards Mobile -->
-      <div class="cards-mobile">
-        @for (contrato of contratosFiltrados; track contrato.id) {
-          <div class="contrato-card">
-            <div class="card-header">
-              <div class="contrato-info">
-                <span class="id-badge">{{ contrato.id }}</span>
-                <h4 class="contrato-cliente">{{ getClienteNome(contrato) }}</h4>
-              </div>
-              <div class="status-badge" 
-                   [class.pendente]="contrato.status === 'PENDENTE'"
-                   [class.ativo]="contrato.status === 'ATIVO'"
-                   [class.concluido]="contrato.status === 'CONCLUIDO'"
-                   [class.cancelado]="contrato.status === 'CANCELADO'">
-                <span>{{ getStatusTexto(contrato.status) }}</span>
-              </div>
-            </div>
-            
-            <div class="card-body">
-              <div class="info-item">
-                <span class="label">Data Início:</span>
-                <span class="value">{{ contrato.dataInicio | date:'dd/MM/yyyy' }}</span>
-              </div>
-              
-              @if (contrato.dataFim) {
-                <div class="info-item">
-                  <span class="label">Data Fim:</span>
-                  <span class="value">{{ contrato.dataFim | date:'dd/MM/yyyy' }}</span>
-                </div>
-              }
-              
-              <div class="info-item">
-                <span class="label">Valor Total:</span>
-                <span class="value valor-destaque">{{ formatarValor(contrato.valorTotal) }}</span>
-              </div>
-              
-              @if (contrato.observacoes) {
-                <div class="info-item">
-                  <span class="label">Observações:</span>
-                  <span class="value">{{ contrato.observacoes }}</span>
-                </div>
-              }
-            </div>
-            
-            <div class="card-footer">
-              <a [routerLink]="['/contratos', contrato.id, 'editar']" 
-                 class="btn-action btn-editar">
-                <span>Editar</span>
-              </a>
-              <button class="btn-action btn-excluir" 
-                      (click)="confirmarExclusao(contrato)">
-                <span>Excluir</span>
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-    }
-  </div>
+  <!-- ⭐ MODAL - Contrato ⭐ -->
+  <app-contrato-modal
+    [aberto]="modalAberto"
+    [modo]="modalModo"
+    [contrato]="contratoSelecionado"
+    [clientes]="clientes"
+    (fecharModal)="fecharModal()"
+    (salvarContrato)="salvarContrato($event)"
+  ></app-contrato-modal>
 </div>
