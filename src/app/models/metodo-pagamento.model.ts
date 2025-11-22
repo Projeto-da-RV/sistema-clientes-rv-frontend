@@ -3,7 +3,7 @@ import { Cliente } from './cliente.model';
 import { Contrato } from './contrato.model';
 import { Servico } from './servico.model';
 
-export type StatusTransacao = 'PENDENTE' | 'PROCESSANDO' | 'CONCLUIDO' | 'FALHO' | 'CANCELADO';
+export type StatusTransacao = 'PENDENTE' | 'CONCLUIDO';
 export type TipoConta = 'CORRENTE' | 'POUPANCA';
 export type BandeiraCartao = 'VISA' | 'MASTERCARD' | 'ELO' | 'AMEX' | 'HIPERCARD';
 

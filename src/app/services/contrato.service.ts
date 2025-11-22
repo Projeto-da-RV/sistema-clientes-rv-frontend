@@ -15,11 +15,23 @@ export class ContratoService extends BaseCrudService<Contrato> {
     super(http);
   }
 
+  /**
+   * Busca contas de um cliente específico
+   * GET /api/contratos/cliente/{clienteId}
+   * @param clienteId ID do cliente
+   * @returns Observable com lista de contas
+   */
   buscarPorCliente(clienteId: number): Observable<Contrato[]> {
     return this.http.get<Contrato[]>(`${this.apiUrl}/cliente/${clienteId}`)
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * Busca contas por status
+   * GET /api/contratos/status/{status}
+   * @param status Status da conta (PENDENTE, PAGO, VENCIDO, CANCELADO)
+   * @returns Observable com lista de contas
+   */
   buscarPorStatus(status: string): Observable<Contrato[]> {
     return this.http.get<Contrato[]>(`${this.apiUrl}/status/${status}`)
       .pipe(catchError(this.handleError));

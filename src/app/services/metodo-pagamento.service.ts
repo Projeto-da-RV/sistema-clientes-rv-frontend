@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { MetodoPagamento, GerarQRCodePIXRequest, TipoMetodoPagamento, StatusMetodoPagamento } from '../models/metodo-pagamento.model';
+import { MetodoPagamento, GerarQRCodePIXRequest, StatusTransacao } from '../models/metodo-pagamento.model';
 import { BaseCrudService } from '../shared/services/base-crud.service';
 
 @Injectable({
@@ -16,9 +16,10 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
   }
 
   /**
-   * Busca todos os métodos de pagamento de um cliente específico
+   * Busca todas as transações de um cliente específico
+   * GET /api/metodos-pagamento/cliente/{clienteId}
    * @param clienteId ID do cliente
-   * @returns Observable com lista de MetodoPagamento
+   * @returns Observable com lista de transações
    */
   buscarPorCliente(clienteId: number): Observable<MetodoPagamento[]> {
     return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/cliente/${clienteId}`)
@@ -26,28 +27,42 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
   }
 
   /**
-   * Busca métodos de pagamento por tipo
-   * @param tipo Tipo do método de pagamento (PIX, BOLETO, CARTAO_CREDITO, CARTAO_DEBITO)
-   * @returns Observable com lista de MetodoPagamento
+   * Busca todas as transações de um contrato específico
+   * GET /api/metodos-pagamento/contrato/{contratoId}
+   * @param contratoId ID do contrato
+   * @returns Observable com lista de transações
    */
-  buscarPorTipo(tipo: TipoMetodoPagamento): Observable<MetodoPagamento[]> {
-    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/tipo/${tipo}`)
+  buscarPorContrato(contratoId: number): Observable<MetodoPagamento[]> {
+    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/contrato/${contratoId}`)
       .pipe(catchError(this.handleError));
   }
 
   /**
-   * Busca métodos de pagamento por status
-   * @param status Status do método de pagamento (ATIVO, INATIVO)
-   * @returns Observable com lista de MetodoPagamento
+   * Busca todas as transações que usaram um serviço específico
+   * GET /api/metodos-pagamento/servico/{servicoId}
+   * @param servicoId ID do serviço (forma de pagamento)
+   * @returns Observable com lista de transações
    */
-  buscarPorStatus(status: StatusMetodoPagamento): Observable<MetodoPagamento[]> {
+  buscarPorServico(servicoId: number): Observable<MetodoPagamento[]> {
+    return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/servico/${servicoId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Busca transações por status
+   * GET /api/metodos-pagamento/status/{status}
+   * @param status Status da transação (PENDENTE ou CONCLUIDO)
+   * @returns Observable com lista de transações
+   */
+  buscarPorStatus(status: StatusTransacao): Observable<MetodoPagamento[]> {
     return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/status/${status}`)
       .pipe(catchError(this.handleError));
   }
 
   /**
-   * Busca todos os métodos PIX que possuem QR Code gerado
-   * @returns Observable com lista de MetodoPagamento do tipo PIX com QR Code
+   * Busca todas as transações PIX que possuem QR Code gerado
+   * GET /api/metodos-pagamento/pix-com-qrcode
+   * @returns Observable com lista de transações PIX com QR Code
    */
   buscarPIXComQRCode(): Observable<MetodoPagamento[]> {
     return this.http.get<MetodoPagamento[]>(`${this.apiUrl}/pix-com-qrcode`)
@@ -55,10 +70,11 @@ export class MetodoPagamentoService extends BaseCrudService<MetodoPagamento> {
   }
 
   /**
-   * Gera QR Code PIX para um método de pagamento
-   * @param id ID do método de pagamento (deve ser do tipo PIX)
+   * Gera QR Code PIX para uma transação
+   * POST /api/metodos-pagamento/{id}/gerar-qrcode-pix
+   * @param id ID da transação (deve usar serviço do tipo PIX)
    * @param request Dados para geração do QR Code (valor e descrição)
-   * @returns Observable com MetodoPagamento atualizado contendo o QR Code
+   * @returns Observable com transação atualizada contendo o QR Code
    */
   gerarQRCodePIX(id: number, request: GerarQRCodePIXRequest): Observable<MetodoPagamento> {
     return this.http.post<MetodoPagamento>(`${this.apiUrl}/${id}/gerar-qrcode-pix`, request)

@@ -15,19 +15,36 @@ export class ServicoService extends BaseCrudService<Servico> {
     super(http);
   }
 
+  /**
+   * Busca formas de pagamento ativas
+   * GET /api/servicos/ativos
+   * @returns Observable com lista de serviços ativos
+   */
   buscarAtivos(): Observable<Servico[]> {
     return this.http.get<Servico[]>(`${this.apiUrl}/ativos`)
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * Busca formas de pagamento por nome
+   * GET /api/servicos/buscar?nome={nome}
+   * @param nome Nome do serviço
+   * @returns Observable com lista de serviços
+   */
   override buscarPorNome(nome: string): Observable<Servico[]> {
     const params = new HttpParams().set('nome', nome);
     return this.http.get<Servico[]>(`${this.apiUrl}/buscar`, { params })
       .pipe(catchError(this.handleError));
   }
 
-  buscarPorCategoria(categoria: string): Observable<Servico[]> {
-    return this.http.get<Servico[]>(`${this.apiUrl}/categoria/${categoria}`)
+  /**
+   * Busca formas de pagamento por tipo
+   * GET /api/servicos/tipo/{tipo}
+   * @param tipo Tipo do serviço (TRANSFERENCIA, BOLETO, CARTAO, DEBITO_CONTA)
+   * @returns Observable com lista de serviços
+   */
+  buscarPorTipo(tipo: string): Observable<Servico[]> {
+    return this.http.get<Servico[]>(`${this.apiUrl}/tipo/${tipo}`)
       .pipe(catchError(this.handleError));
   }
 }
