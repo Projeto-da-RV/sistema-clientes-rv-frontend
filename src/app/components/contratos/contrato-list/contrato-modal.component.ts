@@ -68,11 +68,11 @@ import { Cliente } from '../../../models/cliente.model';
             </label>
             <input
               type="date"
-              formControlName="dataInicio"
+              formControlName="dataVencimento"
               class="form-input"
-              [class.input-error]="form.get('dataInicio')?.invalid && form.get('dataInicio')?.touched"
+              [class.input-error]="form.get('dataVencimento')?.invalid && form.get('dataVencimento')?.touched"
             />
-            <p *ngIf="form.get('dataInicio')?.invalid && form.get('dataInicio')?.touched" class="error-message">
+            <p *ngIf="form.get('dataVencimento')?.invalid && form.get('dataVencimento')?.touched" class="error-message">
               Data de início é obrigatória
             </p>
           </div>
@@ -84,7 +84,7 @@ import { Cliente } from '../../../models/cliente.model';
             </label>
             <input
               type="date"
-              formControlName="dataFim"
+              formControlName="dataPagamento"
               class="form-input"
             />
           </div>
@@ -101,7 +101,7 @@ import { Cliente } from '../../../models/cliente.model';
               <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#6b6b7b]">R$</span>
               <input
                 type="number"
-                formControlName="valorTotal"
+                formControlName="valor"
                 placeholder="0,00"
                 step="0.01"
                 min="0"
@@ -223,9 +223,9 @@ export class ContratoModalComponent implements OnChanges, OnDestroy {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       clienteId: ['', [Validators.required]],
-      dataInicio: ['', [Validators.required]],
-      dataFim: [''],
-      valorTotal: [0],
+      dataVencimento: ['', [Validators.required]],
+      dataPagamento: [''],
+      valor: [0],
       status: ['PENDENTE'],
       observacoes: ['']
     });
@@ -243,14 +243,14 @@ export class ContratoModalComponent implements OnChanges, OnDestroy {
 
         this.form.patchValue({
           clienteId: clienteId,
-          dataInicio: this.contrato.dataInicio,
-          dataFim: this.contrato.dataFim || '',
-          valorTotal: this.contrato.valorTotal || 0,
+          dataVencimento: this.contrato.dataVencimento,
+          dataPagamento: this.contrato.dataPagamento || '',
+          valor: this.contrato.valor || 0,
           status: this.contrato.status || 'PENDENTE',
           observacoes: this.contrato.observacoes || ''
         });
       } else {
-        this.form.reset({ valorTotal: 0, status: 'PENDENTE', clienteId: '', dataInicio: '', dataFim: '', observacoes: '' });
+        this.form.reset({ valor: 0, status: 'PENDENTE', clienteId: '', dataVencimento: '', dataPagamento: '', observacoes: '' });
       }
       // Resetar estado de carregamento
       this.carregando = false;
@@ -258,7 +258,7 @@ export class ContratoModalComponent implements OnChanges, OnDestroy {
       // Restaurar scroll da página e resetar estado
       document.body.style.overflow = '';
       this.carregando = false;
-      this.form.reset({ valorTotal: 0, status: 'PENDENTE', clienteId: '', dataInicio: '', dataFim: '', observacoes: '' });
+      this.form.reset({ valor: 0, status: 'PENDENTE', clienteId: '', dataVencimento: '', dataPagamento: '', observacoes: '' });
     }
   }
 
@@ -292,10 +292,12 @@ export class ContratoModalComponent implements OnChanges, OnDestroy {
       this.carregando = true;
       const dados: Contrato = {
         ...(this.contrato?.id ? { id: this.contrato.id } : {}),
-        dataInicio: this.form.value.dataInicio,
-        dataFim: this.form.value.dataFim || undefined,
-        valorTotal: this.form.value.valorTotal || undefined,
+        descricao: this.form.value.descricao || this.contrato?.descricao || 'Conta',
+        dataVencimento: this.form.value.dataVencimento,
+        dataPagamento: this.form.value.dataPagamento || undefined,
+        valor: this.form.value.valor || undefined,
         status: this.form.value.status,
+        categoria: this.form.value.categoria || this.contrato?.categoria || 'ENERGIA',
         observacoes: this.form.value.observacoes || undefined,
         cliente: { id: Number(this.form.value.clienteId) }
       };

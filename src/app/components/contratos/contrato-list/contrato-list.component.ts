@@ -185,13 +185,13 @@ export class ContratoListComponent implements OnInit {
           valorA = a.id || 0;
           valorB = b.id || 0;
           break;
-        case 'valorTotal':
-          valorA = a.valorTotal || 0;
-          valorB = b.valorTotal || 0;
+        case 'valor':
+          valorA = a.valor || 0;
+          valorB = b.valor || 0;
           break;
-        case 'dataInicio':
-          valorA = a.dataInicio || '';
-          valorB = b.dataInicio || '';
+        case 'dataVencimento':
+          valorA = a.dataVencimento || '';
+          valorB = b.dataVencimento || '';
           break;
         default:
           return 0;
@@ -373,7 +373,7 @@ export class ContratoListComponent implements OnInit {
     if (!contrato) return;
 
     const status = contrato.status || 'PENDENTE';
-    if (status !== 'ATIVO' && status !== 'PENDENTE') {
+    if (status !== 'PAGO' && status !== 'PENDENTE') {
       this.notificationService.showError('Apenas contratos ativos ou pendentes podem ser cancelados');
       this.menuAcoesAberto = null;
       return;
@@ -396,7 +396,7 @@ export class ContratoListComponent implements OnInit {
     const contrato = this.contratos.find(c => c.id === id);
     if (!contrato) return;
 
-    const contratoAtualizado = { ...contrato, status: 'CANCELADO' };
+    const contratoAtualizado: Contrato = { ...contrato, status: 'CANCELADO' };
 
     this.contratoService.atualizar(id, contratoAtualizado).subscribe({
       next: () => {
@@ -556,9 +556,9 @@ export class ContratoListComponent implements OnInit {
   }
 
   formatarPeriodo(contrato: Contrato): string {
-    const dataInicio = this.formatarData(contrato.dataInicio);
-    const dataFim = contrato.dataFim ? this.formatarData(contrato.dataFim) : 'Indeterminado';
-    return `${dataInicio} - ${dataFim}`;
+    const dataVencimento = this.formatarData(contrato.dataVencimento);
+    const dataFim = contrato.dataPagamento ? this.formatarData(contrato.dataPagamento) : 'Indeterminado';
+    return `${dataVencimento} - ${dataFim}`;
   }
 
   formatarData(data: string | undefined): string {
@@ -569,6 +569,6 @@ export class ContratoListComponent implements OnInit {
 
   podeSerCancelado(contrato: Contrato): boolean {
     const status = contrato.status || 'PENDENTE';
-    return status === 'ATIVO' || status === 'PENDENTE';
+    return status === 'PAGO' || status === 'PENDENTE';
   }
 }

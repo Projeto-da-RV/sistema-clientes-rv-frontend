@@ -59,41 +59,94 @@
             }
           </div>
 
-          <!-- Data de Início e Data de Fim -->
+          <!-- Descrição da Conta -->
+          <div class="form-group full-width">
+            <label for="descricao" class="form-label required">
+              Descrição da Conta
+            </label>
+            <input
+              id="descricao"
+              type="text"
+              class="form-control"
+              [class.error]="isFieldInvalid('descricao')"
+              formControlName="descricao"
+              placeholder="Ex: Conta de Luz - CPFL">
+
+            @if (isFieldInvalid('descricao')) {
+              <div class="error-message">
+                A descrição é obrigatória
+              </div>
+            }
+          </div>
+
+          <!-- Categoria e Data de Vencimento -->
           <div class="form-row">
             <div class="form-group">
-              <label for="dataInicio" class="form-label required">
-                Data de Início
+              <label for="categoria" class="form-label required">
+                Categoria
               </label>
-              <input
-                id="dataInicio"
-                type="date"
+              <select
+                id="categoria"
                 class="form-control"
-                [class.error]="isFieldInvalid('dataInicio')"
-                formControlName="dataInicio">
-              
-              @if (isFieldInvalid('dataInicio')) {
+                [class.error]="isFieldInvalid('categoria')"
+                formControlName="categoria">
+                <option value="ENERGIA">⚡ Energia</option>
+                <option value="AGUA">💧 Água</option>
+                <option value="TELEFONE">📞 Telefone</option>
+                <option value="INTERNET">🌐 Internet</option>
+                <option value="GAS">🔥 Gás</option>
+                <option value="ALUGUEL">🏠 Aluguel</option>
+              </select>
+
+              @if (isFieldInvalid('categoria')) {
                 <div class="error-message">
-                  A data de início é obrigatória
+                  A categoria é obrigatória
                 </div>
               }
             </div>
 
             <div class="form-group">
-              <label for="dataFim" class="form-label">
-                Data de Fim
-                <span class="optional">(opcional)</span>
+              <label for="dataVencimento" class="form-label required">
+                Data de Vencimento
               </label>
               <input
-                id="dataFim"
+                id="dataVencimento"
                 type="date"
                 class="form-control"
-                formControlName="dataFim">
+                [class.error]="isFieldInvalid('dataVencimento')"
+                formControlName="dataVencimento">
+
+              @if (isFieldInvalid('dataVencimento')) {
+                <div class="error-message">
+                  A data de vencimento é obrigatória
+                </div>
+              }
             </div>
           </div>
 
-          <!-- Status e Valor Total -->
+          <!-- Valor e Status -->
           <div class="form-row">
+            <div class="form-group">
+              <label for="valor" class="form-label required">
+                Valor da Conta
+              </label>
+              <input
+                id="valor"
+                type="number"
+                step="0.01"
+                min="0.01"
+                class="form-control"
+                [class.error]="isFieldInvalid('valor')"
+                formControlName="valor"
+                placeholder="0,00">
+
+              @if (isFieldInvalid('valor')) {
+                <div class="error-message">
+                  O valor é obrigatório e deve ser maior que zero
+                </div>
+              }
+            </div>
+
             <div class="form-group">
               <label for="status" class="form-label">
                 Status
@@ -102,27 +155,26 @@
                 id="status"
                 class="form-control"
                 formControlName="status">
-                <option value="PENDENTE">Pendente</option>
-                <option value="ATIVO">Ativo</option>
-                <option value="CONCLUIDO">Concluído</option>
-                <option value="CANCELADO">Cancelado</option>
+                <option value="PENDENTE">⏳ Pendente</option>
+                <option value="PAGO">✅ Pago</option>
+                <option value="VENCIDO">❌ Vencido</option>
+                <option value="CANCELADO">🚫 Cancelado</option>
               </select>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label for="valorTotal" class="form-label">
-                Valor Total (R$)
-                <span class="optional">(opcional)</span>
-              </label>
-              <input
-                id="valorTotal"
-                type="number"
-                class="form-control"
-                formControlName="valorTotal"
-                placeholder="0,00"
-                step="0.01"
-                min="0">
-            </div>
+          <!-- Código de Barras -->
+          <div class="form-group full-width">
+            <label for="codigoBarras" class="form-label">
+              Código de Barras
+              <span class="optional">(opcional)</span>
+            </label>
+            <input
+              id="codigoBarras"
+              type="text"
+              class="form-control"
+              formControlName="codigoBarras"
+              placeholder="Digite o código de barras">
           </div>
 
           <!-- Observações -->
@@ -166,10 +218,10 @@
               <span class="metadata-value">{{ getStatusTexto(contrato.status || 'PENDENTE') }}</span>
             </div>
             
-            @if (contrato.dataInicio) {
+            @if (contrato.dataVencimento) {
               <div class="metadata-item">
-                <span class="metadata-label">Data de Início:</span>
-                <span class="metadata-value">{{ contrato.dataInicio | date:'dd/MM/yyyy' }}</span>
+                <span class="metadata-label">Data de Vencimento:</span>
+                <span class="metadata-value">{{ contrato.dataVencimento | date:'dd/MM/yyyy' }}</span>
               </div>
             }
           </div>

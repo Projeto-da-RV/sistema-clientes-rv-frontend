@@ -102,7 +102,7 @@ export class ServicoListComponent implements OnInit {
       resultado = resultado.filter(servico =>
         servico.nome.toLowerCase().includes(termo) ||
         servico.descricao?.toLowerCase().includes(termo) ||
-        servico.categoria?.toLowerCase().includes(termo)
+        servico.tipo?.toLowerCase().includes(termo)
       );
     }
 
@@ -124,8 +124,8 @@ export class ServicoListComponent implements OnInit {
           valorB = b.nome?.toLowerCase() || '';
           break;
         case 'valor':
-          valorA = a.valor || 0;
-          valorB = b.valor || 0;
+          valorA = a.taxa || 0;
+          valorB = b.taxa || 0;
           break;
         case 'dataCriacao':
           valorA = a.createdAt || '';

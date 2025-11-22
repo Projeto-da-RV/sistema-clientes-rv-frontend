@@ -56,10 +56,12 @@ export class ContratoFormComponent implements OnInit {
   private initializeForm(): void {
     this.contratoForm = this.fb.group({
       cliente: [null, [Validators.required]],
-      dataInicio: ['', [Validators.required]],
-      dataFim: [''],
+      descricao: ['', [Validators.required, Validators.maxLength(200)]],
+      valor: ['', [Validators.required, Validators.min(0.01)]],
+      dataVencimento: ['', [Validators.required]],
       status: ['PENDENTE'],
-      valorTotal: [''],
+      categoria: ['ENERGIA', [Validators.required]],
+      codigoBarras: ['', [Validators.maxLength(100)]],
       observacoes: ['', [Validators.maxLength(1000)]]
     });
   }
@@ -112,10 +114,12 @@ export class ContratoFormComponent implements OnInit {
 
     this.contratoForm.patchValue({
       cliente: clienteEncontrado || null,
-      dataInicio: contrato.dataInicio,
-      dataFim: contrato.dataFim || '',
+      descricao: contrato.descricao,
+      valor: contrato.valor,
+      dataVencimento: contrato.dataVencimento,
       status: contrato.status || 'PENDENTE',
-      valorTotal: contrato.valorTotal || '',
+      categoria: contrato.categoria,
+      codigoBarras: contrato.codigoBarras || '',
       observacoes: contrato.observacoes || ''
     });
   }
@@ -158,13 +162,15 @@ export class ContratoFormComponent implements OnInit {
 
   private prepareContratoData(): Contrato {
     const formValue = this.contratoForm.value;
-    
+
     const contrato: Contrato = {
       cliente: formValue.cliente,
-      dataInicio: formValue.dataInicio,
-      dataFim: formValue.dataFim || undefined,
+      descricao: formValue.descricao.trim(),
+      valor: parseFloat(formValue.valor),
+      dataVencimento: formValue.dataVencimento,
       status: formValue.status,
-      valorTotal: formValue.valorTotal ? parseFloat(formValue.valorTotal) : undefined,
+      categoria: formValue.categoria,
+      codigoBarras: formValue.codigoBarras ? formValue.codigoBarras.trim() : undefined,
       observacoes: formValue.observacoes ? formValue.observacoes.trim() : undefined
     };
 
@@ -208,10 +214,10 @@ export class ContratoFormComponent implements OnInit {
   // Métodos auxiliares
   getStatusTexto(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'PENDENTE': 'Pendente',
-      'ATIVO': 'Ativo',
-      'CONCLUIDO': 'Concluído',
-      'CANCELADO': 'Cancelado'
+      'PENDENTE': '⏳ Pendente',
+      'PAGO': '✅ Pago',
+      'VENCIDO': '❌ Vencido',
+      'CANCELADO': '🚫 Cancelado'
     };
     return statusMap[status] || status;
   }

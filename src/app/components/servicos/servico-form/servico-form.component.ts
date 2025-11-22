@@ -50,7 +50,7 @@ export class ServicoFormComponent implements OnInit {
   private initializeForm(): void {
     this.servicoForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      categoria: ['', [Validators.required, Validators.maxLength(50)]],
+      tipo: ['', [Validators.required, Validators.maxLength(50)]],
       valor: ['', [Validators.required, Validators.min(0.01)]],
       descricao: ['', [Validators.required, Validators.maxLength(500)]],
       ativo: [true]
@@ -85,8 +85,8 @@ export class ServicoFormComponent implements OnInit {
   private preencherFormulario(servico: Servico): void {
     this.servicoForm.patchValue({
       nome: servico.nome,
-      categoria: servico.categoria || '',
-      valor: servico.valor,
+      tipo: servico.tipo || '',
+      valor: servico.taxa,
       descricao: servico.descricao,
       ativo: servico.ativo
     });
@@ -133,8 +133,8 @@ export class ServicoFormComponent implements OnInit {
     
     const servico: Servico = {
       nome: formValue.nome.trim(),
-      categoria: formValue.categoria ? formValue.categoria.trim() : undefined,
-      valor: parseFloat(formValue.valor),
+      tipo: formValue.tipo ? formValue.tipo.trim() : undefined,
+      taxa: parseFloat(formValue.taxa),
       descricao: formValue.descricao.trim(),
       ativo: formValue.ativo
     };

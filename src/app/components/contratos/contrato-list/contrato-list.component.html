@@ -153,7 +153,7 @@
 
             <!-- Coluna Valor -->
             <th
-              (click)="ordenarPor('valorTotal')"
+              (click)="ordenarPor('valor')"
               class="col-sortable">
               <div class="th-content">
                 <span class="th-label">Valor</span>
@@ -161,12 +161,12 @@
                   <lucide-icon
                     [img]="ChevronUp"
                     [size]="10"
-                    [class.active]="ordenacao.coluna === 'valorTotal' && ordenacao.direcao === 'asc'"
+                    [class.active]="ordenacao.coluna === 'valor' && ordenacao.direcao === 'asc'"
                   ></lucide-icon>
                   <lucide-icon
                     [img]="ChevronDown"
                     [size]="10"
-                    [class.active]="ordenacao.coluna === 'valorTotal' && ordenacao.direcao === 'desc'"
+                    [class.active]="ordenacao.coluna === 'valor' && ordenacao.direcao === 'desc'"
                   ></lucide-icon>
                 </div>
               </div>
@@ -226,7 +226,7 @@
 
             <!-- Valor (green) -->
             <td>
-              <span class="valor-total">{{ formatarValor(contrato.valorTotal) }}</span>
+              <span class="valor-total">{{ formatarValor(contrato.valor) }}</span>
             </td>
 
             <!-- Período -->

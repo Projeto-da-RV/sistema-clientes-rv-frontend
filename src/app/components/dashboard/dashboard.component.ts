@@ -189,7 +189,7 @@ export class DashboardComponent implements OnInit {
           // Criar lista de serviços/produtos top (mock data)
           this.produtosTop = resultados.servicos.slice(0, 4).map(servico => ({
             nome: servico.nome || 'Serviço',
-            valor: servico.valor || 0
+            valor: servico.taxa || 0
           }));
 
           this.loading = false;

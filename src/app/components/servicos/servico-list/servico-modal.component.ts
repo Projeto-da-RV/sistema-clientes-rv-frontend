@@ -231,8 +231,8 @@ export class ServicoModalComponent implements OnChanges, OnDestroy {
         this.form.patchValue({
           nome: this.servico.nome,
           descricao: this.servico.descricao,
-          categoria: this.servico.categoria,
-          valor: this.servico.valor,
+          categoria: this.servico.tipo,
+          valor: this.servico.taxa,
           ativo: this.servico.ativo
         });
       } else {

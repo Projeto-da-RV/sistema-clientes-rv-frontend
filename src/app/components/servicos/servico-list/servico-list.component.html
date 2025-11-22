@@ -183,14 +183,14 @@
           <!-- Categoria -->
           <td class="px-5 py-4">
             <span class="inline-flex items-center rounded-full bg-[#252434] px-3 py-1 text-xs font-medium text-[#bbb6c6]">
-              {{ servico.categoria || '-' }}
+              {{ servico.tipo || '-' }}
             </span>
           </td>
 
           <!-- Valor -->
           <td class="px-5 py-4">
             <span class="text-sm font-semibold text-[#4ade80]">
-              {{ servico.valor | currency:'BRL':'symbol':'1.2-2' }}
+              {{ servico.taxa | currency:'BRL':'symbol':'1.2-2' }}
             </span>
           </td>
 
