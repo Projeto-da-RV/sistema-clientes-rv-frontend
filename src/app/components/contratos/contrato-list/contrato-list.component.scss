@@ -17,6 +17,14 @@ $info-bg-visible: rgba(59, 130, 246, 0.2);
 $danger-bright: #ef4444;
 $danger-bg-visible: rgba(239, 68, 68, 0.2);
 
+// Additional theme colors
+$primary-hover: #6b6fe8;
+$text-muted: #bbb6c6;
+$text-placeholder: #6b6b7b;
+$bg-input-focus: #1e1e2a;
+$border-hover: #4a4860;
+$text-white: #FFFFFF;
+
 .cliente-list-container {
   padding: 0;
   min-height: calc(100vh - 4rem);
@@ -105,7 +113,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
       box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
 
       &:hover {
-        background: #6b6fe8;
+        background: $primary-hover;
         box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.4);
         transform: translateY(-1px);
       }
@@ -159,14 +167,14 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
         transition: all var(--transition-fast);
 
         &::placeholder {
-          color: #6b6b7b;
+          color: $text-placeholder;
         }
 
         &:focus {
           outline: none;
           border-color: var(--primary);
           box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
-          background: #1e1e2a;
+          background: $bg-input-focus;
         }
 
         @media (min-width: 640px) {
@@ -195,7 +203,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
 
         &:hover {
           background: $bg-hover-dark;
-          border-color: #4a4860;
+          border-color: $border-hover;
         }
 
         lucide-icon {
@@ -263,7 +271,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
           transition: all var(--transition-fast);
 
           &:hover {
-            background: #6b6fe8;
+            background: $primary-hover;
           }
         }
       }
@@ -330,7 +338,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
     border: none;
 
     &:hover {
-      background: #6b6fe8;
+      background: $primary-hover;
     }
   }
 
@@ -403,7 +411,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
             font-size: 0.75rem;
             font-weight: var(--font-bold);
             text-transform: uppercase;
-            color: #bbb6c6 !important;
+            color: $text-muted !important;
             letter-spacing: 0.05em;
           }
 
@@ -455,7 +463,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
 
           .text-muted {
             font-size: var(--text-sm);
-            color: #bbb6c6 !important;
+            color: $text-muted !important;
           }
 
           .text-primary {
@@ -575,26 +583,26 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
     padding: 0;
     background: rgba(59, 57, 78, 0.3);
     border: 1px solid transparent;
-    color: #bbb6c6 !important;
+    color: $text-muted !important;
     cursor: pointer;
     border-radius: var(--radius);
     transition: all var(--transition-fast);
 
     lucide-icon,
     lucide-icon svg {
-      color: #bbb6c6 !important;
-      stroke: #bbb6c6 !important;
+      color: $text-muted !important;
+      stroke: $text-muted !important;
     }
 
     &:hover {
-      color: #FFFFFF !important;
+      color: $text-white !important;
       background: $bg-hover-dark;
       border-color: $border-visible;
 
       lucide-icon,
       lucide-icon svg {
-        color: #FFFFFF !important;
-        stroke: #FFFFFF !important;
+        color: $text-white !important;
+        stroke: $text-white !important;
       }
     }
   }
@@ -619,7 +627,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
       padding: 0.625rem var(--space-4);
       font-size: var(--text-sm);
       font-weight: var(--font-medium);
-      color: #bbb6c6 !important;
+      color: $text-muted !important;
       background: transparent;
       border: none;
       border-radius: var(--radius);
@@ -629,19 +637,19 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
 
       lucide-icon,
       lucide-icon svg {
-        color: #bbb6c6 !important;
-        stroke: #bbb6c6 !important;
+        color: $text-muted !important;
+        stroke: $text-muted !important;
         flex-shrink: 0;
       }
 
       &:hover {
         background: $bg-hover-dark;
-        color: #FFFFFF !important;
+        color: $text-white !important;
 
         lucide-icon,
         lucide-icon svg {
-          color: #FFFFFF !important;
-          stroke: #FFFFFF !important;
+          color: $text-white !important;
+          stroke: $text-white !important;
         }
       }
 
@@ -724,7 +732,7 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
       &:hover:not(:disabled) {
         background: $bg-hover-dark;
         color: var(--foreground);
-        border-color: #4a4860;
+        border-color: $border-hover;
       }
 
       &:disabled {

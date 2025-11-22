@@ -17,18 +17,18 @@ import { Cliente } from '../../../models/cliente.model';
 >
   <!-- Modal Card -->
   <div
-    class="relative w-full max-w-2xl rounded-2xl border border-[#3b394e] bg-[#1a1a24] shadow-2xl"
+    class="modal-card"
     (click)="$event.stopPropagation()"
   >
     <!-- Header -->
-    <div class="flex items-start justify-between border-b border-[#3b394e] p-6">
+    <div class="modal-header">
       <div>
         <h2 class="text-xl font-semibold text-white">{{ titulo }}</h2>
-        <p class="mt-1 text-sm text-[#bbb6c6]">{{ descricao }}</p>
+        <p class="modal-description">{{ descricao }}</p>
       </div>
       <button
         (click)="fechar()"
-        class="flex h-10 w-10 items-center justify-center rounded-lg text-[#bbb6c6] transition-colors hover:bg-[#252434] hover:text-white"
+        class="close-button"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"/>
@@ -98,7 +98,7 @@ import { Cliente } from '../../../models/cliente.model';
               Valor Total
             </label>
             <div class="relative">
-              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#6b6b7b]">R$</span>
+              <span class="currency-symbol">R$</span>
               <input
                 type="number"
                 formControlName="valor"
@@ -167,6 +167,68 @@ import { Cliente } from '../../../models/cliente.model';
 </div>
   `,
   styles: [`
+    :host {
+      --border-visible: #3b394e;
+      --bg-input: #252434;
+      --bg-card: #1a1a24;
+      --text-placeholder: #6b6b7b;
+      --text-muted: #bbb6c6;
+      --primary: #565add;
+      --primary-hover: #6b6fe8;
+      --danger: #ef4444;
+    }
+
+    .modal-card {
+      position: relative;
+      width: 100%;
+      max-width: 42rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border-visible);
+      background: var(--bg-card);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-visible);
+      padding: 1.5rem;
+    }
+
+    .modal-description {
+      margin-top: 0.25rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .close-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 0.5rem;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .close-button:hover {
+      background: var(--bg-input);
+      color: white;
+    }
+
+    .currency-symbol {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-placeholder);
+    }
+
     .form-field {
       @apply flex flex-col gap-2;
     }
@@ -176,35 +238,101 @@ import { Cliente } from '../../../models/cliente.model';
     }
 
     .form-input {
-      @apply h-11 w-full rounded-lg border border-[#3b394e] bg-[#252434] px-4 text-white placeholder:text-[#6b6b7b] focus:border-[#565add] focus:outline-none focus:ring-2 focus:ring-[#565add]/20;
+      height: 2.75rem;
+      width: 100%;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-visible);
+      background: var(--bg-input);
+      padding: 0 1rem;
+      color: white;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-placeholder);
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(86, 90, 221, 0.2);
     }
 
     .form-input.input-error {
-      @apply border-[#ef4444];
+      border-color: var(--danger);
     }
 
     .form-select {
-      @apply h-11 w-full rounded-lg border border-[#3b394e] bg-[#252434] px-4 text-white focus:border-[#565add] focus:outline-none;
+      height: 2.75rem;
+      width: 100%;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-visible);
+      background: var(--bg-input);
+      padding: 0 1rem;
+      color: white;
+      outline: none;
+    }
+
+    .form-select:focus {
+      border-color: var(--primary);
+      outline: none;
     }
 
     .error-message {
-      @apply text-xs text-[#ef4444];
+      font-size: 0.75rem;
+      color: var(--danger);
     }
 
     .text-danger {
-      @apply text-[#ef4444];
+      color: var(--danger);
     }
 
     .modal-footer {
-      @apply flex items-center justify-end gap-3 border-t border-[#3b394e] p-6;
+      @apply flex items-center justify-end gap-3 p-6;
+      border-top: 1px solid var(--border-visible);
     }
 
     .btn-secondary {
-      @apply h-11 rounded-lg border border-[#3b394e] px-6 text-sm font-medium text-white transition hover:bg-[#252434];
+      height: 2.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-visible);
+      padding: 0 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: white;
+      background: transparent;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-input);
     }
 
     .btn-primary {
-      @apply flex h-11 items-center gap-2 rounded-lg bg-[#565add] px-6 text-sm font-medium text-white transition hover:bg-[#6b6fe8] disabled:cursor-not-allowed disabled:opacity-50;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      height: 2.75rem;
+      border-radius: 0.5rem;
+      background: var(--primary);
+      padding: 0 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: white;
+      border: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-primary:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   `]
 })
