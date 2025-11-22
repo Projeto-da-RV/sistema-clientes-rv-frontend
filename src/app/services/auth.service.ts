@@ -4,26 +4,26 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Cliente } from '../models/cliente.model';
 import { environment } from '../../environments/environment';
+import { jwtDecode } from 'jwt-decode';
 
-export interface LoginResponse {
-  id: number;
-  nome: string;
-  cpf: string;
+export interface JwtResponse {
+  jwt: string;
+  type: string;
+  username: string;
   email: string;
-  telefone?: string;
-  dataNascimento: string;
-  ativo: boolean;
-  statusCadastro?: string;
-  tentativasLogin?: number;
-  contaBloqueada?: boolean;
-  ultimoLogin?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  roles: string[];
 }
 
 export interface LoginRequest {
-  cpfOuEmail: string;
-  senha: string;
+  username: string;
+  password: string;
+}
+
+export interface JwtPayload {
+  sub: string;
+  roles?: string[];
+  exp: number;
+  iat?: number;
 }
 
 @Injectable({
@@ -31,7 +31,10 @@ export interface LoginRequest {
 })
 export class AuthService {
   private readonly apiUrl = `${environment.apiBaseUrl}/clientes`;
+  private readonly AUTH_URL = `${environment.apiBaseUrl}/auth`;
+  private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'user';
+  private readonly ROLES_KEY = 'roles';
 
   private currentUserSubject = new BehaviorSubject<Cliente | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -43,37 +46,31 @@ export class AuthService {
   /**
    * Realiza login do usuário
    */
-  login(loginData: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, loginData)
+  login(loginData: LoginRequest): Observable<JwtResponse> {
+    return this.http.post<JwtResponse>(`${this.AUTH_URL}/login`, loginData)
       .pipe(
         tap(response => {
-          // Backend retorna o Cliente completo após login bem-sucedido
-          const user: Cliente = {
-            id: response.id,
-            nome: response.nome,
-            cpf: response.cpf,
-            email: response.email || '',
-            telefone: response.telefone,
-            dataNascimento: response.dataNascimento,
-            ativo: response.ativo,
-            statusCadastro: response.statusCadastro,
-            tentativasLogin: response.tentativasLogin,
-            contaBloqueada: response.contaBloqueada,
-            ultimoLogin: response.ultimoLogin,
-            createdAt: response.createdAt,
-            updatedAt: response.updatedAt
+          this.saveToken(response.jwt);
+
+          const user: Partial<Cliente> = {
+            id: undefined,
+            nome: response.username,
+            email: response.email,
+            cpf: '',
+            dataNascimento: ''
           };
 
-          this.setCurrentUser(user);
+          this.setCurrentUser(user as Cliente);
+          localStorage.setItem(this.ROLES_KEY, JSON.stringify(response.roles));
+
+          this.loadUserFromToken();
         }),
         catchError(error => {
           console.error('Erro no login:', error);
           let errorMessage = 'Erro ao fazer login';
 
-          if (error.status === 401 || error.status === 400) {
-            errorMessage = error.error?.erro || 'CPF/Email ou senha inválidos';
-          } else if (error.error?.erro) {
-            errorMessage = error.error.erro;
+          if (error.status === 401) {
+            errorMessage = 'Usuário ou senha inválidos';
           } else if (error.error?.message) {
             errorMessage = error.error.message;
           }
@@ -88,6 +85,8 @@ export class AuthService {
    */
   logout(): void {
     localStorage.removeItem(this.USER_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.ROLES_KEY);
     this.currentUserSubject.next(null);
   }
 
@@ -99,12 +98,29 @@ export class AuthService {
   }
 
   /**
-   * Verifica se o usuário está autenticado
-   * Nota: Backend não usa JWT, apenas sessão/cookie
+   * Verifica se o usuário está autenticado e o token é válido
    */
   isAuthenticated(): boolean {
-    const user = this.getCurrentUser();
-    return user !== null && user.id !== undefined;
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const decoded: JwtPayload = jwtDecode(token);
+      const isExpired = decoded.exp * 1000 < Date.now();
+
+      if (isExpired) {
+        this.logout();
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Erro ao decodificar token JWT:', error);
+      this.logout();
+      return false;
+    }
   }
 
   /**
@@ -139,20 +155,74 @@ export class AuthService {
   }
 
   /**
-   * Obtém o token (compatibilidade com auth interceptor)
-   * Nota: Backend não usa JWT, retorna null
+   * Obtém o token JWT do localStorage
    */
   getToken(): string | null {
-    return null;
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
   /**
-   * Carrega informações do usuário do localStorage
+   * Salva o token JWT no localStorage
+   */
+  private saveToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
+  }
+
+  /**
+   * Verifica se o usuário possui uma role específica
+   */
+  hasRole(role: string): boolean {
+    const roles = this.getRoles();
+    return roles.includes(role);
+  }
+
+  /**
+   * Verifica se o usuário é admin
+   */
+  isAdmin(): boolean {
+    return this.hasRole('ROLE_ADMIN');
+  }
+
+  /**
+   * Obtém as roles do usuário
+   */
+  getRoles(): string[] {
+    const rolesStr = localStorage.getItem(this.ROLES_KEY);
+    if (!rolesStr) return [];
+
+    try {
+      return JSON.parse(rolesStr) as string[];
+    } catch (error) {
+      console.error('Erro ao parsear roles:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Carrega informações do usuário a partir do token JWT
    */
   private loadUserFromToken(): void {
-    const currentUser = this.getCurrentUser();
-    if (currentUser) {
-      this.currentUserSubject.next(currentUser);
+    const token = this.getToken();
+    if (!token) {
+      return;
+    }
+
+    try {
+      const decoded: JwtPayload = jwtDecode(token);
+
+      const isExpired = decoded.exp * 1000 < Date.now();
+      if (isExpired) {
+        this.logout();
+        return;
+      }
+
+      const currentUser = this.getCurrentUser();
+      if (currentUser) {
+        this.currentUserSubject.next(currentUser);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar usuário do token:', error);
+      this.logout();
     }
   }
 

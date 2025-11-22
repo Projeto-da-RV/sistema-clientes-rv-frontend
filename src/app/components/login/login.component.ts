@@ -14,8 +14,8 @@ import { NotificationService } from '../../shared/services/notification.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
-  cpfOuEmail: string = '';
-  senha: string = '';
+  username: string = '';
+  password: string = '';
   loading: boolean = false;
 
   constructor(
@@ -26,7 +26,7 @@ export class LoginComponent {
   ) {}
 
   onLogin() {
-    if (!this.cpfOuEmail || !this.senha) {
+    if (!this.username || !this.password) {
       this.notificationService.error('Por favor, preencha todos os campos');
       return;
     }
@@ -35,13 +35,13 @@ export class LoginComponent {
     this.cdr.markForCheck();
 
     this.authService.login({
-      cpfOuEmail: this.cpfOuEmail,
-      senha: this.senha
+      username: this.username,
+      password: this.password
     }).subscribe({
       next: (response) => {
         this.loading = false;
         this.cdr.markForCheck();
-        this.notificationService.success(`Bem-vindo, ${response.nome}!`).then(() => {
+        this.notificationService.success(`Bem-vindo, ${response.username}!`).then(() => {
           this.router.navigate(['/dashboard']);
         });
       },
