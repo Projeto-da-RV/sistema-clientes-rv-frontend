@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { LucideAngularModule, Home, Users, Folder, Settings, Briefcase, FileText, MessageSquare, User, LogOut, ChevronsLeft, ChevronsRight } from 'lucide-angular';
+import { LucideAngularModule, Home, Users, Folder, Settings, Briefcase, FileText, MessageSquare, User, LogOut, ChevronsLeft, ChevronsRight, ShoppingCart, CreditCard } from 'lucide-angular';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
 
@@ -40,6 +40,8 @@ export class SidebarComponent implements OnInit {
   readonly LogOut = LogOut;
   readonly ChevronsLeft = ChevronsLeft;
   readonly ChevronsRight = ChevronsRight;
+  readonly ShoppingCart = ShoppingCart;
+  readonly CreditCard = CreditCard;
 
   itemSelecionado: string = 'Dashboard';
   username: string = '';
@@ -58,6 +60,8 @@ export class SidebarComponent implements OnInit {
       title: 'Gestão',
       items: [
         { icon: FileText, label: 'Contratos', route: '/contratos' },
+        { icon: ShoppingCart, label: 'Itens de Pedido', route: '/pedido-itens' },
+        { icon: CreditCard, label: 'Métodos de Pagamento', route: '/metodos-pagamento' },
         { icon: Settings, label: 'Configurações', route: '/configuracoes' },
         { icon: MessageSquare, label: 'Mensagens', route: '/mensagens', badge: 3 },
       ]
