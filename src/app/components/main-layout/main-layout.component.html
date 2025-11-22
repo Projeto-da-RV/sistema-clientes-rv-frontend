@@ -1,12 +1,6 @@
-<div class="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+<div class="main-layout">
   <app-sidebar></app-sidebar>
-  <main
-    class="flex-1 transition-all duration-300 overflow-x-hidden"
-    [ngClass]="{
-      'ml-64': !sidebarService.isCollapsed(),
-      'ml-16': sidebarService.isCollapsed()
-    }"
-  >
+  <main class="content" [class.sidebar-collapsed]="sidebarService.isCollapsed()">
     <router-outlet></router-outlet>
   </main>
 </div>

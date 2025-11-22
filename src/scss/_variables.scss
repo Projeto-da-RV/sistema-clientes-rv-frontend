@@ -1,150 +1,90 @@
 /* ===================================================================
-   RV Digital - Official Brand Design System
-   Corporate Identity Colors & Design Tokens
+   RV Digital - PALETA OFICIAL
+   Cores Definidas pela Identidade Visual
    ================================================================ */
 
-/* ===================================================================
-   PALETA OFICIAL RV DIGITAL
-   ================================================================ */
 :root {
   /* ============================================
-     PRIMARY COLORS - Navy Blue (RV Digital)
+     PRIMARY COLORS
      ============================================ */
-  --primary-600: #01124f;
-  --primary-500: #012063;
-  --primary-400: #023080;
-  --primary-700: #000d3a;
-  --primary-800: #000a2b;
+  --primary: #565add;
+  --primary-foreground: #f0f1ff;
+  --primary-rgb: 86, 90, 221;
 
   /* ============================================
-     SECONDARY COLORS - Cyan Blue (RV Digital)
+     SECONDARY COLORS
      ============================================ */
-  --secondary-600: #9ae7f4;
-  --secondary-500: #b0edf7;
-  --secondary-400: #c6f3fa;
-  --secondary-700: #7dd9ed;
-  --secondary-800: #5fcbe6;
+  --secondary: #2b1c50;
+  --secondary-foreground: #f0f1ff;
+  --secondary-rgb: 43, 28, 80;
 
   /* ============================================
-     ACCENT COLORS - Gold/Yellow (RV Digital)
+     BACKGROUND & FOREGROUND
      ============================================ */
-  --accent-600: #fecc01;
-  --accent-500: #fed734;
-  --accent-400: #fee15c;
-  --accent-700: #e5b801;
-  --accent-800: #cca301;
+  --background: #111019;
+  --foreground: #FFFFFF;
 
   /* ============================================
-     TERTIARY COLORS - Orange Gold (RV Digital)
+     CARDS
      ============================================ */
-  --tertiary-600: #e3a331;
-  --tertiary-500: #e8b14d;
-  --tertiary-400: #edbf69;
-  --tertiary-700: #ce9222;
-  --tertiary-800: #b98215;
+  --card: #111019;
+  --card-foreground: #FFFFFF;
 
   /* ============================================
-     WHITE & NEUTRAL COLORS
+     ACCENT (Destaque Verde)
      ============================================ */
-  --white: #ffffff;
-  --white-90: rgba(255, 255, 255, 0.9);
-  --white-80: rgba(255, 255, 255, 0.8);
-  --white-70: rgba(255, 255, 255, 0.7);
-  --white-60: rgba(255, 255, 255, 0.6);
-  --white-50: rgba(255, 255, 255, 0.5);
+  --accent: #142a19;
+  --accent-foreground: #c5e2c9;
+  --accent-rgb: 20, 42, 25;
 
   /* ============================================
-     GRADIENTS - RV Digital Brand (Simplificados)
+     MUTED (Elementos Suaves)
      ============================================ */
-  --gradient-primary: linear-gradient(135deg, #01124f 0%, #023080 100%);
-  --gradient-secondary: linear-gradient(135deg, #9ae7f4 0%, #5fcbe6 100%);
-  --gradient-accent: linear-gradient(135deg, #fecc01 0%, #fed734 100%);
-  --gradient-hero: linear-gradient(135deg, #01124f 0%, #012063 50%, #023080 100%);
+  --muted: #252434;
+  --muted-foreground: #bbb6c6;
+  --muted-rgb: 37, 36, 52;
 
   /* ============================================
-     BACKGROUNDS - Light Mode
+     BORDERS & INPUTS
      ============================================ */
-  --bg-primary: #fafbfc;
-  --bg-secondary: #f3f4f6;
-  --bg-card: #ffffff;
-  --bg-elevated: #ffffff;
-  --bg-hover: #f9fafb;
-  --bg-active: #f3f4f6;
-
-  /* Glassmorphism backgrounds */
-  --bg-glass: rgba(255, 255, 255, 0.8);
-  --bg-glass-dark: rgba(255, 255, 255, 0.6);
-  --bg-glass-light: rgba(255, 255, 255, 0.95);
+  --border: #3b394e;
+  --input: #252434;
+  --ring: #565add;
 
   /* ============================================
-     TEXT COLORS - High Contrast
+     BORDER RADIUS
      ============================================ */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --text-muted: #94a3b8;
-  --text-disabled: #cbd5e1;
-  --text-on-primary: #ffffff;
-  --text-on-dark: #f8fafc;
-  --text-on-accent: #01124f;
+  --radius: 0.5rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
 
   /* ============================================
-     BORDERS - Subtle & Clean
-     ============================================ */
-  --border-light: #e2e8f0;
-  --border-medium: #cbd5e1;
-  --border-dark: #94a3b8;
-  --border-primary: #01124f;
-  --border-secondary: #9ae7f4;
-  --border-accent: #fecc01;
-
-  /* ============================================
-     SHADOWS - Elevated & Soft
-     ============================================ */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 2px 8px rgba(1, 18, 79, 0.08);
-  --shadow-md: 0 4px 16px rgba(1, 18, 79, 0.12);
-  --shadow-lg: 0 8px 32px rgba(1, 18, 79, 0.16);
-  --shadow-xl: 0 12px 48px rgba(1, 18, 79, 0.2);
-  --shadow-2xl: 0 24px 64px rgba(1, 18, 79, 0.24);
-
-  /* Colored shadows - RV Digital */
-  --shadow-primary: 0 8px 24px rgba(1, 18, 79, 0.25);
-  --shadow-secondary: 0 8px 24px rgba(154, 231, 244, 0.3);
-  --shadow-accent: 0 8px 24px rgba(254, 204, 1, 0.35);
-  --shadow-gold: 0 8px 24px rgba(227, 163, 49, 0.3);
-
-  /* ============================================
-     STATUS COLORS - Clear & Vibrant
+     STATUS COLORS
      ============================================ */
   --success: #10b981;
   --success-light: #d1fae5;
   --success-dark: #059669;
+  --success-rgb: 16, 185, 129;
 
   --error: #ef4444;
   --error-light: #fee2e2;
   --error-dark: #dc2626;
+  --error-rgb: 239, 68, 68;
 
   --warning: #fecc01;
   --warning-light: #fef3c7;
   --warning-dark: #e5b801;
-
-  --info: #9ae7f4;
-  --info-light: #e8f9fc;
-  --info-dark: #5fcbe6;
-
-  /* ============================================
-     RGB VALUES - Para transparências
-     ============================================ */
-  --primary-rgb: 1, 18, 79;
-  --secondary-rgb: 154, 231, 244;
-  --accent-rgb: 254, 204, 1;
-  --tertiary-rgb: 227, 163, 49;
-  --white-rgb: 255, 255, 255;
-  --success-rgb: 16, 185, 129;
-  --error-rgb: 239, 68, 68;
   --warning-rgb: 254, 204, 1;
-  --info-rgb: 154, 231, 244;
+
+  --info: #565add;
+  --info-light: #f0f1ff;
+  --info-dark: #3b3a8f;
+  --info-rgb: 86, 90, 221;
 
   /* ============================================
      SPACING SCALE - Consistent 8px Grid
@@ -164,18 +104,21 @@
   --space-24: 6rem;      /* 96px */
 
   /* ============================================
-     BORDER RADIUS - Rounded & Modern
+     SHADOWS
      ============================================ */
-  --radius-sm: 0.375rem;   /* 6px */
-  --radius-md: 0.5rem;     /* 8px */
-  --radius-lg: 0.75rem;    /* 12px */
-  --radius-xl: 1rem;       /* 16px */
-  --radius-2xl: 1.25rem;   /* 20px */
-  --radius-3xl: 1.5rem;    /* 24px */
-  --radius-full: 9999px;
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.3);
+  --shadow-2xl: 0 24px 64px rgba(0, 0, 0, 0.35);
+
+  --shadow-primary: 0 8px 24px rgba(86, 90, 221, 0.3);
+  --shadow-secondary: 0 8px 24px rgba(43, 28, 80, 0.3);
+  --shadow-accent: 0 8px 24px rgba(20, 42, 25, 0.3);
 
   /* ============================================
-     TRANSITIONS - Smooth & Performant
+     TRANSITIONS
      ============================================ */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -183,7 +126,7 @@
   --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
   /* ============================================
-     TYPOGRAPHY SCALE - Modern & Readable
+     TYPOGRAPHY SCALE
      ============================================ */
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
@@ -210,7 +153,7 @@
   --leading-relaxed: 1.75;
 
   /* ============================================
-     Z-INDEX SCALE - Layering System
+     Z-INDEX SCALE
      ============================================ */
   --z-base: 0;
   --z-dropdown: 100;
@@ -224,16 +167,7 @@
   --z-max: 9999;
 
   /* ============================================
-     BREAKPOINTS - Responsive Design
-     ============================================ */
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
-
-  /* ============================================
-     EFFECTS - Modern UI Elements
+     EFFECTS
      ============================================ */
   --blur-sm: 4px;
   --blur-md: 8px;
@@ -242,31 +176,6 @@
 
   --backdrop-blur: blur(12px) saturate(180%);
   --backdrop-blur-strong: blur(20px) saturate(200%);
-}
-
-/* ===================================================================
-   DARK MODE (Optional - Future Enhancement)
-   ================================================================ */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: var(--primary-700);
-    --bg-secondary: var(--primary-600);
-    --bg-card: var(--primary-600);
-    --bg-elevated: var(--primary-500);
-
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-tertiary: #94a3b8;
-    --text-muted: #64748b;
-
-    --border-light: rgba(var(--white-rgb), 0.12);
-    --border-medium: rgba(var(--white-rgb), 0.2);
-    --border-dark: rgba(var(--white-rgb), 0.3);
-
-    --bg-glass: rgba(var(--primary-rgb), 0.8);
-    --bg-glass-dark: rgba(var(--primary-rgb), 0.6);
-    --bg-glass-light: rgba(var(--primary-rgb), 0.95);
-  }
 }
 
 /* ===================================================================

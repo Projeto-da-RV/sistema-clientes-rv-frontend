@@ -1,9 +1,35 @@
-/* Main Layout - Usando Tailwind CSS */
-/* Apenas estilos necessários que não podem ser feitos com classes utilitárias */
+/* Main Layout - Usando Paleta Oficial RV Digital */
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  main {
-    margin-left: 0 !important;
+.main-layout {
+  min-height: 100vh;
+  background: var(--background); // #111019
+  display: flex;
+}
+
+.content {
+  flex: 1;
+  margin-left: 220px;
+  padding: var(--space-8) var(--space-6);
+  transition: all var(--transition-normal);
+  min-height: 100vh;
+  width: calc(100% - 220px);
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+  &.sidebar-collapsed {
+    margin-left: 64px;
+    width: calc(100% - 64px);
+  }
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    width: 100%;
+    padding: var(--space-4);
+
+    &.sidebar-collapsed {
+      margin-left: 0;
+      width: 100%;
+    }
   }
 }

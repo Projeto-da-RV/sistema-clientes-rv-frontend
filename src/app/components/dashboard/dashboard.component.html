@@ -1,214 +1,149 @@
-<div class="flex-1 bg-gray-50 dark:bg-gray-950 p-6 overflow-auto">
+<div class="dashboard">
   <!-- Cabeçalho -->
-  <div class="flex items-center justify-between mb-8">
-    <div>
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Painel</h1>
-      <p class="text-gray-600 dark:text-gray-400 mt-1">Bem-vindo de volta ao seu painel</p>
+  <div class="dashboard-header">
+    <div class="header-info">
+      <h1>Painel</h1>
+      <p>Bem-vindo de volta ao seu painel</p>
     </div>
-    <div class="flex items-center gap-4">
-      <!-- Botão Notificação -->
-      <button class="relative p-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-        <lucide-icon [img]="Bell" class="h-5 w-5"></lucide-icon>
-        <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+    <div class="header-actions">
+      <button class="btn-icon notification">
+        <lucide-icon [img]="Bell"></lucide-icon>
+        <span class="notification-badge"></span>
       </button>
-      <!-- Botão Usuário -->
-      <button class="p-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-        <lucide-icon [img]="Users" class="h-5 w-5"></lucide-icon>
+      <button class="btn-icon">
+        <lucide-icon [img]="Users"></lucide-icon>
       </button>
     </div>
   </div>
 
   <!-- Grid de Estatísticas -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="stats-grid">
     @for (stat of estatisticas; track stat.titulo) {
-      <a
-        [routerLink]="stat.link"
-        class="block p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <div
-            class="p-2 rounded-lg"
-            [ngClass]="{
-              'bg-blue-50 dark:bg-blue-900/20': stat.corIcone === 'azul',
-              'bg-green-50 dark:bg-green-900/20': stat.corIcone === 'verde',
-              'bg-purple-50 dark:bg-purple-900/20': stat.corIcone === 'roxo',
-              'bg-orange-50 dark:bg-orange-900/20': stat.corIcone === 'laranja'
-            }"
-          >
-            <lucide-icon
-              [img]="stat.icone"
-              class="h-5 w-5"
-              [ngClass]="{
-                'text-blue-600 dark:text-blue-400': stat.corIcone === 'azul',
-                'text-green-600 dark:text-green-400': stat.corIcone === 'verde',
-                'text-purple-600 dark:text-purple-400': stat.corIcone === 'roxo',
-                'text-orange-600 dark:text-orange-400': stat.corIcone === 'laranja'
-              }"
-            ></lucide-icon>
+      <a [routerLink]="stat.link" class="stat-card">
+        <div class="card-header">
+          <div class="icon-container" [ngClass]="stat.corIcone">
+            <lucide-icon [img]="stat.icone"></lucide-icon>
           </div>
-          <lucide-icon [img]="TrendingUp" class="h-4 w-4 text-green-500"></lucide-icon>
+          <lucide-icon [img]="TrendingUp" class="trending-icon"></lucide-icon>
         </div>
-        <h3 class="font-medium text-gray-600 dark:text-gray-400 mb-1 text-sm">{{ stat.titulo }}</h3>
-        <p class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        <h3>{{ stat.titulo }}</h3>
+        <p class="stat-value">
           @if (loading) {
-            <span class="animate-pulse">--</span>
+            <span class="loading-shimmer">--</span>
           } @else {
             {{ stat.valor }}
           }
         </p>
-        <p class="text-sm text-green-600 dark:text-green-400 mt-1">{{ stat.variacao }}</p>
+        <p class="stat-variation">{{ stat.variacao }}</p>
       </a>
     }
   </div>
 
   <!-- Grid de Conteúdo Principal -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <!-- Atividade Recente (2 colunas) -->
-    <div class="lg:col-span-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Atividade Recente</h3>
-        <button class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors">
-          Ver tudo
-        </button>
+  <div class="content-grid">
+    <!-- Atividade Recente -->
+    <div class="activity-card">
+      <div class="card-title">
+        <h3>Atividade Recente</h3>
+        <button class="btn-link">Ver tudo</button>
       </div>
-      <div class="space-y-4">
+      <div class="activity-list">
         @for (atividade of atividades; track atividade.titulo) {
-          <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
-            <div
-              class="p-2 rounded-lg flex-shrink-0"
-              [ngClass]="{
-                'bg-green-50 dark:bg-green-900/20': atividade.cor === 'verde',
-                'bg-blue-50 dark:bg-blue-900/20': atividade.cor === 'azul',
-                'bg-purple-50 dark:bg-purple-900/20': atividade.cor === 'roxo',
-                'bg-orange-50 dark:bg-orange-900/20': atividade.cor === 'laranja',
-                'bg-red-50 dark:bg-red-900/20': atividade.cor === 'vermelho'
-              }"
-            >
-              <lucide-icon
-                [img]="atividade.icone"
-                class="h-4 w-4"
-                [ngClass]="{
-                  'text-green-600 dark:text-green-400': atividade.cor === 'verde',
-                  'text-blue-600 dark:text-blue-400': atividade.cor === 'azul',
-                  'text-purple-600 dark:text-purple-400': atividade.cor === 'roxo',
-                  'text-orange-600 dark:text-orange-400': atividade.cor === 'laranja',
-                  'text-red-600 dark:text-red-400': atividade.cor === 'vermelho'
-                }"
-              ></lucide-icon>
+          <div class="activity-item">
+            <div class="activity-icon" [ngClass]="atividade.cor">
+              <lucide-icon [img]="atividade.icone"></lucide-icon>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                {{ atividade.titulo }}
-              </p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                {{ atividade.descricao }}
-              </p>
+            <div class="activity-info">
+              <p class="activity-title">{{ atividade.titulo }}</p>
+              <p class="activity-description">{{ atividade.descricao }}</p>
             </div>
-            <div class="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">
-              {{ atividade.tempo }}
-            </div>
+            <div class="activity-time">{{ atividade.tempo }}</div>
           </div>
         }
       </div>
     </div>
 
-    <!-- Coluna Lateral (1 coluna) -->
-    <div class="space-y-6">
+    <!-- Coluna Lateral -->
+    <div class="sidebar-column">
       <!-- Estatísticas Rápidas -->
-      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Estatísticas Rápidas</h3>
-        <div class="space-y-4">
+      <div class="quick-stats-card">
+        <h3>Estatísticas Rápidas</h3>
+        <div class="stats-list">
           <!-- Taxa de Conversão -->
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm text-gray-600 dark:text-gray-400">Taxa de Conversão</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-gray-100">3.2%</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 32%"></div>
-            </div>
+          <div class="stat-item">
+            <span class="label">Taxa de Conversão</span>
+            <span class="value">3.2%</span>
           </div>
+          <div class="progress-bar">
+            <div class="progress azul" style="width: 32%"></div>
+          </div>
+
           <!-- Taxa de Retenção -->
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm text-gray-600 dark:text-gray-400">Taxa de Retenção</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-gray-100">85%</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div class="bg-green-500 h-2 rounded-full transition-all duration-300" style="width: 85%"></div>
-            </div>
+          <div class="stat-item">
+            <span class="label">Taxa de Retenção</span>
+            <span class="value">85%</span>
           </div>
+          <div class="progress-bar">
+            <div class="progress verde" style="width: 85%"></div>
+          </div>
+
           <!-- Crescimento -->
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-sm text-gray-600 dark:text-gray-400">Crescimento</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-gray-100">12%</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div class="bg-purple-500 h-2 rounded-full transition-all duration-300" style="width: 72%"></div>
-            </div>
+          <div class="stat-item">
+            <span class="label">Crescimento</span>
+            <span class="value">12%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress roxo" style="width: 72%"></div>
           </div>
         </div>
       </div>
 
       <!-- Top Serviços -->
-      <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Serviços Principais</h3>
+      <div class="top-products-card">
+        <h3>Serviços Principais</h3>
         @if (produtosTop.length > 0) {
-          <div class="space-y-3">
+          <div class="products-list">
             @for (produto of produtosTop; track produto.nome) {
-              <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
-                <span class="text-sm text-gray-600 dark:text-gray-400 truncate">{{ produto.nome }}</span>
-                <span class="text-sm font-medium text-gray-900 dark:text-gray-100 ml-2">R$ {{ produto.valor.toFixed(2) }}</span>
+              <div class="product-item">
+                <span class="product-name">{{ produto.nome }}</span>
+                <span class="product-price">R$ {{ produto.valor.toFixed(2) }}</span>
               </div>
             }
           </div>
         } @else {
-          <p class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">Nenhum serviço cadastrado</p>
+          <p class="empty-message">Nenhum serviço cadastrado</p>
         }
       </div>
     </div>
   </div>
 
   <!-- Ações Rápidas -->
-  <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
-    <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">Ações Rápidas</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <a
-        routerLink="/clientes/novo"
-        class="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-      >
-        <div class="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-          <lucide-icon [img]="Plus" class="h-5 w-5"></lucide-icon>
+  <div class="quick-actions-card">
+    <h2>Ações Rápidas</h2>
+    <div class="actions-grid">
+      <a routerLink="/clientes/novo" class="action-card">
+        <div class="action-icon azul">
+          <lucide-icon [img]="Plus"></lucide-icon>
         </div>
-        <span class="font-semibold text-gray-900 dark:text-gray-100">Novo Cliente</span>
+        <span>Novo Cliente</span>
       </a>
-      <a
-        routerLink="/contratos/novo"
-        class="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-      >
-        <div class="p-2 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
-          <lucide-icon [img]="FileText" class="h-5 w-5"></lucide-icon>
+      <a routerLink="/contratos/novo" class="action-card">
+        <div class="action-icon verde">
+          <lucide-icon [img]="FileText"></lucide-icon>
         </div>
-        <span class="font-semibold text-gray-900 dark:text-gray-100">Novo Contrato</span>
+        <span>Novo Contrato</span>
       </a>
-      <a
-        routerLink="/servicos/novo"
-        class="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-      >
-        <div class="p-2 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
-          <lucide-icon [img]="Settings" class="h-5 w-5"></lucide-icon>
+      <a routerLink="/servicos/novo" class="action-card">
+        <div class="action-icon roxo">
+          <lucide-icon [img]="Settings"></lucide-icon>
         </div>
-        <span class="font-semibold text-gray-900 dark:text-gray-100">Novo Serviço</span>
+        <span>Novo Serviço</span>
       </a>
-      <a
-        routerLink="/categorias/novo"
-        class="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-      >
-        <div class="p-2 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">
-          <lucide-icon [img]="Tag" class="h-5 w-5"></lucide-icon>
+      <a routerLink="/categorias/novo" class="action-card">
+        <div class="action-icon laranja">
+          <lucide-icon [img]="Tag"></lucide-icon>
         </div>
-        <span class="font-semibold text-gray-900 dark:text-gray-100">Nova Categoria</span>
+        <span>Nova Categoria</span>
       </a>
     </div>
   </div>
