@@ -1,232 +1,374 @@
-<div class="cliente-list">
-  <!-- Header da página com novo padrão -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1>Clientes</h1>
-      <span class="subtitle">Gestão completa de clientes cadastrados</span>
+<div class="cliente-list-container">
+  <!-- Card Container -->
+  <div class="card-wrapper">
+    <!-- Header -->
+    <div class="header-section">
+      <div class="header-info">
+        <h3 class="title">Lista de Clientes</h3>
+        <p class="subtitle">Gerencie os clientes cadastrados no sistema.</p>
+      </div>
+      <div class="header-actions">
+        <!-- Botão Exportar -->
+        <button
+          (click)="exportar()"
+          class="btn-export"
+          title="Exportar dados">
+          <lucide-icon [img]="Download" [size]="20"></lucide-icon>
+          <span>Exportar</span>
+        </button>
+        <!-- Botão Novo Cliente -->
+        <a
+          routerLink="/clientes/novo"
+          class="btn-primary">
+          <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+          <span>Novo Cliente</span>
+        </a>
+      </div>
     </div>
-    <div class="header-actions">
-      <a routerLink="/clientes/novo" class="btn btn-primary">
-        <span>Novo Cliente</span>
-      </a>
-    </div>
-  </div>
 
-  <!-- Card de Filtros com novo padrão -->
-  <div class="filter-bar">
-    <div class="filter-content">
-      <!-- Campo de busca por nome -->
-      <div class="input-group">
-        <label>Buscar por nome</label>
-        <div class="input-wrapper">
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-section">
+      <div class="search-filter-content">
+        <!-- Campo de Busca -->
+        <div class="search-box">
+          <span class="search-icon">
+            <lucide-icon [img]="Search" [size]="20"></lucide-icon>
+          </span>
           <input
             type="text"
-            class="input-field"
-            [(ngModel)]="filtroNome"
-            (keyup.enter)="buscarPorNome()"
-            (input)="aplicarFiltros()"
-            placeholder="Digite o nome do cliente">
+            placeholder="Buscar cliente..."
+            [(ngModel)]="termoBusca"
+            (ngModelChange)="aplicarFiltros()"
+            class="search-input"
+          />
         </div>
-      </div>
 
-      <!-- Campo de busca por CPF -->
-      <div class="input-group">
-        <label>Buscar por CPF</label>
-        <div class="input-wrapper">
-          <input
-            type="text"
-            class="input-field"
-            [(ngModel)]="filtroCpf"
-            (keyup.enter)="buscarPorCpf()"
-            (input)="aplicarFiltros()"
-            placeholder="Digite o CPF">
-        </div>
-      </div>
-
-      <!-- Botões de ação -->
-      <div class="btn-group">
-        <button class="btn btn-primary" (click)="filtrar()">
-          <span>Filtrar</span>
-        </button>
-
-        <button class="btn btn-secondary" (click)="limparFiltros()">
-          <span>Limpar</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contador de resultados -->
-  <div class="resultados-info">
-    <span class="text-secondary">{{ contadorResultados }}</span>
-  </div>
-
-  <!-- Tabela de resultados com novo padrão -->
-  <div class="table-container">
-    @if (loading) {
-      <div class="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Carregando clientes...</p>
-      </div>
-    } @else if (clientesFiltrados.length === 0) {
-      <div class="empty-state">
-        <div class="empty-icon">📋</div>
-        <h3>Nenhum cliente encontrado</h3>
-        <p>{{ clientes.length === 0 ? 'Você ainda não possui clientes cadastrados.' : 'Não há clientes que correspondam aos filtros selecionados.' }}</p>
-
-        @if (clientes.length === 0) {
-          <!-- Se não há clientes no total, mostra botão para cadastrar -->
-          <a routerLink="/clientes/novo" class="btn btn-primary">
-            <span>Cadastrar Primeiro Cliente</span>
-          </a>
-        } @else {
-          <!-- Se há clientes mas filtro não encontrou, mostra botão para limpar filtros -->
-          <button class="btn btn-secondary" (click)="limparFiltros()">
-            <span>Limpar Filtros</span>
+        <!-- Botão Filtro -->
+        <div class="filter-dropdown-wrapper relative">
+          <button
+            (click)="toggleFiltro(); $event.stopPropagation()"
+            class="btn-filter"
+            title="Filtros avançados">
+            <lucide-icon [img]="SlidersHorizontal" [size]="20"></lucide-icon>
+            <span>Filtrar</span>
           </button>
-        }
+
+          <!-- Dropdown de Filtro -->
+          <div *ngIf="mostrarFiltro" class="filter-dropdown" (click)="$event.stopPropagation()">
+            <div class="filter-group">
+              <label class="filter-label">Status</label>
+              <select
+                [(ngModel)]="filtroStatus"
+                class="filter-select">
+                <option value="">Todos</option>
+                <option value="ativo">Ativo</option>
+                <option value="inativo">Inativo</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Tipo</label>
+              <select
+                [(ngModel)]="filtroTipo"
+                class="filter-select">
+                <option value="">Todos</option>
+                <option value="pf">Pessoa Física</option>
+                <option value="pj">Pessoa Jurídica</option>
+              </select>
+            </div>
+            <button
+              (click)="aplicarFiltroDropdown()"
+              class="btn-apply-filter">
+              Aplicar
+            </button>
+          </div>
+        </div>
       </div>
-    } @else {
-      <!-- Tabela Desktop -->
-      <div class="tabela-desktop">
-        <table class="tabela">
-          <thead>
-            <tr>
-              <th class="col-id">
-                <div class="th-content">
-                  <span>ID</span>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Carregando clientes...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && clientesPaginados.length === 0" class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3>Nenhum cliente encontrado</h3>
+      <p>{{ clientes.length === 0 ? 'Você ainda não possui clientes cadastrados.' : 'Não há clientes que correspondam aos filtros selecionados.' }}</p>
+
+      <a *ngIf="clientes.length === 0" routerLink="/clientes/novo" class="btn-primary">
+        <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
+        <span>Cadastrar Primeiro Cliente</span>
+      </a>
+
+      <button *ngIf="clientes.length > 0" (click)="limparFiltros()" class="btn-secondary">
+        <span>Limpar Filtros</span>
+      </button>
+    </div>
+
+    <!-- Tabela -->
+    <div *ngIf="!loading && clientesPaginados.length > 0" class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <!-- Checkbox All -->
+            <th class="col-checkbox">
+              <label class="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  class="checkbox-input"
+                  (change)="toggleSelecionarTodos()"
+                  [checked]="todosSelecionados()"
+                />
+                <span
+                  class="checkbox-custom"
+                  [class.checked]="todosSelecionados()">
+                  <lucide-icon
+                    *ngIf="todosSelecionados()"
+                    [img]="Check"
+                    [size]="12"
+                  ></lucide-icon>
+                </span>
+              </label>
+            </th>
+
+            <!-- Coluna Cliente -->
+            <th
+              (click)="ordenarPor('nome')"
+              class="col-sortable">
+              <div class="th-content">
+                <span class="th-label">Cliente</span>
+                <div class="sort-icons">
+                  <lucide-icon
+                    [img]="ChevronUp"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'nome' && ordenacao.direcao === 'asc'"
+                  ></lucide-icon>
+                  <lucide-icon
+                    [img]="ChevronDown"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'nome' && ordenacao.direcao === 'desc'"
+                  ></lucide-icon>
                 </div>
-              </th>
-              <th class="col-nome">
-                <div class="th-content">
-                  <span>Nome</span>
+              </div>
+            </th>
+
+            <!-- Coluna Email -->
+            <th
+              (click)="ordenarPor('email')"
+              class="col-sortable">
+              <div class="th-content">
+                <span class="th-label">Email</span>
+                <div class="sort-icons">
+                  <lucide-icon
+                    [img]="ChevronUp"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'email' && ordenacao.direcao === 'asc'"
+                  ></lucide-icon>
+                  <lucide-icon
+                    [img]="ChevronDown"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'email' && ordenacao.direcao === 'desc'"
+                  ></lucide-icon>
                 </div>
-              </th>
-              <th class="col-cpf">
-                <div class="th-content">
-                  <span>CPF</span>
+              </div>
+            </th>
+
+            <!-- Coluna Telefone -->
+            <th>
+              <span class="th-label">Telefone</span>
+            </th>
+
+            <!-- Coluna Tipo -->
+            <th>
+              <span class="th-label">Tipo</span>
+            </th>
+
+            <!-- Coluna Status -->
+            <th>
+              <span class="th-label">Status</span>
+            </th>
+
+            <!-- Coluna CPF -->
+            <th
+              (click)="ordenarPor('dataCadastro')"
+              class="col-sortable">
+              <div class="th-content">
+                <span class="th-label">CPF</span>
+                <div class="sort-icons">
+                  <lucide-icon
+                    [img]="ChevronUp"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'dataCadastro' && ordenacao.direcao === 'asc'"
+                  ></lucide-icon>
+                  <lucide-icon
+                    [img]="ChevronDown"
+                    [size]="10"
+                    [class.active]="ordenacao.coluna === 'dataCadastro' && ordenacao.direcao === 'desc'"
+                  ></lucide-icon>
                 </div>
-              </th>
-              <th class="col-email">
-                <div class="th-content">
-                  <span>E-mail</span>
+              </div>
+            </th>
+
+            <!-- Coluna Ações -->
+            <th class="col-actions">
+              <span class="sr-only">Ações</span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let cliente of clientesPaginados"
+            class="table-row">
+            <!-- Checkbox -->
+            <td class="col-checkbox">
+              <label class="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  class="checkbox-input"
+                  [checked]="selecionados.includes(cliente.id!)"
+                  (change)="toggleSelecao(cliente.id)"
+                />
+                <span
+                  class="checkbox-custom"
+                  [class.checked]="selecionados.includes(cliente.id!)">
+                  <lucide-icon
+                    *ngIf="selecionados.includes(cliente.id!)"
+                    [img]="Check"
+                    [size]="12"
+                  ></lucide-icon>
+                </span>
+              </label>
+            </td>
+
+            <!-- Nome + Avatar -->
+            <td>
+              <div class="client-info">
+                <div class="client-avatar">
+                  <span>{{ cliente.nome | iniciais }}</span>
                 </div>
-              </th>
-              <th class="col-status">
-                <div class="th-content">
-                  <span>Status</span>
+                <span class="client-name">{{ cliente.nome }}</span>
+              </div>
+            </td>
+
+            <!-- Email -->
+            <td>
+              <span class="text-muted">{{ cliente.email || '-' }}</span>
+            </td>
+
+            <!-- Telefone -->
+            <td>
+              <span class="text-muted">{{ cliente.telefone || '-' }}</span>
+            </td>
+
+            <!-- Tipo -->
+            <td>
+              <span class="text-muted">{{ getTipoCliente(cliente) }}</span>
+            </td>
+
+            <!-- Status Badge -->
+            <td>
+              <span
+                class="status-badge"
+                [class.status-active]="cliente.ativo"
+                [class.status-inactive]="!cliente.ativo">
+                {{ cliente.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </td>
+
+            <!-- CPF -->
+            <td>
+              <span class="text-muted">{{ cliente.cpf }}</span>
+            </td>
+
+            <!-- Ações Dropdown -->
+            <td class="col-actions">
+              <div class="actions-dropdown-wrapper relative">
+                <button
+                  (click)="toggleMenuAcoes(cliente.id); $event.stopPropagation()"
+                  class="btn-actions"
+                  title="Mais ações">
+                  <lucide-icon [img]="MoreHorizontal" [size]="20"></lucide-icon>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div
+                  *ngIf="menuAcoesAberto === cliente.id"
+                  class="actions-dropdown"
+                  (click)="$event.stopPropagation()">
+                  <button
+                    (click)="verDetalhes(cliente.id)"
+                    class="dropdown-item">
+                    <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
+                    <span>Ver Detalhes</span>
+                  </button>
+                  <button
+                    (click)="editar(cliente.id)"
+                    class="dropdown-item">
+                    <lucide-icon [img]="Edit" [size]="16"></lucide-icon>
+                    <span>Editar</span>
+                  </button>
+                  <button
+                    (click)="excluir(cliente.id)"
+                    class="dropdown-item danger">
+                    <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
+                    <span>Excluir</span>
+                  </button>
                 </div>
-              </th>
-              <th class="col-actions">
-                <div class="th-content">
-                  <span>Ações</span>
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (cliente of clientesFiltrados; track cliente.id) {
-              <tr class="tabela-row">
-                <td class="col-id">
-                  <span class="id-badge">{{ cliente.id }}</span>
-                </td>
-                <td class="col-nome">
-                  <div class="cliente-nome">
-                    <strong>{{ cliente.nome }}</strong>
-                  </div>
-                </td>
-                <td class="col-cpf">
-                  <span class="cpf-texto">{{ cliente.cpf }}</span>
-                </td>
-                <td class="col-email">
-                  <span class="email-texto">{{ cliente.email || '-' }}</span>
-                </td>
-                <td class="col-status">
-                  <span class="status-badge" 
-                        [class.ativo]="cliente.ativo"
-                        [class.inativo]="!cliente.ativo">
-                    <span>{{ cliente.ativo ? 'Ativo' : 'Inativo' }}</span>
-                  </span>
-                </td>
-                <td class="col-actions">
-                  <div class="action-buttons">
-                    <a [routerLink]="['/clientes', cliente.id, 'editar']" 
-                       class="btn-action btn-editar"
-                       title="Editar dados do cliente"
-                       attr.aria-label="Editar cliente {{ cliente.nome }}">
-                      <span class="action-text">Editar</span>
-                    </a>
-                    <button class="btn-action btn-excluir" 
-                            (click)="confirmarExclusao(cliente)"
-                            title="Excluir cliente permanentemente"
-                            attr.aria-label="Excluir cliente {{ cliente.nome }}">
-                      <span class="action-text">Excluir</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação -->
+    <div *ngIf="!loading && clientesPaginados.length > 0" class="pagination-section">
+      <!-- Info -->
+      <div class="pagination-info">
+        <span>
+          Mostrando <strong>{{ itemInicial }}</strong> a <strong>{{ itemFinal }}</strong> de <strong>{{ totalClientes }}</strong>
+        </span>
       </div>
 
-      <!-- Cards Mobile -->
-      <div class="cards-mobile">
-        @for (cliente of clientesFiltrados; track cliente.id) {
-          <div class="cliente-card">
-            <div class="card-header">
-              <div class="cliente-info">
-                <span class="id-badge">{{ cliente.id }}</span>
-                <h4 class="cliente-nome">{{ cliente.nome }}</h4>
-              </div>
-              <div class="status-badge" 
-                   [class.ativo]="cliente.ativo"
-                   [class.inativo]="!cliente.ativo">
-                <span>{{ cliente.ativo ? 'Ativo' : 'Inativo' }}</span>
-              </div>
-            </div>
-            
-            <div class="card-body">
-              <div class="info-item">
-                <span class="label">CPF:</span>
-                <span class="value">{{ cliente.cpf }}</span>
-              </div>
-              
-              @if (cliente.email) {
-                <div class="info-item">
-                  <span class="label">E-mail:</span>
-                  <span class="value">{{ cliente.email }}</span>
-                </div>
-              }
-              
-              @if (cliente.telefone) {
-                <div class="info-item">
-                  <span class="label">Telefone:</span>
-                  <span class="value">{{ cliente.telefone }}</span>
-                </div>
-              }
-              
-              @if (cliente.dataNascimento) {
-                <div class="info-item">
-                  <span class="label">Nascimento:</span>
-                  <span class="value">{{ cliente.dataNascimento | date:'dd/MM/yyyy' }}</span>
-                </div>
-              }
-            </div>
-            
-            <div class="card-footer">
-              <a [routerLink]="['/clientes', cliente.id, 'editar']" 
-                 class="btn-action btn-editar">
-                <span>Editar</span>
-              </a>
-              <button class="btn-action btn-excluir" 
-                      (click)="confirmarExclusao(cliente)">
-                <span>Excluir</span>
-              </button>
-            </div>
-          </div>
-        }
+      <!-- Controles -->
+      <div class="pagination-controls">
+        <!-- Botão Anterior -->
+        <button
+          (click)="paginaAnterior()"
+          [disabled]="paginaAtual === 1"
+          class="btn-pagination"
+          title="Página anterior">
+          <lucide-icon [img]="ChevronLeft" [size]="20"></lucide-icon>
+        </button>
+
+        <!-- Números de Página (Desktop) -->
+        <div class="page-numbers">
+          <button
+            *ngFor="let pagina of paginas"
+            (click)="irParaPagina(pagina)"
+            class="btn-page"
+            [class.active]="paginaAtual === pagina">
+            {{ pagina }}
+          </button>
+        </div>
+
+        <!-- Info Mobile -->
+        <span class="page-info-mobile">
+          Página {{ paginaAtual }} de {{ totalPaginas }}
+        </span>
+
+        <!-- Botão Próximo -->
+        <button
+          (click)="proximaPagina()"
+          [disabled]="paginaAtual === totalPaginas"
+          class="btn-pagination"
+          title="Próxima página">
+          <lucide-icon [img]="ChevronRight" [size]="20"></lucide-icon>
+        </button>
       </div>
-    }
+    </div>
   </div>
 </div>
