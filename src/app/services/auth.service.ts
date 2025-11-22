@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 import { jwtDecode } from 'jwt-decode';
 
 export interface JwtResponse {
-  jwt: string;
+  token: string;  // Backend retorna "token", não "jwt"
   type: string;
   username: string;
   email: string;
@@ -51,11 +51,11 @@ export class AuthService {
       .pipe(
         tap(response => {
           console.log('✅ Login response:', response);
-          console.log('🔑 Token recebido:', response.jwt);
+          console.log('🔑 Token recebido:', response.token);
 
           // Valida formato do token antes de salvar
-          if (response.jwt) {
-            const parts = response.jwt.split('.');
+          if (response.token) {
+            const parts = response.token.split('.');
             console.log('📊 Token tem', parts.length, 'partes (esperado: 3)');
             if (parts.length !== 3) {
               console.error('❌ Token JWT inválido recebido do backend!');
@@ -63,7 +63,7 @@ export class AuthService {
             }
           }
 
-          this.saveToken(response.jwt);
+          this.saveToken(response.token);
 
           const user: Partial<Cliente> = {
             id: undefined,
