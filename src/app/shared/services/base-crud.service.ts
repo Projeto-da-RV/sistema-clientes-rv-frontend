@@ -132,6 +132,34 @@ export abstract class BaseCrudService<T extends BaseEntity> {
       console.error('URL:', error.url);
       console.error('Status:', error.status);
       console.error('Mensagem:', error.message);
+
+      // Tenta extrair o texto da resposta para debug
+      if (error.error && typeof error.error === 'object') {
+        console.error('Tipo do erro:', error.error.constructor.name);
+        console.error('Erro completo:', error.error);
+      }
+    } else if (error.status === 200 && error.message.includes('parsing')) {
+      // Status 200 mas erro de parsing = JSON malformado (geralmente referência circular)
+      errorMessage = 'Backend retornou JSON inválido. Possível referência circular nos relacionamentos.';
+      console.error('❌ Erro de parsing com status 200 - Provável referência circular!');
+      console.error('URL:', error.url);
+      console.error('Mensagem:', error.message);
+
+      // Tenta mostrar parte do JSON problemático
+      if (error.error && error.error.text) {
+        const text = error.error.text;
+        console.error('Tamanho da resposta:', text.length, 'caracteres');
+        console.error('Início do JSON:', text.substring(0, 500));
+        console.error('Fim do JSON:', text.substring(Math.max(0, text.length - 500)));
+
+        // Tenta identificar o erro de sintaxe
+        const match = error.message.match(/position (\d+)/);
+        if (match) {
+          const pos = parseInt(match[1]);
+          console.error('Posição do erro:', pos);
+          console.error('Contexto do erro:', text.substring(Math.max(0, pos - 100), Math.min(text.length, pos + 100)));
+        }
+      }
     } else {
       // Erro do lado do servidor
       switch (error.status) {
