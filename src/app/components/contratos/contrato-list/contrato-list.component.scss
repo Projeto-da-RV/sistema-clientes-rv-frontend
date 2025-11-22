@@ -458,6 +458,12 @@ $danger-bg-visible: rgba(239, 68, 68, 0.2);
             color: #bbb6c6 !important;
           }
 
+          .text-primary {
+            font-size: var(--text-sm);
+            font-weight: var(--font-semibold);
+            color: var(--foreground) !important;
+          }
+
           .contrato-numero {
             font-size: var(--text-sm);
             font-weight: var(--font-bold);
