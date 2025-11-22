@@ -1,124 +1,82 @@
-/* Sidebar Component - RV Digital Modern Layout */
-/* Paleta de Cores Otimizada para Contraste */
+/* Sidebar Component - RV Digital Official Palette */
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--background);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  transition: width var(--transition-normal);
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 220px;
-  background: var(--primary-600); // ✓ Fundo escuro (Navy Blue #01124f)
-  border-right: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda sutil clara
-  box-shadow: var(--shadow-primary);
   z-index: 1000;
-  transition: all var(--transition-normal);
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
 
-  &.collapsed {
-    width: 64px; // Reduzido de 72px para 64px
+  &.expandida {
+    width: 10rem; // 160px
+  }
 
-    .sidebar-header .brand h3 {
-      opacity: 0;
-      transform: scale(0.8);
-      visibility: hidden;
-    }
-
-    .nav-text,
-    .user-details {
-      opacity: 0;
-      transform: translateX(-10px);
-      visibility: hidden;
-      width: 0;
-      overflow: hidden;
-    }
-
-    .dropdown-icon {
-      opacity: 0;
-      display: none;
-    }
+  &.colapsada {
+    width: 4rem; // 64px
   }
 }
 
-/* Header do Sidebar */
-.sidebar-header {
-  padding: var(--space-6) var(--space-4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda clara sutil
+/* Logo Section */
+.logo-section {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 72px;
-  background: var(--primary-700); // ✓ Fundo um pouco mais escuro para diferenciação (#000d3a)
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--muted-foreground);
+  transition: all var(--transition-normal);
+  min-height: 4.5rem;
 
-  .sidebar.collapsed & {
-    padding: var(--space-4);
+  .colapsada & {
     justify-content: center;
-    flex-direction: column;
-    gap: var(--space-2);
+    padding: var(--space-4);
   }
 
-  .brand {
-    transition: all var(--transition-normal);
-
-    h3 {
-      color: var(--white); // ✓ Branco para contraste em fundo escuro
-      margin: 0;
-      font-size: var(--text-xl);
-      font-weight: var(--font-bold);
-      letter-spacing: -0.02em;
-      transition: all var(--transition-normal);
-    }
-
-    .brand-icon {
-      color: var(--accent-600); // ✓ Dourado para destaque (#fecc01)
-      font-size: var(--text-lg);
-      font-weight: var(--font-extrabold);
-      display: block;
-      text-align: center;
-      line-height: 1;
-    }
-
-    &.collapsed {
-      text-align: center;
-      margin-bottom: 0;
-    }
+  &:hover {
+    color: var(--foreground);
   }
 
-  .toggle-btn {
-    background: rgba(255, 255, 255, 0.1); // ✓ Fundo semi-transparente
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--white-80); // ✓ Branco com 80% opacidade
-    padding: var(--space-2);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all var(--transition-fast);
+  .logo-icon {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 2rem;
+    height: 2rem;
     flex-shrink: 0;
 
-    .sidebar.collapsed & {
-      padding: var(--space-2);
-      width: 32px;
-      height: 32px;
+    .logo-svg {
+      width: 100%;
+      height: 100%;
+      color: var(--primary);
     }
+  }
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.2); // ✓ Mais opaco no hover
-      border-color: rgba(255, 255, 255, 0.3);
-      color: var(--white); // ✓ Branco total no hover
-    }
+  .logo-text {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--foreground);
+    white-space: nowrap;
+    opacity: 1;
+    transition: all var(--transition-normal);
 
-    lucide-icon {
-      width: 18px;
-      height: 18px;
+    .colapsada & {
+      opacity: 0;
+      width: 0;
+      visibility: hidden;
     }
   }
 }
 
-/* Navigation */
-.sidebar-nav {
+/* Menu Container */
+.menu-container {
   flex: 1;
   padding: var(--space-4) 0;
   overflow-y: auto;
@@ -129,325 +87,314 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05); // ✓ Track escuro sutil
+    background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2); // ✓ Thumb claro
-    border-radius: var(--radius-sm);
+    background: var(--border);
+    border-radius: var(--radius);
 
     &:hover {
-      background: rgba(255, 255, 255, 0.3); // ✓ Mais claro no hover
+      background: var(--muted-foreground);
     }
   }
 }
 
-.nav-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* Section Divider */
+.section-divider {
+  width: calc(100% - var(--space-8));
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-4) auto;
 }
 
-.nav-item {
-  margin-bottom: var(--space-1);
-
-  &.dropdown {
-    position: relative;
-
-    &.active {
-      .nav-link.dropdown-toggle {
-        background: rgba(255, 255, 255, 0.1); // ✓ Fundo claro sutil
-        color: var(--accent-600); // ✓ Dourado para destaque
-      }
-    }
-  }
+/* Section Title */
+.section-title {
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.625rem;
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+  margin-top: var(--space-2);
 }
 
-.sidebar.collapsed .nav-item.dropdown .nav-link.dropdown-toggle {
-  padding: var(--space-3) 0;
-  justify-content: center;
-
-  lucide-icon {
-    margin: 0 auto;
-  }
-}
-
-.nav-link {
+/* Menu Item */
+.menu-item {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  color: var(--white-80); // ✓ Branco com 80% opacidade (INATIVO)
+  margin: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
   text-decoration: none;
-  background: none;
-  border: none;
-  width: 100%;
-  cursor: pointer;
+  color: var(--muted-foreground);
   transition: all var(--transition-fast);
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
   position: relative;
-  border-radius: var(--radius-md);
-  margin: 0 var(--space-2);
-  width: calc(100% - var(--space-4));
+  cursor: pointer;
 
-  .sidebar.collapsed & {
-    padding: var(--space-3) 0;
+  .colapsada & {
     justify-content: center;
+    padding: var(--space-3);
     gap: 0;
-    margin: 0 var(--space-1);
-    width: calc(100% - var(--space-2));
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1); // ✓ Fundo branco com 10% (HOVER)
-    color: var(--white); // ✓ Branco total no hover
+    background: var(--muted);
+    color: var(--foreground);
   }
 
-  &.active,
-  &.router-link-active {
-    background: var(--accent-600); // ✓ Dourado vibrante para ATIVO (#fecc01)
-    color: var(--primary-800); // ✓ Azul muito escuro para contraste (#000a2b)
-    font-weight: var(--font-semibold);
+  &.ativo {
+    background: var(--muted);
+    color: var(--foreground);
+
+    .item-icon {
+      color: var(--primary);
+    }
 
     &::before {
       content: '';
       position: absolute;
       left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px;
+      top: 20%;
       height: 60%;
-      background: var(--primary-800); // ✓ Azul escuro
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      width: 3px;
+      background: var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
     }
   }
 
-  lucide-icon {
-    width: 20px;
-    height: 20px;
+  .item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
     flex-shrink: 0;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast);
 
-    .sidebar.collapsed & {
-      margin: 0 auto;
+    lucide-icon {
+      display: flex;
     }
   }
 
-  .nav-text {
+  .item-label {
     flex: 1;
-    transition: all var(--transition-fast);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
     white-space: nowrap;
-  }
+    opacity: 1;
+    transition: all var(--transition-normal);
 
-  &.dropdown-toggle {
-    .dropdown-icon {
-      width: 14px;
-      height: 14px;
-      margin-left: auto;
-      transition: all var(--transition-fast);
+    .colapsada & {
+      opacity: 0;
+      width: 0;
+      visibility: hidden;
     }
   }
-}
 
-/* Dropdown Menu */
-.dropdown-menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: all var(--transition-fast);
-
-  &.show {
-    max-height: 250px;
-    padding: var(--space-1) 0;
+  // Badge de Notificação
+  .item-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-full);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.625rem;
+    font-weight: var(--font-semibold);
+    line-height: 1;
   }
 
-  &.collapsed-menu {
+  .item-badge-dot {
     position: absolute;
-    left: 74px;
-    top: 0;
-    background: var(--primary-700); // ✓ Fundo escuro para dropdown (#000d3a)
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda clara sutil
-    min-width: 200px;
-    z-index: 1001;
-    max-height: none;
-    padding: var(--space-2);
-  }
-
-  li {
-    margin: 0;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--primary);
   }
 }
 
-.dropdown-item {
+/* Sidebar Footer */
+.sidebar-footer {
+  border-top: 1px solid var(--border);
+  padding: var(--space-4);
+  background: var(--card);
+}
+
+/* User Section */
+.user-section {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-10);
-  color: var(--white-70); // ✓ Branco com 70% opacidade (INATIVO)
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  background: var(--muted);
+  border-radius: var(--radius-lg);
   text-decoration: none;
-  font-size: var(--text-sm);
+  color: var(--foreground);
   transition: all var(--transition-fast);
-  border-radius: var(--radius-md);
-  margin: 0 var(--space-2);
-  width: calc(100% - var(--space-4));
 
-  .collapsed-menu & {
-    padding: var(--space-2) var(--space-4);
-    color: var(--white-70); // ✓ Mesma cor no dropdown colapsado
-    margin: 0;
-    width: 100%;
+  .colapsada & {
+    justify-content: center;
+    padding: var(--space-2);
+    gap: 0;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1); // ✓ Fundo claro no hover
-    color: var(--white); // ✓ Branco total no hover
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--foreground);
 
-    .collapsed-menu & {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--accent-600); // ✓ Dourado no hover do dropdown
+    .user-avatar {
+      background: var(--primary);
+      color: var(--primary-foreground);
     }
   }
 
-  &.active,
-  &.router-link-active {
-    background: rgba(var(--accent-rgb), 0.2); // ✓ Dourado com 20% opacidade
-    color: var(--accent-600); // ✓ Dourado vibrante
-    font-weight: var(--font-semibold);
-
-    .collapsed-menu & {
-      background: rgba(var(--accent-rgb), 0.2);
-      color: var(--accent-600);
-    }
-  }
-
-  lucide-icon {
-    width: 16px;
-    height: 16px;
+  .user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-full);
+    background: var(--background);
+    color: var(--muted-foreground);
+    flex-shrink: 0;
     transition: all var(--transition-fast);
-  }
-}
 
-/* Footer/User Section */
-.sidebar-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.1); // ✓ Borda clara sutil
-  padding: var(--space-4);
-  background: var(--primary-700); // ✓ Fundo escuro (#000d3a)
+    lucide-icon {
+      display: flex;
+    }
+  }
 
   .user-info {
     display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    margin-bottom: var(--space-3);
-    padding: var(--space-3);
-    background: rgba(255, 255, 255, 0.05); // ✓ Fundo claro muito sutil
-    border-radius: var(--radius-lg);
+    flex-direction: column;
+    gap: var(--space-1);
+    overflow: hidden;
+    opacity: 1;
     transition: all var(--transition-normal);
 
-    &.collapsed {
-      justify-content: center;
-      padding: var(--space-2);
-
-      .user-details {
-        display: none;
-      }
+    .colapsada & {
+      opacity: 0;
+      width: 0;
+      visibility: hidden;
     }
 
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      background: var(--accent-600); // ✓ Avatar dourado (#fecc01)
-      border-radius: var(--radius-full);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all var(--transition-fast);
-
-      lucide-icon {
-        width: 20px;
-        height: 20px;
-        color: var(--primary-800); // ✓ Ícone azul escuro para contraste
-      }
+    .user-name {
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      color: var(--foreground);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .user-details {
-      flex: 1;
-      transition: all var(--transition-fast);
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
 
-      .user-name {
-        display: block;
-        color: var(--white); // ✓ Nome em branco
-        font-weight: var(--font-semibold);
-        font-size: var(--text-sm);
-        margin-bottom: var(--space-1);
-      }
+/* Logout Button */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-lg);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
 
-      .user-role {
-        display: block;
-        color: var(--white-60); // ✓ Role em branco com 60% opacidade
-        font-size: var(--text-xs);
-      }
+  .colapsada & {
+    gap: 0;
+    padding: var(--space-3);
+
+    span {
+      display: none;
     }
   }
 
-  .logout-btn {
+  &:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  lucide-icon {
+    flex-shrink: 0;
     display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    width: 100%;
-    padding: var(--space-3);
-    background: rgba(var(--error-rgb), 0.15); // ✓ Vermelho com 15% opacidade
-    border: 1px solid rgba(var(--error-rgb), 0.3);
-    color: var(--error-light); // ✓ Vermelho claro para contraste em fundo escuro
-    border-radius: var(--radius-lg);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    font-size: var(--text-sm);
-    font-weight: var(--font-medium);
+  }
 
-    .sidebar.collapsed & {
-      justify-content: center;
-      padding: var(--space-3);
-      gap: 0;
+  span {
+    white-space: nowrap;
+  }
+}
 
-      span {
-        display: none;
-      }
-    }
+/* Toggle Button */
+.toggle-btn {
+  position: absolute;
+  bottom: var(--space-4);
+  right: calc(var(--space-4) * -1);
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-full);
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
 
-    &:hover {
-      background: var(--error);
-      color: white;
-      border-color: var(--error-dark);
-      box-shadow: var(--shadow-md);
-    }
+  &:hover {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+    transform: scale(1.1);
+  }
 
-    lucide-icon {
-      width: 18px;
-      height: 18px;
-      transition: all var(--transition-fast);
-    }
+  lucide-icon {
+    display: flex;
   }
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
   .sidebar {
-    width: 260px;
     transform: translateX(-100%);
 
-    &:not(.collapsed) {
+    &.expandida {
       transform: translateX(0);
+      width: 16rem;
     }
 
-    &.collapsed {
+    &.colapsada {
       transform: translateX(-100%);
-      width: 260px;
     }
+  }
+
+  .toggle-btn {
+    right: calc(var(--space-4) * -3);
   }
 }

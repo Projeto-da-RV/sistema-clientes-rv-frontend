@@ -1,6 +1,8 @@
 <div class="main-layout">
-  <app-sidebar></app-sidebar>
-  <main class="content" [class.sidebar-collapsed]="sidebarService.isCollapsed()">
+  <app-sidebar
+    [(expandida)]="sidebarExpandida"
+  ></app-sidebar>
+  <main class="content" [class.sidebar-colapsada]="!sidebarExpandida">
     <router-outlet></router-outlet>
   </main>
 </div>

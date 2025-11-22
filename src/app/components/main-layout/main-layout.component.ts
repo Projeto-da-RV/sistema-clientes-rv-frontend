@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../shared/sidebar/sidebar.component';
-import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -13,5 +12,25 @@ import { SidebarService } from '../../services/sidebar.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainLayoutComponent {
-  constructor(public sidebarService: SidebarService) {}
+  sidebarExpandida: boolean = true;
+
+  constructor() {
+    this.initMobileResponsive();
+  }
+
+  /**
+   * Inicializa sidebar colapsada em dispositivos móveis
+   */
+  private initMobileResponsive(): void {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      this.sidebarExpandida = false;
+    }
+  }
+
+  /**
+   * Callback quando sidebar muda de estado
+   */
+  onSidebarToggle(expandida: boolean): void {
+    this.sidebarExpandida = expandida;
+  }
 }

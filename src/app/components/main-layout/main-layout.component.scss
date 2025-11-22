@@ -2,24 +2,24 @@
 
 .main-layout {
   min-height: 100vh;
-  background: var(--background); // #111019
+  background: var(--background);
   display: flex;
 }
 
 .content {
   flex: 1;
-  margin-left: 220px;
+  margin-left: 10rem; // 160px - Sidebar expandida
   padding: var(--space-8) var(--space-6);
-  transition: all var(--transition-normal);
+  transition: margin-left var(--transition-normal), width var(--transition-normal);
   min-height: 100vh;
-  width: calc(100% - 220px);
+  width: calc(100% - 10rem);
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
 
-  &.sidebar-collapsed {
-    margin-left: 64px;
-    width: calc(100% - 64px);
+  &.sidebar-colapsada {
+    margin-left: 4rem; // 64px - Sidebar colapsada
+    width: calc(100% - 4rem);
   }
 
   @media (max-width: 768px) {
@@ -27,7 +27,7 @@
     width: 100%;
     padding: var(--space-4);
 
-    &.sidebar-collapsed {
+    &.sidebar-colapsada {
       margin-left: 0;
       width: 100%;
     }

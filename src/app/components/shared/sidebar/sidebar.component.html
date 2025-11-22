@@ -1,138 +1,78 @@
-<aside class="sidebar" [class.collapsed]="sidebarCollapsed">
-  <!-- Header do Sidebar -->
-  <div class="sidebar-header">
-    <div class="brand" [class.collapsed]="sidebarCollapsed">
-      <h3 *ngIf="!sidebarCollapsed">RV Digital</h3>
-      <span *ngIf="sidebarCollapsed" class="brand-icon">RV</span>
+<!-- Sidebar Container -->
+<nav
+  class="sidebar"
+  [class.expandida]="expandida"
+  [class.colapsada]="!expandida"
+>
+  <!-- Logo Section -->
+  <a class="logo-section" routerLink="/dashboard">
+    <div class="logo-icon">
+      <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"/>
+      </svg>
     </div>
-    <button class="toggle-btn" (click)="toggleSidebar()">
-      <lucide-icon [img]="sidebarCollapsed ? Menu : X"></lucide-icon>
-    </button>
+    <span class="logo-text" *ngIf="expandida">RV Digital</span>
+  </a>
+
+  <!-- Menu Sections -->
+  <div class="menu-container">
+    <ng-container *ngFor="let section of menuPrincipal; let i = index">
+      <!-- Section Divider -->
+      <div class="section-divider" *ngIf="i > 0"></div>
+
+      <!-- Section Title (only when expanded) -->
+      <div class="section-title" *ngIf="section.title && expandida">
+        {{ section.title }}
+      </div>
+
+      <!-- Menu Items -->
+      <a
+        *ngFor="let item of section.items"
+        class="menu-item"
+        [class.ativo]="isItemAtivo(item.label)"
+        [routerLink]="item.route"
+        routerLinkActive="ativo"
+        (click)="selecionarItem(item.label)"
+        [title]="!expandida ? item.label : ''"
+      >
+        <div class="item-icon">
+          <lucide-icon [img]="item.icon" [size]="20"></lucide-icon>
+        </div>
+        <span class="item-label" *ngIf="expandida">{{ item.label }}</span>
+
+        <!-- Badge de Notificação -->
+        <span class="item-badge" *ngIf="item.badge && expandida">
+          {{ item.badge }}
+        </span>
+        <span class="item-badge-dot" *ngIf="item.badge && !expandida"></span>
+      </a>
+    </ng-container>
   </div>
 
-  <!-- Navigation Menu -->
-  <nav class="sidebar-nav">
-    <ul class="nav-list">
-      <!-- Dashboard -->
-      <li class="nav-item">
-        <a routerLink="/dashboard" 
-           routerLinkActive="active" 
-           class="nav-link"
-           [title]="sidebarCollapsed ? 'Dashboard' : ''">
-          <lucide-icon [img]="Home"></lucide-icon>
-          <span *ngIf="!sidebarCollapsed" class="nav-text">Dashboard</span>
-        </a>
-      </li>
-
-      <!-- Cadastros Dropdown -->
-      <li class="nav-item dropdown" [class.active]="isCadastrosActive || cadastrosOpen">
-        <button class="nav-link dropdown-toggle" 
-                (click)="toggleCadastros()"
-                [title]="sidebarCollapsed ? 'Cadastros' : ''">
-          <lucide-icon [img]="Users"></lucide-icon>
-          <span *ngIf="!sidebarCollapsed" class="nav-text">Cadastros</span>
-          <lucide-icon *ngIf="!sidebarCollapsed" 
-                       [img]="cadastrosOpen ? ChevronDown : ChevronRight" 
-                       class="dropdown-icon"></lucide-icon>
-        </button>
-        
-        <ul class="dropdown-menu" 
-            [class.show]="cadastrosOpen && !sidebarCollapsed"
-            [class.collapsed-menu]="sidebarCollapsed && cadastrosOpen">
-          <li>
-            <a routerLink="/clientes" 
-               routerLinkActive="active" 
-               class="dropdown-item"
-               [title]="sidebarCollapsed ? 'Clientes' : ''">
-              <lucide-icon [img]="User"></lucide-icon>
-              <span *ngIf="!sidebarCollapsed">Clientes</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/categorias" 
-               routerLinkActive="active" 
-               class="dropdown-item"
-               [title]="sidebarCollapsed ? 'Categorias' : ''">
-              <lucide-icon [img]="Tag"></lucide-icon>
-              <span *ngIf="!sidebarCollapsed">Categorias</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/servicos" 
-               routerLinkActive="active" 
-               class="dropdown-item"
-               [title]="sidebarCollapsed ? 'Serviços' : ''">
-              <lucide-icon [img]="Settings"></lucide-icon>
-              <span *ngIf="!sidebarCollapsed">Serviços</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-
-      <!-- Gestão Dropdown -->
-      <li class="nav-item dropdown" [class.active]="isGestaoActive || gestaoOpen">
-        <button class="nav-link dropdown-toggle" 
-                (click)="toggleGestao()"
-                [title]="sidebarCollapsed ? 'Gestão' : ''">
-          <lucide-icon [img]="Briefcase"></lucide-icon>
-          <span *ngIf="!sidebarCollapsed" class="nav-text">Gestão</span>
-          <lucide-icon *ngIf="!sidebarCollapsed" 
-                       [img]="gestaoOpen ? ChevronDown : ChevronRight" 
-                       class="dropdown-icon"></lucide-icon>
-        </button>
-        
-        <ul class="dropdown-menu" 
-            [class.show]="gestaoOpen && !sidebarCollapsed"
-            [class.collapsed-menu]="sidebarCollapsed && gestaoOpen">
-          <li>
-            <a routerLink="/contratos" 
-               routerLinkActive="active" 
-               class="dropdown-item"
-               [title]="sidebarCollapsed ? 'Contratos' : ''">
-              <lucide-icon [img]="FileText"></lucide-icon>
-              <span *ngIf="!sidebarCollapsed">Contratos</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/enderecos" 
-               routerLinkActive="active" 
-               class="dropdown-item"
-               [title]="sidebarCollapsed ? 'Endereços' : ''">
-              <lucide-icon [img]="MapPin"></lucide-icon>
-              <span *ngIf="!sidebarCollapsed">Endereços</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="/itens" 
-               routerLinkActive="active" 
-               class="dropdown-item"
-               [title]="sidebarCollapsed ? 'Itens' : ''">
-              <lucide-icon [img]="Package"></lucide-icon>
-              <span *ngIf="!sidebarCollapsed">Itens</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- User Section -->
+  <!-- User Section (Footer) -->
   <div class="sidebar-footer">
-    <div class="user-info" [class.collapsed]="sidebarCollapsed">
+    <a class="user-section" routerLink="/perfil">
       <div class="user-avatar">
-        <lucide-icon [img]="User"></lucide-icon>
+        <lucide-icon [img]="User" [size]="20"></lucide-icon>
       </div>
-      <div *ngIf="!sidebarCollapsed" class="user-details">
+      <div class="user-info" *ngIf="expandida">
         <span class="user-name">{{ username }}</span>
         <span class="user-role">{{ userRole }}</span>
       </div>
-    </div>
-    
-    <button class="logout-btn" 
-            (click)="logout()"
-            [title]="sidebarCollapsed ? 'Sair' : ''">
-      <lucide-icon [img]="LogOut"></lucide-icon>
-      <span *ngIf="!sidebarCollapsed">Sair</span>
+    </a>
+
+    <!-- Logout Button -->
+    <button class="logout-btn" (click)="logout()" [title]="!expandida ? 'Sair' : ''">
+      <lucide-icon [img]="LogOut" [size]="18"></lucide-icon>
+      <span *ngIf="expandida">Sair</span>
     </button>
   </div>
-</aside>
+
+  <!-- Toggle Button -->
+  <button class="toggle-btn" (click)="alternarSidebar()" [title]="expandida ? 'Recolher menu' : 'Expandir menu'">
+    <lucide-icon
+      [img]="expandida ? ChevronsLeft : ChevronsRight"
+      [size]="18"
+    ></lucide-icon>
+  </button>
+</nav>
