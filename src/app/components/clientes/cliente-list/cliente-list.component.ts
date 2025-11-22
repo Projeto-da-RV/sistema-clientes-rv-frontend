@@ -416,16 +416,6 @@ export class ClienteListComponent implements OnInit {
   }
 
   private criarCliente(cliente: Cliente): void {
-    console.log('🔍 Dados que serão enviados para criar cliente:', cliente);
-    console.log('🔍 Tipo de cada campo:', {
-      nome: typeof cliente.nome,
-      email: typeof cliente.email,
-      telefone: typeof cliente.telefone,
-      cpf: typeof cliente.cpf,
-      dataNascimento: typeof cliente.dataNascimento,
-      ativo: typeof cliente.ativo
-    });
-
     this.clienteService.criar(cliente).subscribe({
       next: (clienteCriado) => {
         this.ngZone.run(() => {
@@ -435,13 +425,11 @@ export class ClienteListComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('❌ Erro ao criar cliente:', error);
-        console.error('❌ Dados que causaram erro:', cliente);
-        if (error.error) {
-          console.error('❌ Erro do backend:', error.error);
-        }
-        this.notificationService.showError('Erro ao cadastrar cliente. Verifique o console para detalhes.');
-        // NÃO fechar o modal para permitir correção
+        this.ngZone.run(() => {
+          console.error('Erro ao criar cliente:', error);
+          const mensagemErro = error.error?.erro || 'Erro ao cadastrar cliente';
+          this.notificationService.showError(mensagemErro);
+        });
       }
     });
   }
@@ -458,9 +446,11 @@ export class ClienteListComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Erro ao atualizar cliente:', error);
-        this.notificationService.showError('Erro ao atualizar cliente');
-        this.fecharModal();
+        this.ngZone.run(() => {
+          console.error('Erro ao atualizar cliente:', error);
+          const mensagemErro = error.error?.erro || 'Erro ao atualizar cliente';
+          this.notificationService.showError(mensagemErro);
+        });
       }
     });
   }

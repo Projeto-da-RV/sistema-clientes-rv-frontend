@@ -57,9 +57,13 @@ export class ClienteModalComponent implements OnChanges, OnDestroy {
         this.form.get('senha')?.setValidators([Validators.required, Validators.minLength(6)]);
         this.form.get('senha')?.updateValueAndValidity();
       }
+      // Resetar estado de carregamento
+      this.carregando = false;
     } else {
-      // Restaurar scroll da página
+      // Restaurar scroll da página e resetar estado
       document.body.style.overflow = '';
+      this.carregando = false;
+      this.form.reset({ ativo: true });
     }
   }
 
