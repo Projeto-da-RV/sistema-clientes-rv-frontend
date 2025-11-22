@@ -17,12 +17,12 @@
           <span>Exportar</span>
         </button>
         <!-- Botão Novo Cliente -->
-        <a
-          routerLink="/clientes/novo"
+        <button
+          (click)="abrirModalCriar()"
           class="btn-primary">
           <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
           <span>Novo Cliente</span>
-        </a>
+        </button>
       </div>
     </div>
 
@@ -97,10 +97,10 @@
       <h3>Nenhum cliente encontrado</h3>
       <p>{{ clientes.length === 0 ? 'Você ainda não possui clientes cadastrados.' : 'Não há clientes que correspondam aos filtros selecionados.' }}</p>
 
-      <a *ngIf="clientes.length === 0" routerLink="/clientes/novo" class="btn-primary">
+      <button *ngIf="clientes.length === 0" (click)="abrirModalCriar()" class="btn-primary">
         <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
         <span>Cadastrar Primeiro Cliente</span>
-      </a>
+      </button>
 
       <button *ngIf="clientes.length > 0" (click)="limparFiltros()" class="btn-secondary">
         <span>Limpar Filtros</span>
@@ -371,4 +371,13 @@
       </div>
     </div>
   </div>
+
+  <!-- ⭐ MODAL - Cliente ⭐ -->
+  <app-cliente-modal
+    [aberto]="modalAberto"
+    [modo]="modalModo"
+    [cliente]="clienteSelecionado"
+    (fecharModal)="fecharModal()"
+    (salvarCliente)="salvarCliente($event)"
+  ></app-cliente-modal>
 </div>

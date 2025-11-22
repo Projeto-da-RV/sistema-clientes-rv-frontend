@@ -1,0 +1,154 @@
+<!-- Overlay -->
+<div
+  *ngIf="aberto"
+  (click)="onOverlayClick($event)"
+  class="modal-overlay"
+>
+  <!-- Modal Card -->
+  <div
+    class="modal-card"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title">{{ titulo }}</h2>
+        <p class="modal-description">{{ descricao }}</p>
+      </div>
+      <button
+        (click)="fechar()"
+        type="button"
+        class="btn-close"
+        aria-label="Fechar modal"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <form [formGroup]="form" class="form-container">
+
+        <!-- Linha 1: Nome e Email -->
+        <div class="form-grid">
+          <!-- Nome -->
+          <div class="form-field">
+            <label class="form-label">
+              Nome <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              formControlName="nome"
+              placeholder="Nome completo do cliente"
+              class="form-input"
+              [class.input-error]="form.get('nome')?.invalid && form.get('nome')?.touched"
+            />
+            <p *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched" class="error-message">
+              Nome é obrigatório (mínimo 3 caracteres)
+            </p>
+          </div>
+
+          <!-- Email -->
+          <div class="form-field">
+            <label class="form-label">
+              Email <span class="text-danger">*</span>
+            </label>
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="email@exemplo.com"
+              class="form-input"
+              [class.input-error]="form.get('email')?.invalid && form.get('email')?.touched"
+            />
+            <p *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error-message">
+              Email inválido
+            </p>
+          </div>
+        </div>
+
+        <!-- Linha 2: Telefone e CPF -->
+        <div class="form-grid">
+          <!-- Telefone -->
+          <div class="form-field">
+            <label class="form-label">
+              Telefone <span class="text-danger">*</span>
+            </label>
+            <input
+              type="tel"
+              formControlName="telefone"
+              placeholder="(00) 00000-0000"
+              class="form-input"
+              [class.input-error]="form.get('telefone')?.invalid && form.get('telefone')?.touched"
+            />
+            <p *ngIf="form.get('telefone')?.invalid && form.get('telefone')?.touched" class="error-message">
+              Telefone é obrigatório
+            </p>
+          </div>
+
+          <!-- CPF -->
+          <div class="form-field">
+            <label class="form-label">
+              CPF <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              formControlName="cpf"
+              placeholder="000.000.000-00"
+              class="form-input"
+              [class.input-error]="form.get('cpf')?.invalid && form.get('cpf')?.touched"
+            />
+            <p *ngIf="form.get('cpf')?.invalid && form.get('cpf')?.touched" class="error-message">
+              CPF é obrigatório
+            </p>
+          </div>
+        </div>
+
+        <!-- Linha 3: Status -->
+        <div class="form-grid-single">
+          <div class="form-field">
+            <label class="form-label">
+              Status <span class="text-danger">*</span>
+            </label>
+            <select
+              formControlName="ativo"
+              class="form-select"
+            >
+              <option [value]="true">Ativo</option>
+              <option [value]="false">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <!-- Botão Fechar -->
+      <button
+        (click)="fechar()"
+        type="button"
+        class="btn-secondary"
+      >
+        Fechar
+      </button>
+
+      <!-- Botão Salvar -->
+      <button
+        (click)="salvar()"
+        type="button"
+        [disabled]="carregando"
+        class="btn-primary"
+      >
+        <svg *ngIf="carregando" class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ labelBotaoSalvar }}
+      </button>
+    </div>
+  </div>
+</div>

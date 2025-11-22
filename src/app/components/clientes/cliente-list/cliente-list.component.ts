@@ -7,6 +7,7 @@ import { ClienteService } from '../../../services/cliente.service';
 import { Cliente } from '../../../models/cliente.model';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { IniciaisPipe } from '../../../shared/pipes/iniciais.pipe';
+import { ClienteModalComponent } from '../cliente-modal/cliente-modal.component';
 
 interface Ordenacao {
   coluna: string;
@@ -21,7 +22,8 @@ interface Ordenacao {
     RouterModule,
     FormsModule,
     LucideAngularModule,
-    IniciaisPipe
+    IniciaisPipe,
+    ClienteModalComponent
   ],
   templateUrl: './cliente-list.component.html',
   styleUrls: ['./cliente-list.component.scss'],
@@ -58,6 +60,11 @@ export class ClienteListComponent implements OnInit {
   filtroStatus: string = '';
   filtroTipo: string = '';
   menuAcoesAberto: number | null = null;
+
+  // Modal
+  modalAberto: boolean = false;
+  modalModo: 'criar' | 'editar' = 'criar';
+  clienteSelecionado: Cliente | null = null;
 
   // Ordenação
   ordenacao: Ordenacao = { coluna: 'nome', direcao: 'asc' };
@@ -335,7 +342,9 @@ export class ClienteListComponent implements OnInit {
 
   editar(id: number | undefined): void {
     if (!id) return;
-    this.router.navigate(['/clientes', id, 'editar']);
+    const cliente = this.clientes.find(c => c.id === id);
+    if (!cliente) return;
+    this.abrirModalEditar(cliente);
     this.menuAcoesAberto = null;
   }
 
@@ -376,6 +385,70 @@ export class ClienteListComponent implements OnInit {
    */
   exportar(): void {
     this.notificationService.showSuccess('Funcionalidade de exportação em desenvolvimento');
+  }
+
+  /**
+   * Métodos do Modal
+   */
+  abrirModalCriar(): void {
+    this.modalModo = 'criar';
+    this.clienteSelecionado = null;
+    this.modalAberto = true;
+  }
+
+  abrirModalEditar(cliente: Cliente): void {
+    this.modalModo = 'editar';
+    this.clienteSelecionado = { ...cliente }; // Clone para não alterar original
+    this.modalAberto = true;
+  }
+
+  fecharModal(): void {
+    this.modalAberto = false;
+    this.clienteSelecionado = null;
+  }
+
+  salvarCliente(cliente: Cliente): void {
+    if (this.modalModo === 'criar') {
+      this.criarCliente(cliente);
+    } else {
+      this.atualizarCliente(cliente);
+    }
+  }
+
+  private criarCliente(cliente: Cliente): void {
+    this.clienteService.criar(cliente).subscribe({
+      next: (clienteCriado) => {
+        this.ngZone.run(() => {
+          this.notificationService.showSuccess('Cliente cadastrado com sucesso!');
+          this.fecharModal();
+          this.carregarClientes();
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao criar cliente:', error);
+        this.notificationService.showError('Erro ao cadastrar cliente');
+        this.fecharModal();
+      }
+    });
+  }
+
+  private atualizarCliente(cliente: Cliente): void {
+    if (!cliente.id) return;
+
+    this.clienteService.atualizar(cliente.id, cliente).subscribe({
+      next: (clienteAtualizado) => {
+        this.ngZone.run(() => {
+          this.notificationService.showSuccess('Cliente atualizado com sucesso!');
+          this.fecharModal();
+          this.carregarClientes();
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar cliente:', error);
+        this.notificationService.showError('Erro ao atualizar cliente');
+        this.fecharModal();
+      }
+    });
   }
 
   /**
