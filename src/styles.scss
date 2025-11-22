@@ -2,6 +2,11 @@
    RV Digital - Sistema de Design Completo e Funcional
    ================================================================ */
 
+/* Tailwind CSS - Diretivas principais */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Importa apenas as variáveis que existem */
 @import 'scss/variables';
 @import 'scss/layout';
