@@ -50,6 +50,19 @@ export class AuthService {
     return this.http.post<JwtResponse>(`${this.AUTH_URL}/login`, loginData)
       .pipe(
         tap(response => {
+          console.log('✅ Login response:', response);
+          console.log('🔑 Token recebido:', response.jwt);
+
+          // Valida formato do token antes de salvar
+          if (response.jwt) {
+            const parts = response.jwt.split('.');
+            console.log('📊 Token tem', parts.length, 'partes (esperado: 3)');
+            if (parts.length !== 3) {
+              console.error('❌ Token JWT inválido recebido do backend!');
+              throw new Error('Token JWT mal formado recebido do servidor');
+            }
+          }
+
           this.saveToken(response.jwt);
 
           const user: Partial<Cliente> = {
@@ -62,6 +75,9 @@ export class AuthService {
 
           this.setCurrentUser(user as Cliente);
           localStorage.setItem(this.ROLES_KEY, JSON.stringify(response.roles));
+
+          console.log('✅ Usuário salvo:', user);
+          console.log('✅ Roles salvas:', response.roles);
         }),
         catchError(error => {
           console.error('Erro no login:', error);
@@ -107,6 +123,13 @@ export class AuthService {
       return false;
     }
 
+    // Valida formato do token JWT (deve ter 3 partes)
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.warn('Token JWT mal formado no isAuthenticated');
+      return false;
+    }
+
     // Tenta validar o token, mas não faz logout em caso de erro
     // pois o backend vai rejeitar requests inválidas de qualquer forma
     try {
@@ -121,10 +144,8 @@ export class AuthService {
 
       return true;
     } catch (error) {
-      console.warn('Token inválido, mas usuário existe:', error);
-      // Retorna true pois o usuário está salvo
-      // Se o token for realmente inválido, o backend vai rejeitar as requests
-      return true;
+      console.warn('Erro ao validar token:', error);
+      return false;
     }
   }
 
@@ -212,6 +233,14 @@ export class AuthService {
       return;
     }
 
+    // Valida formato do token JWT (deve ter 3 partes: header.payload.signature)
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.warn('Token JWT mal formado (não tem 3 partes), limpando...');
+      localStorage.removeItem(this.TOKEN_KEY);
+      return;
+    }
+
     try {
       const decoded: JwtPayload = jwtDecode(token);
 
@@ -227,9 +256,8 @@ export class AuthService {
         this.currentUserSubject.next(currentUser);
       }
     } catch (error) {
-      console.warn('Token inválido ou mal formado, ignorando:', error);
-      // Não faz logout aqui, pois pode ser um token temporariamente inválido
-      // O usuário ainda está salvo no localStorage
+      console.warn('Erro ao decodificar token, limpando:', error);
+      localStorage.removeItem(this.TOKEN_KEY);
     }
   }
 
