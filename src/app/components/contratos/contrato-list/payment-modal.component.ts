@@ -669,8 +669,8 @@ export class PaymentModalComponent implements OnChanges, OnInit {
       this.carregando = true;
 
       const metodoPagamento: MetodoPagamento = {
-        valor: this.contrato.valor,
-        valorTaxa: this.servicoSelecionado.taxa,
+        valor: this.contrato.valor || 0,
+        valorTaxa: this.servicoSelecionado.taxa || 0,
         valorTotal: this.calcularTotal(),
         dataTransacao: new Date().toISOString(),
         status: 'PENDENTE',
@@ -687,6 +687,8 @@ export class PaymentModalComponent implements OnChanges, OnInit {
         bandeira: this.form.value.bandeira || undefined,
         observacoes: this.form.value.observacoes || undefined
       };
+
+      console.log('📤 Enviando pagamento:', JSON.stringify(metodoPagamento, null, 2));
 
       this.pagamentoConfirmado.emit(metodoPagamento);
     } else {

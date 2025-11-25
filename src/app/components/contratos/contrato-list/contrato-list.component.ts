@@ -385,6 +385,9 @@ export class ContratoListComponent implements OnInit {
   }
 
   processarPagamento(metodoPagamento: MetodoPagamento): void {
+    console.log('🔄 Processando pagamento recebido do modal:', metodoPagamento);
+    console.log('📊 Dados do pagamento:', JSON.stringify(metodoPagamento, null, 2));
+
     this.metodoPagamentoService.criar(metodoPagamento).subscribe({
       next: (pagamento) => {
         this.ngZone.run(() => {
@@ -410,8 +413,11 @@ export class ContratoListComponent implements OnInit {
       },
       error: (error) => {
         this.ngZone.run(() => {
-          console.error('Erro ao processar pagamento:', error);
-          const mensagemErro = error.error?.erro || 'Erro ao processar pagamento';
+          console.error('❌ Erro ao processar pagamento:', error);
+          console.error('❌ Detalhes do erro:', error.error);
+          console.error('❌ Status:', error.status);
+          console.error('❌ Mensagem:', error.message);
+          const mensagemErro = error.error?.erro || error.error?.message || 'Erro ao processar pagamento';
           this.notificationService.showError(mensagemErro);
         });
       }
