@@ -668,13 +668,27 @@ export class PaymentModalComponent implements OnChanges, OnInit {
     if (this.form.valid && this.contrato && this.servicoSelecionado) {
       this.carregando = true;
 
+      // Garantir que temos o ID do cliente
+      let clienteId: number | undefined;
+      if (typeof this.contrato.cliente === 'object' && this.contrato.cliente && 'id' in this.contrato.cliente) {
+        clienteId = this.contrato.cliente.id;
+      } else if (typeof this.contrato.cliente === 'number') {
+        clienteId = this.contrato.cliente;
+      }
+
+      if (!clienteId) {
+        console.error('❌ Cliente ID não encontrado no contrato:', this.contrato);
+        this.carregando = false;
+        return;
+      }
+
       const metodoPagamento: MetodoPagamento = {
         valor: this.contrato.valor || 0,
         valorTaxa: this.servicoSelecionado.taxa || 0,
         valorTotal: this.calcularTotal(),
         dataTransacao: new Date().toISOString(),
         status: 'PENDENTE',
-        cliente: this.contrato.cliente,
+        cliente: { id: clienteId },
         contrato: { id: this.contrato.id! },
         servico: { id: this.servicoSelecionado.id! },
         chavePix: this.form.value.chavePix || undefined,
