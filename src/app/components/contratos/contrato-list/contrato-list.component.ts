@@ -412,7 +412,10 @@ export class ContratoListComponent implements OnInit {
 
             // Garantir que cliente seja enviado como { id: X }
             let clienteParaEnvio: { id: number };
-            if (typeof this.contratoPagamento.cliente === 'object' && this.contratoPagamento.cliente && 'id' in this.contratoPagamento.cliente) {
+            if (typeof this.contratoPagamento.cliente === 'object' &&
+                this.contratoPagamento.cliente &&
+                'id' in this.contratoPagamento.cliente &&
+                this.contratoPagamento.cliente.id !== undefined) {
               clienteParaEnvio = { id: this.contratoPagamento.cliente.id };
             } else {
               console.error('❌ Cliente inválido no contrato:', this.contratoPagamento.cliente);
