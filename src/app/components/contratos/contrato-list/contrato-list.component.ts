@@ -371,12 +371,24 @@ export class ContratoListComponent implements OnInit {
 
   pagarConta(id: number | undefined): void {
     if (!id) return;
-    const contrato = this.contratos.find(c => c.id === id);
-    if (!contrato) return;
 
-    this.contratoPagamento = contrato;
-    this.paymentModalAberto = true;
-    this.menuAcoesAberto = null;
+    // Buscar contrato completo do backend (com cliente)
+    this.contratoService.buscarPorId(id).subscribe({
+      next: (contrato) => {
+        this.ngZone.run(() => {
+          this.contratoPagamento = contrato;
+          this.paymentModalAberto = true;
+          this.menuAcoesAberto = null;
+        });
+      },
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error('Erro ao buscar contrato:', error);
+          this.notificationService.showError('Erro ao carregar dados do contrato');
+          this.menuAcoesAberto = null;
+        });
+      }
+    });
   }
 
   fecharPaymentModal(): void {
