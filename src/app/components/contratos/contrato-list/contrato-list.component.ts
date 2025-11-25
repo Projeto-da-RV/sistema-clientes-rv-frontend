@@ -403,23 +403,56 @@ export class ContratoListComponent implements OnInit {
     this.metodoPagamentoService.criar(metodoPagamento).subscribe({
       next: (pagamento) => {
         this.ngZone.run(() => {
+          console.log('✅ Pagamento criado com sucesso:', pagamento);
           this.notificationService.showSuccess('Pagamento registrado com sucesso!');
-          this.fecharPaymentModal();
+
           // Atualizar status do contrato para PAGO
           if (this.contratoPagamento?.id) {
+            console.log('🔄 Atualizando status do contrato para PAGO...');
+
+            // Garantir que cliente seja enviado como { id: X }
+            let clienteParaEnvio: { id: number };
+            if (typeof this.contratoPagamento.cliente === 'object' && this.contratoPagamento.cliente && 'id' in this.contratoPagamento.cliente) {
+              clienteParaEnvio = { id: this.contratoPagamento.cliente.id };
+            } else {
+              console.error('❌ Cliente inválido no contrato:', this.contratoPagamento.cliente);
+              this.fecharPaymentModal();
+              this.carregarContratos();
+              return;
+            }
+
             const contratoAtualizado: Contrato = {
               ...this.contratoPagamento,
+              cliente: clienteParaEnvio,
               status: 'PAGO',
-              dataPagamento: new Date().toISOString().split('T')[0]
+              dataPagamento: new Date().toISOString().split('T')[0],
+              // Remover campos que não devem ser enviados na atualização
+              metodosPagamento: undefined,
+              createdAt: undefined,
+              updatedAt: undefined
             };
+
+            console.log('📤 Enviando atualização do contrato:', JSON.stringify(contratoAtualizado, null, 2));
+
             this.contratoService.atualizar(this.contratoPagamento.id, contratoAtualizado).subscribe({
-              next: () => {
+              next: (contratoAtualizado) => {
+                console.log('✅ Status do contrato atualizado com sucesso!', contratoAtualizado);
+                this.fecharPaymentModal();
                 this.carregarContratos();
               },
               error: (error) => {
-                console.error('Erro ao atualizar status do contrato:', error);
+                console.error('❌ Erro ao atualizar status do contrato:', error);
+                console.error('❌ Detalhes do erro:', error.error);
+                console.error('❌ Status HTTP:', error.status);
+                this.notificationService.showError('Pagamento registrado, mas falha ao atualizar status do contrato');
+                this.fecharPaymentModal();
+                this.carregarContratos();
               }
             });
+          } else {
+            console.warn('⚠️ Contrato sem ID, não foi possível atualizar status');
+            this.fecharPaymentModal();
+            this.carregarContratos();
           }
         });
       },
