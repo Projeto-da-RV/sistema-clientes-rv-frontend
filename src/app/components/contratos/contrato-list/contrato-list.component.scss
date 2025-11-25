@@ -555,6 +555,18 @@ $text-white: #FFFFFF;
     border: 1px solid $warning-bright;
   }
 
+  &.status-pago {
+    background: $success-bg-visible;
+    color: $success-bright;
+    border: 1px solid $success-bright;
+  }
+
+  &.status-vencido {
+    background: $danger-bg-visible;
+    color: $danger-bright;
+    border: 1px solid $danger-bright;
+  }
+
   &.status-concluido {
     background: $info-bg-visible;
     color: $info-bright;

@@ -655,6 +655,8 @@ export class ContratoListComponent implements OnInit {
   getStatusLabel(status: string | undefined): string {
     const statusMap: { [key: string]: string } = {
       'PENDENTE': 'Pendente',
+      'PAGO': 'Pago',
+      'VENCIDO': 'Vencido',
       'ATIVO': 'Ativo',
       'CONCLUIDO': 'Concluído',
       'CANCELADO': 'Cancelado'
@@ -665,6 +667,8 @@ export class ContratoListComponent implements OnInit {
   getStatusClass(status: string | undefined): string {
     const statusClassMap: { [key: string]: string } = {
       'PENDENTE': 'status-pendente',
+      'PAGO': 'status-pago',
+      'VENCIDO': 'status-vencido',
       'ATIVO': 'status-ativo',
       'CONCLUIDO': 'status-concluido',
       'CANCELADO': 'status-cancelado'
