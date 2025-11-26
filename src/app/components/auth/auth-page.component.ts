@@ -121,12 +121,24 @@ export class AuthPageComponent implements OnInit {
           this.carregandoLogin = false;
 
           let mensagemErro = 'Email ou senha incorretos';
-          if (error.error?.message) {
+
+          // Extrair mensagem de erro do backend
+          if (error.error?.erro) {
+            // Erro do backend brasileiro
+            if (error.error.erro.includes('rollback')) {
+              mensagemErro = 'Erro no servidor. Verifique suas credenciais ou contate o administrador.';
+              console.error('⚠️ ATENÇÃO: Erro de transação no backend. Verifique os logs do Spring Boot!');
+            } else {
+              mensagemErro = error.error.erro;
+            }
+          } else if (error.error?.message) {
             mensagemErro = error.error.message;
-          } else if (error.error?.erro) {
-            mensagemErro = error.error.erro;
-          } else if (error.message) {
-            mensagemErro = error.message;
+          } else if (error.status === 400) {
+            mensagemErro = 'Dados inválidos. Verifique email e senha.';
+          } else if (error.status === 401) {
+            mensagemErro = 'Email ou senha incorretos';
+          } else if (error.status === 500) {
+            mensagemErro = 'Erro interno do servidor. Contate o administrador.';
           }
 
           this.notificationService.showError(mensagemErro);
