@@ -1,4 +1,28 @@
-@import '../../../scss/variables';
+/* ===================================================================
+   VARIÁVEIS - PALETA RV DIGITAL
+   =================================================================== */
+
+// Background colors
+$background: #111019;
+$card: #1a1a24;
+$input: #252434;
+
+// Border colors
+$border: #3b394e;
+
+// Text colors
+$foreground: #FFFFFF;
+$muted-foreground: #bbb6c6;
+
+// Primary colors
+$primary: #565add;
+$primary-hover: #6b6fe8;
+
+// Status colors
+$success-bright: #22c55e;
+$success-bg-visible: rgba(34, 197, 94, 0.2);
+$danger-bright: #ef4444;
+$danger-bg-visible: rgba(239, 68, 68, 0.2);
 
 /* ===================================================================
    AUTH PAGE - PÁGINA PRINCIPAL
