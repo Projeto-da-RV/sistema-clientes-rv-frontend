@@ -102,16 +102,34 @@ export class AuthPageComponent implements OnInit {
 
       const { username, password } = this.loginForm.value;
 
+      console.log('🔐 Tentando fazer login com:', { username, password: '***' });
+      console.log('📤 Payload completo:', JSON.stringify({ username, password: '***' }, null, 2));
+
       this.authService.login({ username, password }).subscribe({
         next: (response) => {
+          console.log('✅ Login bem-sucedido:', response);
           this.carregandoLogin = false;
           this.fecharModalLogin();
           this.notificationService.showSuccess('Login realizado com sucesso!');
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
+          console.error('❌ Erro no login:', error);
+          console.error('❌ Status:', error.status);
+          console.error('❌ Mensagem do servidor:', error.error);
+          console.error('❌ Body completo:', error);
           this.carregandoLogin = false;
-          this.notificationService.showError(error.message || 'Email ou senha incorretos');
+
+          let mensagemErro = 'Email ou senha incorretos';
+          if (error.error?.message) {
+            mensagemErro = error.error.message;
+          } else if (error.error?.erro) {
+            mensagemErro = error.error.erro;
+          } else if (error.message) {
+            mensagemErro = error.message;
+          }
+
+          this.notificationService.showError(mensagemErro);
         }
       });
     } else {

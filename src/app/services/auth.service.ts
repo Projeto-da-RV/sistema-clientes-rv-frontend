@@ -47,6 +47,9 @@ export class AuthService {
    * Realiza login do usuário
    */
   login(loginData: LoginRequest): Observable<JwtResponse> {
+    console.log('🌐 AuthService.login() - URL:', `${this.AUTH_URL}/login`);
+    console.log('📦 AuthService.login() - Payload:', JSON.stringify(loginData, null, 2));
+
     return this.http.post<JwtResponse>(`${this.AUTH_URL}/login`, loginData)
       .pipe(
         tap(response => {
