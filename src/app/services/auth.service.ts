@@ -83,16 +83,15 @@ export class AuthService {
           console.log('✅ Roles salvas:', response.roles);
         }),
         catchError(error => {
-          console.error('Erro no login:', error);
-          let errorMessage = 'Erro ao fazer login';
+          console.error('🔴 AuthService - Erro no login:', error);
+          console.error('🔴 AuthService - Status HTTP:', error.status);
+          console.error('🔴 AuthService - Error body:', error.error);
+          console.error('🔴 AuthService - Error message:', error.message);
+          console.error('🔴 AuthService - URL:', error.url);
 
-          if (error.status === 401) {
-            errorMessage = 'Usuário ou senha inválidos';
-          } else if (error.error?.message) {
-            errorMessage = error.error.message;
-          }
-
-          return throwError(() => new Error(errorMessage));
+          // IMPORTANTE: Retornar o erro original para preservar HttpErrorResponse
+          // Isso permite que o componente acesse error.status, error.error, etc.
+          return throwError(() => error);
         })
       );
   }
