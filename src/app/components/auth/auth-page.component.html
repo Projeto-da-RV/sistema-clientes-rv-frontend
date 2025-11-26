@@ -1,0 +1,377 @@
+<div class="auth-page">
+
+  <!-- Background Gradiente Animado -->
+  <div class="gradient-background">
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 800 600"
+      fill="none"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <defs>
+        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#565add;stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:#2b1c50;stop-opacity:0.6" />
+        </linearGradient>
+        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#142a19;stop-opacity:0.9" />
+          <stop offset="50%" style="stop-color:#2b1c50;stop-opacity:0.7" />
+          <stop offset="100%" style="stop-color:#565add;stop-opacity:0.6" />
+        </linearGradient>
+        <radialGradient id="grad3" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" style="stop-color:#565add;stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:#2b1c50;stop-opacity:0.4" />
+        </radialGradient>
+        <filter id="blur1" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="35"/>
+        </filter>
+        <filter id="blur2" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="25"/>
+        </filter>
+        <filter id="blur3" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="45"/>
+        </filter>
+      </defs>
+
+      <g class="animate-float-1">
+        <ellipse cx="200" cy="500" rx="250" ry="180" fill="url(#grad1)" filter="url(#blur1)" transform="rotate(-30 200 500)"/>
+        <rect x="500" y="100" width="300" height="250" rx="80" fill="url(#grad2)" filter="url(#blur2)" transform="rotate(15 650 225)"/>
+      </g>
+
+      <g class="animate-float-2">
+        <circle cx="650" cy="450" r="150" fill="url(#grad3)" filter="url(#blur3)" opacity="0.7"/>
+        <ellipse cx="50" cy="150" rx="180" ry="120" fill="#142a19" filter="url(#blur2)" opacity="0.8"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Logo no topo -->
+  <div class="logo-header">
+    <div class="logo-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <h1 class="logo-text">RV Digital</h1>
+  </div>
+
+  <!-- Conteúdo Central -->
+  <div class="main-content">
+    <div class="content-wrapper">
+
+      <!-- Título Principal -->
+      <div class="hero-section">
+        <h1 class="hero-title">
+          Bem-vindo ao RV Digital
+        </h1>
+        <p class="hero-subtitle">
+          Gerencie seus serviços com facilidade
+        </p>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="action-buttons">
+        <!-- Botão Entrar -->
+        <button
+          (click)="abrirModalLogin()"
+          class="btn btn-outline">
+          <span>Entrar</span>
+        </button>
+
+        <!-- Botão Criar Conta -->
+        <button
+          (click)="abrirModalRegistro()"
+          class="btn btn-primary">
+          <span>Criar Conta</span>
+        </button>
+      </div>
+
+      <!-- Texto Rodapé -->
+      <p class="footer-text">
+        Ao continuar, você concorda com nossos
+        <a href="#" class="footer-link">Termos de Serviço</a> e
+        <a href="#" class="footer-link">Política de Privacidade</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ⭐ MODAL DE LOGIN ⭐ -->
+<div
+  *ngIf="modalLoginAberto"
+  class="modal-overlay"
+  (click)="fecharModalLogin()"
+>
+  <div
+    class="modal-content"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Botão Fechar -->
+    <button
+      (click)="fecharModalLogin()"
+      class="modal-close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">Entrar</h2>
+      <p class="modal-subtitle">Entre com suas credenciais</p>
+    </div>
+
+    <!-- Formulário -->
+    <form [formGroup]="loginForm" (ngSubmit)="fazerLogin()" class="modal-form">
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">
+          Email <span class="required">*</span>
+        </label>
+        <input
+          type="email"
+          formControlName="username"
+          placeholder="seu@email.com"
+          class="form-input"
+        />
+        <p *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="form-error">
+          Email inválido
+        </p>
+      </div>
+
+      <!-- Senha -->
+      <div class="form-group">
+        <label class="form-label">
+          Senha <span class="required">*</span>
+        </label>
+        <div class="input-with-icon">
+          <input
+            [type]="mostrarSenhaLogin ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="••••••••"
+            class="form-input"
+          />
+          <button
+            type="button"
+            (click)="mostrarSenhaLogin = !mostrarSenhaLogin"
+            class="input-icon-btn">
+            <svg *ngIf="!mostrarSenhaLogin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="mostrarSenhaLogin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+        <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="form-error">
+          Senha deve ter no mínimo 6 caracteres
+        </p>
+      </div>
+
+      <!-- Esqueci a senha -->
+      <div class="form-footer-link">
+        <a href="#" class="link-primary">Esqueci minha senha</a>
+      </div>
+
+      <!-- Botão Entrar -->
+      <button
+        type="submit"
+        [disabled]="carregandoLogin"
+        class="btn btn-submit">
+        <svg *ngIf="carregandoLogin" class="spinner" viewBox="0 0 24 24" fill="none">
+          <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        {{ carregandoLogin ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <!-- Link para Registro -->
+    <p class="modal-footer-text">
+      Não tem uma conta?
+      <button (click)="trocarParaRegistro()" class="link-primary-btn">
+        Criar conta
+      </button>
+    </p>
+  </div>
+</div>
+
+<!-- ⭐ MODAL DE REGISTRO ⭐ -->
+<div
+  *ngIf="modalRegistroAberto"
+  class="modal-overlay"
+  (click)="fecharModalRegistro()"
+>
+  <div
+    class="modal-content"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Botão Fechar -->
+    <button
+      (click)="fecharModalRegistro()"
+      class="modal-close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">Criar Conta</h2>
+      <p class="modal-subtitle">Preencha seus dados para começar</p>
+    </div>
+
+    <!-- Formulário -->
+    <form [formGroup]="registroForm" (ngSubmit)="fazerRegistro()" class="modal-form">
+
+      <!-- Nome -->
+      <div class="form-group">
+        <label class="form-label">
+          Nome Completo <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          formControlName="nome"
+          placeholder="Seu nome"
+          class="form-input"
+        />
+        <p *ngIf="registroForm.get('nome')?.invalid && registroForm.get('nome')?.touched" class="form-error">
+          Nome deve ter no mínimo 3 caracteres
+        </p>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">
+          Email <span class="required">*</span>
+        </label>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="seu@email.com"
+          class="form-input"
+        />
+        <p *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" class="form-error">
+          Email inválido
+        </p>
+      </div>
+
+      <!-- CPF -->
+      <div class="form-group">
+        <label class="form-label">
+          CPF <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          formControlName="cpf"
+          placeholder="000.000.000-00"
+          (input)="formatarCPF($event)"
+          maxlength="14"
+          class="form-input"
+        />
+        <p *ngIf="registroForm.get('cpf')?.invalid && registroForm.get('cpf')?.touched" class="form-error">
+          CPF inválido
+        </p>
+      </div>
+
+      <!-- Data de Nascimento -->
+      <div class="form-group">
+        <label class="form-label">
+          Data de Nascimento <span class="required">*</span>
+        </label>
+        <input
+          type="date"
+          formControlName="dataNascimento"
+          class="form-input"
+        />
+      </div>
+
+      <!-- Senha -->
+      <div class="form-group">
+        <label class="form-label">
+          Senha <span class="required">*</span>
+        </label>
+        <div class="input-with-icon">
+          <input
+            [type]="mostrarSenhaRegistro ? 'text' : 'password'"
+            formControlName="senha"
+            placeholder="Mínimo 6 caracteres"
+            class="form-input"
+          />
+          <button
+            type="button"
+            (click)="mostrarSenhaRegistro = !mostrarSenhaRegistro"
+            class="input-icon-btn">
+            <svg *ngIf="!mostrarSenhaRegistro" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="mostrarSenhaRegistro" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirmar Senha -->
+      <div class="form-group">
+        <label class="form-label">
+          Confirmar Senha <span class="required">*</span>
+        </label>
+        <div class="input-with-icon">
+          <input
+            [type]="mostrarConfirmarSenha ? 'text' : 'password'"
+            formControlName="confirmarSenha"
+            placeholder="Digite a senha novamente"
+            class="form-input"
+          />
+          <button
+            type="button"
+            (click)="mostrarConfirmarSenha = !mostrarConfirmarSenha"
+            class="input-icon-btn">
+            <svg *ngIf="!mostrarConfirmarSenha" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="mostrarConfirmarSenha" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+        <p *ngIf="senhasNaoCoincidem()" class="form-error">
+          As senhas não coincidem
+        </p>
+      </div>
+
+      <!-- Botão Criar Conta -->
+      <button
+        type="submit"
+        [disabled]="carregandoRegistro || senhasNaoCoincidem()"
+        class="btn btn-submit">
+        <svg *ngIf="carregandoRegistro" class="spinner" viewBox="0 0 24 24" fill="none">
+          <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        {{ carregandoRegistro ? 'Criando...' : 'Criar Conta' }}
+      </button>
+    </form>
+
+    <!-- Link para Login -->
+    <p class="modal-footer-text">
+      Já tem uma conta?
+      <button (click)="trocarParaLogin()" class="link-primary-btn">
+        Entrar
+      </button>
+    </p>
+  </div>
+</div>

@@ -3,8 +3,13 @@ import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    loadComponent: () => import('./components/auth/auth-page.component').then(m => m.AuthPageComponent)
+  },
+  {
     path: 'login',
-    loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
+    redirectTo: 'auth',
+    pathMatch: 'full'
   },
   {
     path: 'access-denied',
