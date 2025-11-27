@@ -69,11 +69,12 @@ export const routes: Routes = [
         loadComponent: () => import('./components/servicos/servico-form/servico-form.component').then(m => m.ServicoFormComponent),
         canActivate: [adminGuard]
       },
-      // Rotas de Contas a Pagar - Apenas ADMIN
+      // Rotas de Contas a Pagar
+      // Lista: Todos podem ver suas contas
+      // Criar/Editar: Apenas ADMIN
       {
         path: 'contratos',
-        loadComponent: () => import('./components/contratos/contrato-list/contrato-list.component').then(m => m.ContratoListComponent),
-        canActivate: [adminGuard]
+        loadComponent: () => import('./components/contratos/contrato-list/contrato-list.component').then(m => m.ContratoListComponent)
       },
       {
         path: 'contratos/novo',

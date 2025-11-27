@@ -16,8 +16,9 @@
           <lucide-icon [img]="Download" [size]="20"></lucide-icon>
           <span>Exportar</span>
         </button>
-        <!-- Botão Nova Conta a Pagar -->
+        <!-- Botão Nova Conta a Pagar - Apenas ADMIN -->
         <button
+          *ngIf="isAdmin()"
           (click)="abrirModalCriar()"
           class="btn-primary">
           <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
@@ -91,7 +92,8 @@
       <h3>Nenhuma conta a pagar encontrada</h3>
       <p>{{ contratos.length === 0 ? 'Você ainda não possui contas a pagar cadastradas.' : 'Não há contas a pagar que correspondam aos filtros selecionados.' }}</p>
 
-      <button *ngIf="contratos.length === 0" (click)="abrirModalCriar()" class="btn-primary">
+      <!-- Botão criar - apenas para ADMIN -->
+      <button *ngIf="contratos.length === 0 && isAdmin()" (click)="abrirModalCriar()" class="btn-primary">
         <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
         <span>Cadastrar Primeira Conta a Pagar</span>
       </button>
@@ -283,7 +285,9 @@
                     <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
                     <span>Ver Detalhes</span>
                   </button>
+                  <!-- Editar - Apenas ADMIN -->
                   <button
+                    *ngIf="isAdmin()"
                     (click)="editar(contrato.id)"
                     class="dropdown-item">
                     <lucide-icon [img]="Edit" [size]="16"></lucide-icon>
@@ -295,14 +299,17 @@
                     <lucide-icon [img]="FileText" [size]="16"></lucide-icon>
                     <span>Baixar PDF</span>
                   </button>
+                  <!-- Cancelar - Apenas ADMIN -->
                   <button
-                    *ngIf="podeSerCancelado(contrato)"
+                    *ngIf="isAdmin() && podeSerCancelado(contrato)"
                     (click)="cancelar(contrato.id)"
                     class="dropdown-item warning">
                     <lucide-icon [img]="XCircle" [size]="16"></lucide-icon>
                     <span>Cancelar Contrato</span>
                   </button>
+                  <!-- Excluir - Apenas ADMIN -->
                   <button
+                    *ngIf="isAdmin()"
                     (click)="excluir(contrato.id)"
                     class="dropdown-item danger">
                     <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>

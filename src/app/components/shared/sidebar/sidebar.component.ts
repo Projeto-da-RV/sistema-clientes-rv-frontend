@@ -64,7 +64,7 @@ export class SidebarComponent implements OnInit {
     {
       title: 'Gestão Financeira',
       items: [
-        { icon: Receipt, label: 'Contas a Pagar', route: '/contratos', requiresAdmin: true },
+        { icon: Receipt, label: 'Contas a Pagar', route: '/contratos', requiresAdmin: false }, // Todos podem ver/pagar
       ]
     }
   ];

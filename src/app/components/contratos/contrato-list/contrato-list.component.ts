@@ -6,6 +6,7 @@ import { LucideAngularModule, Download, Plus, Search, SlidersHorizontal, Eye, Ed
 import { ContratoService } from '../../../services/contrato.service';
 import { ClienteService } from '../../../services/cliente.service';
 import { MetodoPagamentoService } from '../../../services/metodo-pagamento.service';
+import { AuthService } from '../../../services/auth.service';
 import { Contrato } from '../../../models/contrato.model';
 import { Cliente } from '../../../models/cliente.model';
 import { MetodoPagamento } from '../../../models/metodo-pagamento.model';
@@ -91,6 +92,7 @@ export class ContratoListComponent implements OnInit {
     private contratoService: ContratoService,
     private clienteService: ClienteService,
     private metodoPagamentoService: MetodoPagamentoService,
+    private authService: AuthService,
     private notificationService: NotificationService,
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -699,5 +701,12 @@ export class ContratoListComponent implements OnInit {
   podeSerCancelado(contrato: Contrato): boolean {
     const status = contrato.status || 'PENDENTE';
     return status === 'PAGO' || status === 'PENDENTE';
+  }
+
+  /**
+   * Verifica se o usuário logado é ADMIN
+   */
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 }
