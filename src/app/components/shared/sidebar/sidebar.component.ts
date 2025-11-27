@@ -48,6 +48,9 @@ export class SidebarComponent implements OnInit {
   username: string = '';
   userRole: string = '';
 
+  // Menu que será exibido (filtrado baseado em permissões)
+  menuPrincipal: MenuSection[] = [];
+
   // Menu completo - alguns itens exigem ROLE_ADMIN
   private readonly allMenuSections: MenuSection[] = [
     {
@@ -66,30 +69,44 @@ export class SidebarComponent implements OnInit {
     }
   ];
 
-  /**
-   * Menu filtrado baseado nas permissões do usuário
-   */
-  get menuPrincipal(): MenuSection[] {
-    const isAdmin = this.authService.isAdmin();
-
-    return this.allMenuSections
-      .map(section => ({
-        ...section,
-        items: section.items.filter(item =>
-          !item.requiresAdmin || isAdmin
-        )
-      }))
-      .filter(section => section.items.length > 0); // Remove seções vazias
-  }
-
   constructor(
     private router: Router,
     private authService: AuthService
   ) {}
 
   ngOnInit() {
+    this.buildMenu();
     this.loadUserInfo();
     this.detectActiveRoute();
+  }
+
+  /**
+   * Constrói o menu baseado nas permissões do usuário
+   * Executado UMA VEZ no ngOnInit para evitar loops de change detection
+   */
+  private buildMenu(): void {
+    try {
+      const isAdmin = this.authService.isAdmin();
+
+      this.menuPrincipal = this.allMenuSections
+        .map(section => ({
+          ...section,
+          items: section.items.filter(item =>
+            !item.requiresAdmin || isAdmin
+          )
+        }))
+        .filter(section => section.items.length > 0); // Remove seções vazias
+    } catch (error) {
+      console.error('Erro ao construir menu:', error);
+      // Em caso de erro, mostrar apenas Dashboard
+      this.menuPrincipal = [
+        {
+          items: [
+            { icon: Home, label: 'Dashboard', route: '/dashboard', requiresAdmin: false }
+          ]
+        }
+      ];
+    }
   }
 
   /**
