@@ -10,6 +10,7 @@ interface MenuItem {
   label: string;
   route: string;
   badge?: number;
+  requiresAdmin?: boolean; // Se true, só mostra para ROLE_ADMIN
 }
 
 interface MenuSection {
@@ -47,22 +48,39 @@ export class SidebarComponent implements OnInit {
   username: string = '';
   userRole: string = '';
 
-  menuPrincipal: MenuSection[] = [
+  // Menu completo - alguns itens exigem ROLE_ADMIN
+  private readonly allMenuSections: MenuSection[] = [
     {
       items: [
-        { icon: Home, label: 'Dashboard', route: '/dashboard' },
-        { icon: Users, label: 'Clientes', route: '/clientes' },
-        { icon: Folder, label: 'Categorias', route: '/categorias' },
-        { icon: CreditCard, label: 'Formas de Pagamento', route: '/servicos' },
+        { icon: Home, label: 'Dashboard', route: '/dashboard', requiresAdmin: false },
+        { icon: Users, label: 'Clientes', route: '/clientes', requiresAdmin: true },
+        { icon: Folder, label: 'Categorias', route: '/categorias', requiresAdmin: true },
+        { icon: CreditCard, label: 'Formas de Pagamento', route: '/servicos', requiresAdmin: true },
       ]
     },
     {
       title: 'Gestão Financeira',
       items: [
-        { icon: Receipt, label: 'Contas a Pagar', route: '/contratos' },
+        { icon: Receipt, label: 'Contas a Pagar', route: '/contratos', requiresAdmin: true },
       ]
     }
   ];
+
+  /**
+   * Menu filtrado baseado nas permissões do usuário
+   */
+  get menuPrincipal(): MenuSection[] {
+    const isAdmin = this.authService.isAdmin();
+
+    return this.allMenuSections
+      .map(section => ({
+        ...section,
+        items: section.items.filter(item =>
+          !item.requiresAdmin || isAdmin
+        )
+      }))
+      .filter(section => section.items.length > 0); // Remove seções vazias
+  }
 
   constructor(
     private router: Router,

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth.guard';
+import { adminGuard } from './admin.guard';
 
 export const routes: Routes = [
   {
@@ -15,65 +16,86 @@ export const routes: Routes = [
     loadComponent: () => import('./components/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
     canActivate: [authGuard],
     children: [
+      // Dashboard - Acessível para todos os usuários autenticados
       {
         path: 'dashboard',
         loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
+      // Rotas de Clientes - Apenas ADMIN
       {
         path: 'clientes',
-        loadComponent: () => import('./components/clientes/cliente-list/cliente-list.component').then(m => m.ClienteListComponent)
+        loadComponent: () => import('./components/clientes/cliente-list/cliente-list.component').then(m => m.ClienteListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'clientes/novo',
-        loadComponent: () => import('./components/clientes/cliente-form/cliente-form.component').then(m => m.ClienteFormComponent)
+        loadComponent: () => import('./components/clientes/cliente-form/cliente-form.component').then(m => m.ClienteFormComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'clientes/:id/editar',
-        loadComponent: () => import('./components/clientes/cliente-form/cliente-form.component').then(m => m.ClienteFormComponent)
+        loadComponent: () => import('./components/clientes/cliente-form/cliente-form.component').then(m => m.ClienteFormComponent),
+        canActivate: [adminGuard]
       },
+      // Rotas de Categorias - Apenas ADMIN
       {
         path: 'categorias',
-        loadComponent: () => import('./components/categorias/categoria-list/categoria-list.component').then(m => m.CategoriaListComponent)
+        loadComponent: () => import('./components/categorias/categoria-list/categoria-list.component').then(m => m.CategoriaListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'categorias/novo',
-        loadComponent: () => import('./components/categorias/categoria-form/categoria-form.component').then(m => m.CategoriaFormComponent)
+        loadComponent: () => import('./components/categorias/categoria-form/categoria-form.component').then(m => m.CategoriaFormComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'categorias/:id/editar',
-        loadComponent: () => import('./components/categorias/categoria-form/categoria-form.component').then(m => m.CategoriaFormComponent)
+        loadComponent: () => import('./components/categorias/categoria-form/categoria-form.component').then(m => m.CategoriaFormComponent),
+        canActivate: [adminGuard]
       },
+      // Rotas de Formas de Pagamento - Apenas ADMIN
       {
         path: 'servicos',
-        loadComponent: () => import('./components/servicos/servico-list/servico-list.component').then(m => m.ServicoListComponent)
+        loadComponent: () => import('./components/servicos/servico-list/servico-list.component').then(m => m.ServicoListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'servicos/novo',
-        loadComponent: () => import('./components/servicos/servico-form/servico-form.component').then(m => m.ServicoFormComponent)
+        loadComponent: () => import('./components/servicos/servico-form/servico-form.component').then(m => m.ServicoFormComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'servicos/:id/editar',
-        loadComponent: () => import('./components/servicos/servico-form/servico-form.component').then(m => m.ServicoFormComponent)
+        loadComponent: () => import('./components/servicos/servico-form/servico-form.component').then(m => m.ServicoFormComponent),
+        canActivate: [adminGuard]
       },
+      // Rotas de Contas a Pagar - Apenas ADMIN
       {
         path: 'contratos',
-        loadComponent: () => import('./components/contratos/contrato-list/contrato-list.component').then(m => m.ContratoListComponent)
+        loadComponent: () => import('./components/contratos/contrato-list/contrato-list.component').then(m => m.ContratoListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'contratos/novo',
-        loadComponent: () => import('./components/contratos/contrato-form/contrato-form.component').then(m => m.ContratoFormComponent)
+        loadComponent: () => import('./components/contratos/contrato-form/contrato-form.component').then(m => m.ContratoFormComponent),
+        canActivate: [adminGuard]
       },
       {
         path: 'contratos/:id/editar',
-        loadComponent: () => import('./components/contratos/contrato-form/contrato-form.component').then(m => m.ContratoFormComponent)
+        loadComponent: () => import('./components/contratos/contrato-form/contrato-form.component').then(m => m.ContratoFormComponent),
+        canActivate: [adminGuard]
       },
+      // Rotas de Endereços - Apenas ADMIN
       {
         path: 'enderecos',
-        loadComponent: () => import('./components/enderecos/endereco-list/endereco-list.component').then(m => m.EnderecoListComponent)
+        loadComponent: () => import('./components/enderecos/endereco-list/endereco-list.component').then(m => m.EnderecoListComponent),
+        canActivate: [adminGuard]
       },
+      // Rotas de Itens - Apenas ADMIN
       {
         path: 'itens',
-        loadComponent: () => import('./components/itens/item-list/item-list.component').then(m => m.ItemListComponent)
+        loadComponent: () => import('./components/itens/item-list/item-list.component').then(m => m.ItemListComponent),
+        canActivate: [adminGuard]
       },
       {
         path: '',
