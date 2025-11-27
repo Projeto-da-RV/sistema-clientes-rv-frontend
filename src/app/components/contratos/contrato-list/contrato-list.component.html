@@ -4,8 +4,8 @@
     <!-- Header -->
     <div class="header-section">
       <div class="header-info">
-        <h3 class="title">Lista de Contratos</h3>
-        <p class="subtitle">Gerencie os contratos cadastrados no sistema.</p>
+        <h3 class="title">Contas a Pagar</h3>
+        <p class="subtitle">Gerencie as contas a pagar cadastradas no sistema.</p>
       </div>
       <div class="header-actions">
         <!-- Botão Exportar -->
@@ -16,12 +16,12 @@
           <lucide-icon [img]="Download" [size]="20"></lucide-icon>
           <span>Exportar</span>
         </button>
-        <!-- Botão Novo Contrato -->
+        <!-- Botão Nova Conta a Pagar -->
         <button
           (click)="abrirModalCriar()"
           class="btn-primary">
           <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
-          <span>Novo Contrato</span>
+          <span>Nova Conta a Pagar</span>
         </button>
       </div>
     </div>
@@ -36,7 +36,7 @@
           </div>
           <input
             type="text"
-            placeholder="Buscar contrato..."
+            placeholder="Buscar conta a pagar..."
             [(ngModel)]="termoBusca"
             (ngModelChange)="aplicarFiltros()"
             class="search-input"
@@ -82,18 +82,18 @@
     <!-- Loading State -->
     <div *ngIf="loading" class="loading-state">
       <div class="loading-spinner"></div>
-      <p>Carregando contratos...</p>
+      <p>Carregando contas a pagar...</p>
     </div>
 
     <!-- Empty State -->
     <div *ngIf="!loading && contratosPaginados.length === 0" class="empty-state">
       <div class="empty-icon">📄</div>
-      <h3>Nenhum contrato encontrado</h3>
-      <p>{{ contratos.length === 0 ? 'Você ainda não possui contratos cadastrados.' : 'Não há contratos que correspondam aos filtros selecionados.' }}</p>
+      <h3>Nenhuma conta a pagar encontrada</h3>
+      <p>{{ contratos.length === 0 ? 'Você ainda não possui contas a pagar cadastradas.' : 'Não há contas a pagar que correspondam aos filtros selecionados.' }}</p>
 
       <button *ngIf="contratos.length === 0" (click)="abrirModalCriar()" class="btn-primary">
         <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
-        <span>Cadastrar Primeiro Contrato</span>
+        <span>Cadastrar Primeira Conta a Pagar</span>
       </button>
 
       <button *ngIf="contratos.length > 0" (click)="limparFiltros()" class="btn-secondary">
@@ -127,12 +127,12 @@
               </label>
             </th>
 
-            <!-- Coluna Nº Contrato -->
+            <!-- Coluna Nº Conta -->
             <th
               (click)="ordenarPor('id')"
               class="col-sortable">
               <div class="th-content">
-                <span class="th-label">Nº Contrato</span>
+                <span class="th-label">Nº Conta</span>
                 <div class="sort-icons">
                   <lucide-icon
                     [img]="ChevronUp"

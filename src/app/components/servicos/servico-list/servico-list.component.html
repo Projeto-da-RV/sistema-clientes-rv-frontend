@@ -3,8 +3,8 @@
   <!-- Header -->
   <div class="flex flex-col justify-between gap-5 border-b border-[#3b394e] px-5 py-4 sm:flex-row sm:items-center">
     <div>
-      <h3 class="text-lg font-semibold text-white">Lista de Serviços</h3>
-      <p class="text-sm text-[#bbb6c6]">Gerencie os serviços oferecidos no sistema.</p>
+      <h3 class="text-lg font-semibold text-white">Formas de Pagamento</h3>
+      <p class="text-sm text-[#bbb6c6]">Gerencie as formas de pagamento disponíveis no sistema.</p>
     </div>
     <div class="flex gap-3">
       <!-- Botão Exportar -->
@@ -17,7 +17,7 @@
         Exportar
       </button>
 
-      <!-- Botão Novo Serviço - Abre Modal -->
+      <!-- Botão Nova Forma de Pagamento - Abre Modal -->
       <button
         (click)="abrirModalCriar()"
         class="flex items-center gap-2 rounded-lg bg-[#565add] px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-[#565add]/25 transition hover:bg-[#6b6fe8]"
@@ -26,7 +26,7 @@
           <line x1="12" y1="5" x2="12" y2="19"/>
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
-        Novo Serviço
+        Nova Forma de Pagamento
       </button>
     </div>
   </div>
@@ -44,7 +44,7 @@
         </div>
         <input
           type="text"
-          placeholder="Buscar serviço..."
+          placeholder="Buscar forma de pagamento..."
           [(ngModel)]="termoBusca"
           (ngModelChange)="filtrar()"
           class="h-11 w-full rounded-lg border border-[#3b394e] bg-[#252434] py-2.5 pl-12 pr-4 text-sm text-white placeholder:text-[#6b6b7b] focus:border-[#565add] focus:outline-none focus:ring-2 focus:ring-[#565add]/20 sm:w-[320px]"
@@ -92,10 +92,10 @@
             </label>
           </th>
 
-          <!-- Serviço -->
+          <!-- Forma de Pagamento -->
           <th class="px-5 py-4 text-left">
             <div class="flex cursor-pointer items-center gap-2" (click)="ordenarPor('nome')">
-              <span class="text-xs font-semibold uppercase tracking-wider text-[#bbb6c6]">Serviço</span>
+              <span class="text-xs font-semibold uppercase tracking-wider text-[#bbb6c6]">Forma de Pagamento</span>
               <div class="flex flex-col">
                 <svg class="h-2.5 w-2.5" [class.text-[#565add]]="ordenacao.coluna === 'nome' && ordenacao.direcao === 'asc'" [class.text-[#3b394e]]="!(ordenacao.coluna === 'nome' && ordenacao.direcao === 'asc')" fill="currentColor" viewBox="0 0 8 5">
                   <path d="M4 0L8 5H0L4 0Z"/>
@@ -264,12 +264,12 @@
                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
               </svg>
-              <p class="text-[#bbb6c6]">Nenhum serviço encontrado</p>
+              <p class="text-[#bbb6c6]">Nenhuma forma de pagamento encontrada</p>
               <button
                 (click)="abrirModalCriar()"
                 class="mt-4 text-sm text-[#565add] hover:underline"
               >
-                Criar primeiro serviço
+                Criar primeira forma de pagamento
               </button>
             </div>
           </td>
@@ -283,7 +283,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
               </svg>
-              <p class="text-[#bbb6c6]">Carregando serviços...</p>
+              <p class="text-[#bbb6c6]">Carregando formas de pagamento...</p>
             </div>
           </td>
         </tr>

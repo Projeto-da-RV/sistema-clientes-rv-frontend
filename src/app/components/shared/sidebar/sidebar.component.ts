@@ -60,9 +60,6 @@ export class SidebarComponent implements OnInit {
       title: 'Gestão Financeira',
       items: [
         { icon: Receipt, label: 'Contas a Pagar', route: '/contratos' },
-        { icon: FileText, label: 'Transações', route: '/metodos-pagamento' },
-        { icon: Settings, label: 'Configurações', route: '/configuracoes' },
-        { icon: MessageSquare, label: 'Mensagens', route: '/mensagens', badge: 3 },
       ]
     }
   ];
