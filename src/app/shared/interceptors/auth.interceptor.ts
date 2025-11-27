@@ -27,9 +27,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const publicUrls = ['/login', '/register', '/verificar-cpf-email', '/forgot-password'];
   const isPublicUrl = publicUrls.some(url => req.url.includes(url));
 
+  // POST /api/clientes também é público (registro de novo usuário)
+  const isPublicClienteRegistration = req.method === 'POST' && req.url.includes('/api/clientes');
+
   // Clonar requisição e adicionar header Authorization se não for URL pública
   let authReq = req;
-  if (!isPublicUrl) {
+  if (!isPublicUrl && !isPublicClienteRegistration) {
     const token = authService.getToken();
     if (token) {
       authReq = req.clone({
@@ -50,9 +53,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         authService.logout();
         router.navigate(['/login']);
       } else if (error.status === 403) {
-        // Acesso negado - redirecionar para página de acesso negado
-        console.error('Acesso negado');
-        router.navigate(['/access-denied']);
+        // Acesso negado - mas não redirecionar se for tentativa de registro público
+        if (!isPublicUrl && !isPublicClienteRegistration) {
+          console.error('Acesso negado');
+          router.navigate(['/access-denied']);
+        } else {
+          // Deixar o componente tratar o erro de registro
+          console.error('Erro ao criar conta:', error.error?.erro || error.message);
+        }
       }
 
       // Re-lançar o erro para que outros interceptors possam tratar (ex: httpErrorInterceptor)
