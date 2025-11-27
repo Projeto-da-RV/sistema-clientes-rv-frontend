@@ -9,12 +9,12 @@ import { AuthService } from './services/auth.service';
  * Funcionalidades:
  * - Verifica se o usuário possui token JWT válido
  * - Valida se o token não está expirado
- * - Redireciona para /auth se não autenticado ou token inválido
+ * - Redireciona para /login se não autenticado ou token inválido
  * - Bloqueia acesso direto por URL sem autenticação
  *
  * @param route - Rota que está sendo ativada
  * @param state - Estado atual do router
- * @returns true se autenticado, false e redireciona para /auth caso contrário
+ * @returns true se autenticado, false e redireciona para /login caso contrário
  */
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
@@ -24,8 +24,8 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isLoggedIn()) {
     return true;
   } else {
-    // Usuário não autenticado ou token expirado - redirecionar para auth
-    router.navigate(['/auth']);
+    // Usuário não autenticado ou token expirado - redirecionar para login
+    router.navigate(['/login']);
     return false;
   }
 };
