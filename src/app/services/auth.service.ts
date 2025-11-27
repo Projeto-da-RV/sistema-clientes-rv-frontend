@@ -19,6 +19,22 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  nome: string;
+  email: string;
+  cpf: string;
+  dataNascimento: string;
+  senha: string;
+}
+
+export interface RegisterResponse {
+  id?: number;
+  nome: string;
+  email: string;
+  cpf: string;
+  message?: string;
+}
+
 export interface JwtPayload {
   sub: string;
   roles?: string[];
@@ -91,6 +107,31 @@ export class AuthService {
 
           // IMPORTANTE: Retornar o erro original para preservar HttpErrorResponse
           // Isso permite que o componente acesse error.status, error.error, etc.
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Registra novo usuário/cliente
+   * Cria User para autenticação + Cliente com dados completos
+   */
+  register(registerData: RegisterRequest): Observable<RegisterResponse> {
+    console.log('🌐 AuthService.register() - URL:', `${this.AUTH_URL}/register`);
+    console.log('📦 AuthService.register() - Payload:', JSON.stringify(registerData, null, 2));
+
+    return this.http.post<RegisterResponse>(`${this.AUTH_URL}/register`, registerData)
+      .pipe(
+        tap(response => {
+          console.log('✅ Registro response:', response);
+        }),
+        catchError(error => {
+          console.error('🔴 AuthService - Erro no registro:', error);
+          console.error('🔴 AuthService - Status HTTP:', error.status);
+          console.error('🔴 AuthService - Error body:', error.error);
+          console.error('🔴 AuthService - Error message:', error.message);
+          console.error('🔴 AuthService - URL:', error.url);
+
           return throwError(() => error);
         })
       );
