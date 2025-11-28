@@ -8,7 +8,6 @@
         <p class="subtitle">Gerencie as contas a pagar cadastradas no sistema.</p>
       </div>
       <div class="header-actions">
-        <!-- Botão Exportar -->
         <button
           (click)="exportar()"
           class="btn-export"
@@ -16,7 +15,6 @@
           <lucide-icon [img]="Download" [size]="20"></lucide-icon>
           <span>Exportar</span>
         </button>
-        <!-- Botão Nova Conta a Pagar - Apenas ADMIN -->
         <button
           *ngIf="isAdmin()"
           (click)="abrirModalCriar()"
@@ -92,7 +90,6 @@
       <h3>Nenhuma conta a pagar encontrada</h3>
       <p>{{ contratos.length === 0 ? 'Você ainda não possui contas a pagar cadastradas.' : 'Não há contas a pagar que correspondam aos filtros selecionados.' }}</p>
 
-      <!-- Botão criar - apenas para ADMIN -->
       <button *ngIf="contratos.length === 0 && isAdmin()" (click)="abrirModalCriar()" class="btn-primary">
         <lucide-icon [img]="Plus" [size]="20"></lucide-icon>
         <span>Cadastrar Primeira Conta a Pagar</span>
@@ -285,7 +282,6 @@
                     <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
                     <span>Ver Detalhes</span>
                   </button>
-                  <!-- Editar - Apenas ADMIN -->
                   <button
                     *ngIf="isAdmin()"
                     (click)="editar(contrato.id)"
@@ -299,7 +295,6 @@
                     <lucide-icon [img]="FileText" [size]="16"></lucide-icon>
                     <span>Baixar PDF</span>
                   </button>
-                  <!-- Cancelar - Apenas ADMIN -->
                   <button
                     *ngIf="isAdmin() && podeSerCancelado(contrato)"
                     (click)="cancelar(contrato.id)"
@@ -307,7 +302,6 @@
                     <lucide-icon [img]="XCircle" [size]="16"></lucide-icon>
                     <span>Cancelar Contrato</span>
                   </button>
-                  <!-- Excluir - Apenas ADMIN -->
                   <button
                     *ngIf="isAdmin()"
                     (click)="excluir(contrato.id)"

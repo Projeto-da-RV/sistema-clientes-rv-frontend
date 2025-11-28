@@ -93,23 +93,18 @@ export class LoginComponent {
     this.registerLoading = true;
     this.cdr.markForCheck();
 
-    // Usar endpoint de registro do AuthService
-    // Cria User para autenticação + Cliente com dados completos
     const registerPayload = {
       nome: this.registerData.nome,
       email: this.registerData.email,
-      cpf: this.registerData.cpf.replace(/\D/g, ''), // Remove formatação
+      cpf: this.registerData.cpf.replace(/\D/g, ''),
       dataNascimento: this.registerData.dataNascimento,
       senha: this.registerData.senha
     };
-
-    console.log('📝 Registrando novo usuário:', registerPayload);
 
     this.authService.register(registerPayload).subscribe({
       next: (response) => {
         this.registerLoading = false;
         this.cdr.markForCheck();
-        console.log('✅ Usuário registrado com sucesso:', response);
 
         this.notificationService.success('Conta criada com sucesso! Faça login para continuar.').then(() => {
           // Preencher campos de login com os dados do registro
@@ -135,8 +130,6 @@ export class LoginComponent {
       error: (error) => {
         this.registerLoading = false;
         this.cdr.markForCheck();
-        console.error('❌ Erro ao registrar usuário:', error);
-
         const mensagem = error.error?.erro || error.error?.message || 'Erro ao criar conta';
         this.notificationService.error(mensagem);
       }

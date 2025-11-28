@@ -61,23 +61,17 @@ export class AuthService {
 
   /**
    * Realiza login do usuário
+   * @param loginData Credenciais de login (username e password)
+   * @returns Observable com resposta JWT contendo token e informações do usuário
    */
   login(loginData: LoginRequest): Observable<JwtResponse> {
-    console.log('🌐 AuthService.login() - URL:', `${this.AUTH_URL}/login`);
-    console.log('📦 AuthService.login() - Payload:', JSON.stringify(loginData, null, 2));
-
     return this.http.post<JwtResponse>(`${this.AUTH_URL}/login`, loginData)
       .pipe(
         tap(response => {
-          console.log('✅ Login response:', response);
-          console.log('🔑 Token recebido:', response.token);
-
           // Valida formato do token antes de salvar
           if (response.token) {
             const parts = response.token.split('.');
-            console.log('📊 Token tem', parts.length, 'partes (esperado: 3)');
             if (parts.length !== 3) {
-              console.error('❌ Token JWT inválido recebido do backend!');
               throw new Error('Token JWT mal formado recebido do servidor');
             }
           }
@@ -94,19 +88,8 @@ export class AuthService {
 
           this.setCurrentUser(user as Cliente);
           localStorage.setItem(this.ROLES_KEY, JSON.stringify(response.roles));
-
-          console.log('✅ Usuário salvo:', user);
-          console.log('✅ Roles salvas:', response.roles);
         }),
         catchError(error => {
-          console.error('🔴 AuthService - Erro no login:', error);
-          console.error('🔴 AuthService - Status HTTP:', error.status);
-          console.error('🔴 AuthService - Error body:', error.error);
-          console.error('🔴 AuthService - Error message:', error.message);
-          console.error('🔴 AuthService - URL:', error.url);
-
-          // IMPORTANTE: Retornar o erro original para preservar HttpErrorResponse
-          // Isso permite que o componente acesse error.status, error.error, etc.
           return throwError(() => error);
         })
       );
@@ -114,24 +97,13 @@ export class AuthService {
 
   /**
    * Registra novo usuário/cliente
-   * Cria User para autenticação + Cliente com dados completos
+   * @param registerData Dados do novo usuário (nome, email, CPF, data nascimento, senha)
+   * @returns Observable com resposta contendo dados do cliente criado
    */
   register(registerData: RegisterRequest): Observable<RegisterResponse> {
-    console.log('🌐 AuthService.register() - URL:', `${this.AUTH_URL}/register`);
-    console.log('📦 AuthService.register() - Payload:', JSON.stringify(registerData, null, 2));
-
     return this.http.post<RegisterResponse>(`${this.AUTH_URL}/register`, registerData)
       .pipe(
-        tap(response => {
-          console.log('✅ Registro response:', response);
-        }),
         catchError(error => {
-          console.error('🔴 AuthService - Erro no registro:', error);
-          console.error('🔴 AuthService - Status HTTP:', error.status);
-          console.error('🔴 AuthService - Error body:', error.error);
-          console.error('🔴 AuthService - Error message:', error.message);
-          console.error('🔴 AuthService - URL:', error.url);
-
           return throwError(() => error);
         })
       );

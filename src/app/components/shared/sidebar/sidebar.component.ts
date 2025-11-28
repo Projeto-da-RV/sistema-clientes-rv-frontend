@@ -51,7 +51,6 @@ export class SidebarComponent implements OnInit {
   // Menu que será exibido (filtrado baseado em permissões)
   menuPrincipal: MenuSection[] = [];
 
-  // Menu completo - alguns itens exigem ROLE_ADMIN
   private readonly allMenuSections: MenuSection[] = [
     {
       items: [
@@ -64,7 +63,7 @@ export class SidebarComponent implements OnInit {
     {
       title: 'Gestão Financeira',
       items: [
-        { icon: Receipt, label: 'Contas a Pagar', route: '/contratos', requiresAdmin: false }, // Todos podem ver/pagar
+        { icon: Receipt, label: 'Contas a Pagar', route: '/contratos', requiresAdmin: false },
       ]
     }
   ];
@@ -81,8 +80,13 @@ export class SidebarComponent implements OnInit {
   }
 
   /**
-   * Constrói o menu baseado nas permissões do usuário
-   * Executado UMA VEZ no ngOnInit para evitar loops de change detection
+   * Constrói menu baseado nas permissões do usuário
+   * Executado uma única vez no ngOnInit para evitar loops de change detection
+   *
+   * @remarks
+   * Filtra itens de menu com base na role ROLE_ADMIN
+   * Remove seções que ficam vazias após filtragem
+   * Em caso de erro, exibe apenas Dashboard como fallback
    */
   private buildMenu(): void {
     try {
@@ -95,10 +99,8 @@ export class SidebarComponent implements OnInit {
             !item.requiresAdmin || isAdmin
           )
         }))
-        .filter(section => section.items.length > 0); // Remove seções vazias
+        .filter(section => section.items.length > 0);
     } catch (error) {
-      console.error('Erro ao construir menu:', error);
-      // Em caso de erro, mostrar apenas Dashboard
       this.menuPrincipal = [
         {
           items: [

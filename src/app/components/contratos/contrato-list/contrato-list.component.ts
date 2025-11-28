@@ -704,7 +704,8 @@ export class ContratoListComponent implements OnInit {
   }
 
   /**
-   * Verifica se o usuário logado é ADMIN
+   * Verifica se o usuário logado possui role ROLE_ADMIN
+   * @returns true se o usuário é admin, false caso contrário
    */
   isAdmin(): boolean {
     return this.authService.isAdmin();

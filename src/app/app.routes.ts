@@ -16,12 +16,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
     canActivate: [authGuard],
     children: [
-      // Dashboard - Acessível para todos os usuários autenticados
       {
         path: 'dashboard',
         loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
-      // Rotas de Clientes - Apenas ADMIN
       {
         path: 'clientes',
         loadComponent: () => import('./components/clientes/cliente-list/cliente-list.component').then(m => m.ClienteListComponent),
@@ -37,7 +35,6 @@ export const routes: Routes = [
         loadComponent: () => import('./components/clientes/cliente-form/cliente-form.component').then(m => m.ClienteFormComponent),
         canActivate: [adminGuard]
       },
-      // Rotas de Categorias - Apenas ADMIN
       {
         path: 'categorias',
         loadComponent: () => import('./components/categorias/categoria-list/categoria-list.component').then(m => m.CategoriaListComponent),
@@ -53,7 +50,6 @@ export const routes: Routes = [
         loadComponent: () => import('./components/categorias/categoria-form/categoria-form.component').then(m => m.CategoriaFormComponent),
         canActivate: [adminGuard]
       },
-      // Rotas de Formas de Pagamento - Apenas ADMIN
       {
         path: 'servicos',
         loadComponent: () => import('./components/servicos/servico-list/servico-list.component').then(m => m.ServicoListComponent),
@@ -69,9 +65,6 @@ export const routes: Routes = [
         loadComponent: () => import('./components/servicos/servico-form/servico-form.component').then(m => m.ServicoFormComponent),
         canActivate: [adminGuard]
       },
-      // Rotas de Contas a Pagar
-      // Lista: Todos podem ver suas contas
-      // Criar/Editar: Apenas ADMIN
       {
         path: 'contratos',
         loadComponent: () => import('./components/contratos/contrato-list/contrato-list.component').then(m => m.ContratoListComponent)
@@ -86,13 +79,11 @@ export const routes: Routes = [
         loadComponent: () => import('./components/contratos/contrato-form/contrato-form.component').then(m => m.ContratoFormComponent),
         canActivate: [adminGuard]
       },
-      // Rotas de Endereços - Apenas ADMIN
       {
         path: 'enderecos',
         loadComponent: () => import('./components/enderecos/endereco-list/endereco-list.component').then(m => m.EnderecoListComponent),
         canActivate: [adminGuard]
       },
-      // Rotas de Itens - Apenas ADMIN
       {
         path: 'itens',
         loadComponent: () => import('./components/itens/item-list/item-list.component').then(m => m.ItemListComponent),
